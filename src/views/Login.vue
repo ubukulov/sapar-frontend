@@ -43,6 +43,7 @@
 <script>
     import { validationMixin } from 'vuelidate'
     import { required, maxLength } from 'vuelidate/lib/validators'
+    import axios from 'axios'
 
     export default {
         mixins: [validationMixin],
@@ -68,7 +69,20 @@
 
         methods: {
             submit () {
-                //this.$v.$touch()
+                this.$v.$touch()
+                let api_url = process.env.VUE_APP_API_URL
+                console.log('api_url', api_url)
+                let formData = new FormData()
+                formData.append('username', this.username)
+                formData.append('password', this.password)
+                axios.post('http://sapar.loc/cashier/login', formData)
+                .then(res => {
+                    console.log(res)
+
+                })
+                .catch(err => {
+                    console.log(err)
+                })
             },
         },
     }

@@ -1,21 +1,18 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Auth from '@/layouts/Auth.vue';
+import Auth from '../layouts/Auth.vue';
 import Intercity from "../views/cashier/Intercity";
-//import Cabinet from "../views/cashier/Cabinet";
 import DefaultCashier from "../layouts/DefaultCashier";
 import Tours from "../views/cashier/Tours";
 import Hotels from "../views/cashier/Hotels";
 import CreateTrip from "../views/cashier/CreateTrip";
+import store from '../store'
+import auth from '../middleware/auth'
+import middlewarePipeline from '../middleware/middlewarePipeline'
 
 Vue.use(VueRouter)
 
 const routes = [
-  /*{
-    path: '/',
-    name: 'Home',
-    component: Home
-  },*/
   {
     path: '/',
     name: 'Auth',
@@ -25,6 +22,11 @@ const routes = [
     path: '/cashier',
     name: 'Cabinet',
     component: DefaultCashier,
+    meta: {
+      middleware: [
+          auth
+      ]
+    },
     children: [
       {
         path: '/cashier/intercity',
@@ -62,8 +64,25 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: process.env.VUE_APP_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (!to.meta.middleware) {
+    return next()
+  }
+  const middleware = to.meta.middleware
+  const context = {
+    to,
+    from,
+    next,
+    store
+  }
+  return middleware[0]({
+    ...context,
+    next: middlewarePipeline(context, middleware, 1)
+  })
 })
 
 export default router
