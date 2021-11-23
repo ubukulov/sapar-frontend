@@ -58,6 +58,11 @@
                     text: 'Отели',
                     link: '/cashier/hotels'
                 },
+                {
+                    icon: 'mdi-logout',
+                    text: 'Выйти',
+                    link: '/logout'
+                },
             ],
             model: 1,
         }),

@@ -32,13 +32,11 @@ const routes = [
         path: '/cashier/intercity',
         name: 'Intercity',
         component: Intercity,
-        children: [
-          {
-            path: '/cashier/intercity/create',
-            name: 'CreateTrip',
-            component: CreateTrip
-          }
-        ]
+      },
+      {
+        path: '/cashier/intercity/create',
+        name: 'CreateTrip',
+        component: CreateTrip
       },
       {
         path: '/cashier/hotels',
@@ -51,6 +49,25 @@ const routes = [
         component: Tours
       },
     ]
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    component: {
+      beforeRouteEnter(to, from, next) {
+        const destination = {
+          path: "/",
+          query: from.query,
+          params: from.params
+        };
+        if (!from) {
+          console.log("no from");
+        }
+        console.log("running before hook");
+        store.commit('logout')
+        next(destination);
+      }
+    }
   },
   /*{
     path: '/about',

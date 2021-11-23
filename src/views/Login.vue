@@ -22,6 +22,7 @@
                                 :error-messages="nameErrors"
                                 :counter="10"
                                 label="Пароль"
+                                type="password"
                                 required
                                 @input="$v.name.$touch()"
                                 @blur="$v.name.$touch()"
@@ -75,10 +76,13 @@
                 let formData = new FormData()
                 formData.append('username', this.username)
                 formData.append('password', this.password)
-                axios.post('http://sapar.loc/cashier/login', formData)
+                axios.post('http://localhost/api/v1/cashier/login', formData)
                 .then(res => {
-                    console.log(res)
-
+                    //console.log(res.data.user)
+                    this.$store.commit('logged')
+                    this.$store.commit('setUser', res.data.user)
+                    this.$router.push({name: 'Cabinet'})
+                    console.log('vuex_user', this.$store.getters.getUserData)
                 })
                 .catch(err => {
                     console.log(err)
