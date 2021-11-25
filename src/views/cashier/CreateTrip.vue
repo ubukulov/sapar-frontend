@@ -467,7 +467,7 @@
                 }
             },
             getCompanies(){
-                axios.get('http://localhost/api/v1/cashier/companies/list')
+                axios.get('http://business-saparline.kz/api/v1/cashier/companies/list')
                 .then(res => {
                     this.companies = res.data;
                 })
@@ -476,7 +476,7 @@
                 })
             },
             getCompanyCarLists(){
-                axios.get('http://localhost/api/v1/cashier/companies/' + this.company_id + '/get-cars-list')
+                axios.get('http://business-saparline.kz/api/v1/cashier/companies/' + this.company_id + '/get-cars-list')
                     .then(res => {
                         this.cars = res.data;
                     })
@@ -489,7 +489,7 @@
                 return d.getFullYear()+ "-" + (((d.getMonth()+1) < 10)?"0":"") + (d.getMonth()+1) + "-" + ((d.getDate() < 10)?"0":"") + d.getDate() +"T"+ ((d.getHours() < 10)?"0":"") + d.getHours() + ":"+ ((d.getMinutes() < 10)?"0":"") + d.getMinutes();
             },
             getCities(){
-                axios.get('http://localhost/api/v1/cashier/cities/list')
+                axios.get('http://business-saparline.kz/api/v1/cashier/cities/list')
                     .then(res => {
                         this.cities = res.data;
                     })
@@ -498,7 +498,7 @@
                     })
             },
             getStationsForCity(city_id, type = false){
-                axios.get('http://localhost/api/v1/cashier/cities/' + city_id + '/get-stations')
+                axios.get('http://business-saparline.kz/api/v1/cashier/cities/' + city_id + '/get-stations')
                     .then(res => {
                         if (type) {
                             this.stations2 = res.data;
@@ -522,7 +522,7 @@
                 formData.append('destination_time', this.destination_time);
                 formData.append('price_places', JSON.stringify(this.price_places));
 
-                axios.post('http://localhost/api/v1/cashier/create-trip', formData)
+                axios.post('http://business-saparline.kz/api/v1/cashier/create-trip', formData)
                 .then(res => {
                     console.log(res)
                     this.dialog = true
@@ -548,7 +548,7 @@
                         this.errors.push('Выберите машину/автобус');
                     }
                     if (this.errors.length === 0) {
-                        axios.get(`http://localhost/api/v1/cashier/car/${this.car_id}/get-info`)
+                        axios.get(`http://business-saparline.kz/api/v1/cashier/car/${this.car_id}/get-info`)
                         .then(res => {
                             this.car = res.data;
                             this.e1 = 2;

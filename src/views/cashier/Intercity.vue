@@ -132,7 +132,7 @@
         },
         methods: {
             getTravels(){
-                axios.get('http://localhost/api/v1/cashier/get-travels-upcoming')
+                axios.get('http://business-saparline.kz/api/v1/cashier/get-travels-upcoming')
                 .then(res => {
                     this.travels = res.data;
                     console.log(this.travels)

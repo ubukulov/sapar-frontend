@@ -76,7 +76,7 @@
                 let formData = new FormData()
                 formData.append('username', this.username)
                 formData.append('password', this.password)
-                axios.post('http://localhost/api/v1/cashier/login', formData)
+                axios.post('http://business-saparline.kz/api/v1/cashier/login', formData)
                 .then(res => {
                     //console.log(res.data.user)
                     this.$store.commit('logged')
