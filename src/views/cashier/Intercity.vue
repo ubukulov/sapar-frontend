@@ -1,92 +1,124 @@
 <template>
-    <v-container>
+    <div class="mt-2">
         <v-row>
-            <v-col cols="12">
+            <v-col cols="6">
+                <h4>Плановые поездки</h4>
+            </v-col>
+
+            <v-col cols="6" class="text-right">
                 <router-link
-                    class="btn btn-primary"
-                    to="/cashier/intercity/create"
+                        class="btn green"
+                        to="/cashier/intercity/create"
                 >
                     <span class="mdc-button__label">Создать поездку</span>
                 </router-link>
+            </v-col>
 
-                <v-row>
-                    <v-card
-                            :loading="loading"
-                            class="mx-auto my-12"
-                            max-width="374"
-                            v-for="(item,i) in travels"
-                            :key="i"
-                    >
-                        <template slot="progress">
-                            <v-progress-linear
-                                    color="deep-purple"
-                                    height="10"
-                                    indeterminate
-                            ></v-progress-linear>
-                        </template>
+            <v-col cols="3" v-for="(item,i) in travels" :key="i">
+                <v-card
+                    :loading="loading"
+                    class="mx-auto my-12"
+                    max-width="374"
+                >
+                    <template slot="progress">
+                        <v-progress-linear
+                                color="deep-purple"
+                                height="10"
+                                indeterminate
+                        ></v-progress-linear>
+                    </template>
 
-                        <v-img
+                    <v-img
                             height="250"
                             src="http://localhost/car_images/1604063280FeLD9.jpg"
-                        ></v-img>
+                    ></v-img>
 
-                        <v-card-title>{{ item.car.car_type }}</v-card-title>
+                    <v-card-title>{{ item.car.car_type }}</v-card-title>
 
-                        <v-card-text>
-                            <v-row
-                                    align="center"
-                                    class="mx-0"
-                            >
-                                <v-rating
-                                        :value="4.5"
-                                        color="amber"
-                                        dense
-                                        half-increments
-                                        readonly
-                                        size="14"
-                                ></v-rating>
+                    <v-card-text>
+                        <v-row
+                                align="center"
+                                class="mx-0"
+                        >
+                            <v-rating
+                                    :value="4.5"
+                                    color="amber"
+                                    dense
+                                    half-increments
+                                    readonly
+                                    size="14"
+                            ></v-rating>
 
-                                <div class="grey--text ms-4">
-                                    4.5 (413)
-                                </div>
-                            </v-row>
-
-                            <div class="my-4 text-subtitle-1">
-                                &#8376; {{ item.min_price }} - {{ item.max_price }}
+                            <div class="grey--text ms-4">
+                                4.5 (413)
                             </div>
+                        </v-row>
 
-                            <div>Small plates, salads & sandwiches - an intimate setting with 12 indoor seats plus patio seating.</div>
-                        </v-card-text>
+                        <div class="my-4 text-subtitle-1">
+                            &#8376; {{ item.min_price }} - {{ item.max_price }}
+                        </div>
 
-                        <v-divider class="mx-4"></v-divider>
+                        <div>
+                            <p v-if="item.car.tv === 1">• Телевизор - <span style="font-weight: bold; color: green;">есть</span></p>
+                            <p v-if="item.car.conditioner === 1">• Кондиционер - <span style="font-weight: bold; color: green;">есть</span></p>
+                            <p v-if="item.car.baggage === 1">• Багажник - <span style="font-weight: bold; color: green;">есть</span></p>
+                        </div>
+                    </v-card-text>
 
-                        <v-card-title>Дата и время отправление</v-card-title>
+                    <v-divider class="mx-4"></v-divider>
 
-                        <v-card-text>
-                            <v-chip-group
-                                active-class="deep-purple accent-4 white--text"
-                                column
-                            >
-                                <v-chip>{{ item.departure_time }}</v-chip>
-                            </v-chip-group>
-                        </v-card-text>
+                    <v-card-title style="justify-content: center;">{{ item.departure_time }}</v-card-title>
 
-                        <v-card-actions>
-                            <!--<v-btn
-                                    color="deep-purple lighten-2"
-                                    text
-                                    @click="reserve"
-                            >
-                                Reserve
-                            </v-btn>-->
-                        </v-card-actions>
-                    </v-card>
-                </v-row>
+                    <v-card-text>
+                        <v-row>
+                            <v-col cols="4" class="text-right">
+                                <div><strong>{{ item.from.city }}</strong></div>
+                                <div><span>{{item.from.station}}</span></div>
+                            </v-col>
 
-                <router-view></router-view>
+                            <v-col cols="4" class="text-center">
+                                <v-icon size="40">
+                                    mdi-chevron-right-circle-outline
+                                </v-icon>
+                            </v-col>
+
+                            <v-col cols="4" class="text-left">
+                                <div><strong>{{ item.to.city }}</strong></div>
+                                <div><span>{{item.to.station}}</span></div>
+                            </v-col>
+                        </v-row>
+
+                        <v-row>
+                            <v-col>
+                                <span class="card_car_info_span__success">Свободно: 36</span>
+                            </v-col>
+
+                            <v-col>
+                                <span class="card_car_info_span__danger">Занято: 0</span>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-btn
+                                color="red lighten-2"
+                        >
+                            Удалить
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                color="deep-purple lighten-2"
+                        >
+                            Посмотреть
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
             </v-col>
+
+            <router-view></router-view>
+
         </v-row>
-    </v-container>
+    </div>
 </template>
 
 <script>
@@ -117,5 +149,12 @@
 </script>
 
 <style scoped>
-
+.card_car_info_span__success {
+    color: green;
+    font-weight: bold;
+}
+.card_car_info_span__danger{
+    color: #cc0000;
+    font-weight: bold;
+}
 </style>

@@ -66,7 +66,7 @@
 
                     <v-btn
                             color="primary"
-                            @click="e1 = 2"
+                            @click="nextStep(2)"
                     >
                         Далее
                     </v-btn>
@@ -74,9 +74,9 @@
 
                 <v-stepper-content step="2">
                     <v-card
-                            class="mb-12"
-                            color="lighten-1"
-                            height="200px"
+                        class="mb-12"
+                        color="lighten-1"
+                        height="200px"
                     >
                         <v-row>
                             <v-col cols="2">
@@ -85,10 +85,10 @@
                                         label="Выберите город"
                                         :hint="`${cities.id}, ${cities.name}`"
                                         item-value="id"
-                                        v-model="city_id1"
-                                        prepend-icon="mdi-location"
+                                        v-model="from_city_id"
+                                        prepend-icon="mdi-map-marker"
                                         item-text="name"
-                                        @change="getStationsForCity(city_id1)"
+                                        @change="getStationsForCity(from_city_id)"
                                         dense
                                         solo
                                 ></v-select>
@@ -120,10 +120,10 @@
                                         label="Выберите город"
                                         :hint="`${cities.id}, ${cities.name}`"
                                         item-value="id"
-                                        v-model="city_id2"
-                                        prepend-icon="mdi-location"
+                                        v-model="to_city_id"
+                                        prepend-icon="mdi-flag"
                                         item-text="name"
-                                        @change="getStationsForCity(city_id2, true)"
+                                        @change="getStationsForCity(to_city_id, true)"
                                         dense
                                         solo
                                 ></v-select>
@@ -151,7 +151,7 @@
 
                     <v-btn
                             color="primary"
-                            @click="e1 = 3"
+                            @click="nextStep(3)"
                     >
                         Далее
                     </v-btn>
@@ -166,20 +166,35 @@
 
                 <v-stepper-content step="3">
                     <v-card
-                            class="mb-12"
-                            color="lighten-1"
-                            height="200px"
-                            style="height: auto; padding: 10px;"
+                        class="mb-12"
+                        color="lighten-1"
+                        height="200px"
+                        style="height: auto; padding: 10px;"
                     >
                         <v-row>
                             <v-col cols="12">
                                 <v-row>
+                                    <v-col cols="12">
+                                        <v-alert
+                                            v-if="car.length !== 0"
+                                            border="bottom"
+                                            colored-border
+                                            type="warning"
+                                            elevation="2"
+                                        >
+                                            Просим быть внимательно когда указываете цены за каждое место. Количество мест не должно быть больше чем полагается.
+                                            <br>
+                                            <strong>В этом выбранном машине количество мест - {{car.car_type.count_places}}</strong>
+                                        </v-alert>
+                                    </v-col>
+
                                     <v-col
                                             cols="2"
                                     >
                                         <v-text-field
                                                 label="От"
                                                 v-model="from_place"
+                                                dense
                                                 solo
                                         ></v-text-field>
                                     </v-col>
@@ -190,6 +205,7 @@
                                         <v-text-field
                                                 label="До"
                                                 v-model="to_place"
+                                                dense
                                                 solo
                                         ></v-text-field>
                                     </v-col>
@@ -200,6 +216,7 @@
                                         <v-text-field
                                                 label="Цена билета"
                                                 v-model="price"
+                                                dense
                                                 solo
                                         ></v-text-field>
                                     </v-col>
@@ -208,7 +225,7 @@
                                             cols="2"
                                     >
                                         <v-btn
-                                                class="btn indigo"
+                                                class="btn orange"
                                                 @click="addToPricePlaces"
                                         >Готово</v-btn>
                                     </v-col>
@@ -245,6 +262,15 @@
                     </v-btn>
                 </v-stepper-content>
             </v-stepper-items>
+
+            <v-col cols="12">
+                <p v-if="errors.length" style="margin-bottom: 0px !important;">
+                    <b>Пожалуйста исправьте указанные ошибки:</b>
+                    <ul style="color: red; padding-left: 15px; list-style: circle; text-align: left;">
+                        <li v-for="(error,i) in errors" :key="i">{{error}}</li>
+                    </ul>
+                </p>
+            </v-col>
         </v-stepper>
 
         <v-dialog
@@ -253,15 +279,26 @@
             max-width="290"
         >
             <v-card>
-                <v-card-text>Поездка успешно оформлено!</v-card-text>
+                <v-card-text class="dialog_text">
+                    <p>Поездка успешно оформлено!</p>
+
+                    <p style="margin-bottom: 0px;">
+                        <v-icon
+                            style="font-size: 30px; color: green;"
+                        >
+                            mdi-check-bold
+                        </v-icon>
+                    </p>
+                </v-card-text>
                 <v-card-actions>
+                    <v-spacer></v-spacer>
                     <v-btn
                         color="green darken-1"
-                        text
                         @click="closeDialog()"
                     >
                         Ок
                     </v-btn>
+                    <v-spacer></v-spacer>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -387,6 +424,7 @@
         data(){
             return {
                 cars: [],
+                car: [],
                 companies: [],
                 car_id: 0,
                 company_id: 0,
@@ -400,26 +438,33 @@
                 departure_time: this.currentDateTime(),
                 destination_time: this.currentDateTime(),
                 cities: [],
-                city_id1: 0,
-                city_id2: 0,
+                from_city_id: 0,
+                to_city_id: 0,
                 stations1: [],
                 stations2: [],
                 from_station_id: 0,
                 to_station_id: 0,
                 dialog: false,
+                errors: []
             }
         },
         methods: {
             addToPricePlaces(){
-                let arr = {};
-                arr.from = this.from_place;
-                arr.to   = this.to_place;
-                arr.price = this.price;
-                this.price_places.push(arr);
+                this.errors = [];
+                if ((this.to_place > this.car.car_type.count_places) || (this.from_place > this.car.car_type.count_places)) {
+                    this.errors.push(`Максимальное количество место: ${this.car.car_type.count_places}`)
+                }
+                if (this.errors.length === 0) {
+                    let arr = {};
+                    arr.from = this.from_place;
+                    arr.to   = this.to_place;
+                    arr.price = this.price;
+                    this.price_places.push(arr);
 
-                this.from_place =  null
-                this.to_place = null
-                this.price = null
+                    this.from_place =  null
+                    this.to_place = null
+                    this.price = null
+                }
             },
             getCompanies(){
                 axios.get('http://localhost/api/v1/cashier/companies/list')
@@ -469,8 +514,8 @@
                 let formData = new FormData();
                 formData.append('company_id', this.company_id);
                 formData.append('car_id', this.car_id);
-                formData.append('city_id1', this.city_id1);
-                formData.append('city_id2', this.city_id2);
+                formData.append('from_city_id', this.from_city_id);
+                formData.append('to_city_id', this.to_city_id);
                 formData.append('from_station_id', this.from_station_id);
                 formData.append('to_station_id', this.to_station_id);
                 formData.append('departure_time', this.departure_time);
@@ -492,6 +537,60 @@
             },
             getFieldText(item) {
                 return `${item.number} (${item.car_type_name}, кол-во мест: ${item.count_places})`
+            },
+            nextStep(step) {
+                this.errors = [];
+                if (step === 2) {
+                    if (this.company_id === 0) {
+                        this.errors.push('Выберите компанию');
+                    }
+                    if (this.car_id === 0) {
+                        this.errors.push('Выберите машину/автобус');
+                    }
+                    if (this.errors.length === 0) {
+                        axios.get(`http://localhost/api/v1/cashier/car/${this.car_id}/get-info`)
+                        .then(res => {
+                            this.car = res.data;
+                            this.e1 = 2;
+                            console.log('car', this.car)
+                            console.log('car_type', this.car.car_type.count_places)
+                        })
+                        .catch(err => {
+                            console.log(err)
+                            this.errors.push('Произошло ошибка во время получение информацию о машине')
+                        })
+                    }
+                }
+
+                if (step === 3) {
+                    if (this.from_city_id === 0) {
+                        this.errors.push('Укажите город отправление');
+                    }
+                    if (this.from_station_id === 0) {
+                        this.errors.push('Укажите станцию отправление');
+                    }
+                    if (this.to_city_id === 0) {
+                        this.errors.push('Укажите город прибытие');
+                    }
+                    if (this.to_station_id === 0) {
+                        this.errors.push('Укажите станцию прибытие');
+                    }
+                    if (this.from_city_id === this.to_city_id) {
+                        this.errors.push('Город прибытие должно быть другой');
+                    }
+
+                    let departure_time = new Date(this.departure_time);
+                    let destination_time = new Date(this.destination_time);
+
+                    if(departure_time.getTime() >= destination_time.getTime()) {
+                        this.errors.push('Дата отправление не может быть больше или равно чем дата прибытие');
+                    }
+
+                    if (this.errors.length === 0) {
+                        this.e1 = 3;
+                    }
+                }
+
             }
         },
         created() {
@@ -502,5 +601,11 @@
 </script>
 
 <style scoped>
-
+.dialog_text {
+    padding: 20px 10px !important;
+    font-size: 30px;
+    line-height: 30px;
+    color: green !important;
+    text-align: center;
+}
 </style>
