@@ -30,7 +30,7 @@
 
                     <v-img
                             height="250"
-                            src="http://localhost/car_images/1604063280FeLD9.jpg"
+                            :src="`http://194.4.56.241:8888/${item.car.image}`"
                     ></v-img>
 
                     <v-card-title>{{ item.car.car_type }}</v-card-title>
@@ -90,11 +90,11 @@
 
                         <v-row>
                             <v-col>
-                                <span class="card_car_info_span__success">Свободно: 36</span>
+                                <span class="card_car_info_span__success">Свободно: {{ item.count_free_places }}</span>
                             </v-col>
 
                             <v-col>
-                                <span class="card_car_info_span__danger">Занято: 0</span>
+                                <span class="card_car_info_span__danger">Занято: {{ item.car.car_type_count_places - item.count_free_places }}</span>
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -117,6 +117,13 @@
 
             <router-view></router-view>
 
+            <v-overlay :value="overlay">
+                <v-progress-circular
+                        indeterminate
+                        size="64"
+                ></v-progress-circular>
+            </v-overlay>
+
         </v-row>
     </div>
 </template>
@@ -128,12 +135,15 @@
             return {
                 travels: [],
                 loading: false,
+                overlay: false,
             }
         },
         methods: {
             getTravels(){
-                axios.get('http://business-saparline.kz/api/v1/cashier/get-travels-upcoming')
+                this.overlay = true;
+                axios.get('http://194.4.56.241:8888/api/v1/cashier/get-travels-upcoming')
                 .then(res => {
+                    this.overlay = false;
                     this.travels = res.data;
                     console.log(this.travels)
                 })
