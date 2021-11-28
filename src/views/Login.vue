@@ -9,10 +9,11 @@
 
                     <form>
                         <v-text-field
-                                v-model="username"
+                                v-model="email"
                                 :error-messages="nameErrors"
                                 :counter="10"
                                 label="Логин"
+                                type="email"
                                 required
                                 @input="$v.name.$touch()"
                                 @blur="$v.name.$touch()"
@@ -35,6 +36,10 @@
                             Войти
                         </v-btn>
                     </form>
+
+                    <router-link to="/register">
+                        Регистрация
+                    </router-link>
                 </v-col>
             </v-col>
         </v-row>
@@ -43,7 +48,7 @@
 
 <script>
     import { validationMixin } from 'vuelidate'
-    import { required, maxLength } from 'vuelidate/lib/validators'
+    import {required, maxLength, email} from 'vuelidate/lib/validators'
     import axios from 'axios'
 
     export default {
@@ -51,10 +56,11 @@
 
         validations: {
             name: { required, maxLength: maxLength(10) },
+            email: { required, email },
         },
 
         data: () => ({
-            username: '',
+            email: '',
             password: '',
         }),
 
@@ -66,29 +72,35 @@
                 !this.$v.name.required && errors.push('Поле обязательно.')
                 return errors
             },
+            emailErrors () {
+                const errors = []
+                if (!this.$v.email.$dirty) return errors
+                !this.$v.email.email && errors.push('Введите пожалуйста правильный e-mail')
+                !this.$v.email.required && errors.push('E-mail обязательно')
+                return errors
+            },
         },
 
         methods: {
             submit () {
                 this.$v.$touch()
-                let api_url = process.env.VUE_APP_API_URL
-                console.log('api_url', api_url)
                 let formData = new FormData()
-                formData.append('username', this.username)
+                formData.append('email', this.email)
                 formData.append('password', this.password)
-                axios.post('http://194.4.56.241:8888/api/v1/cashier/login', formData)
+                axios.post(`${this.$apiUrl}cashier/login`, formData)
                 .then(res => {
-                    //console.log(res.data.user)
                     this.$store.commit('logged')
                     this.$store.commit('setUser', res.data.user)
                     this.$router.push({name: 'Cabinet'})
-                    console.log('vuex_user', this.$store.getters.getUserData)
                 })
                 .catch(err => {
                     console.log(err)
                 })
             },
         },
+        created() {
+            console.log('apiUrl', this.$apiUrl)
+        }
     }
 </script>
 

@@ -310,112 +310,6 @@
             ></v-progress-circular>
         </v-overlay>
     </div>
-
-    <!--<v-container>
-        <v-row>
-            <v-col cols="3">
-                <v-select
-                        :items="companies"
-                        class="form-control"
-                        :hint="`${companies.id}, ${companies.title}`"
-                        item-value="id"
-                        label="Выберите фирму"
-                        v-model="company_id"
-                        @change="getCompanyCarLists()"
-                        item-text="title"
-                ></v-select>
-            </v-col>
-            <v-col cols="3">
-                <v-select
-                        :items="cars"
-                        class="form-control"
-                        label="Выберите автобус/машину"
-                        :hint="`${cars.id}, ${cars.number}`"
-                        item-value="id"
-                        v-model="car_id"
-                        item-text="number"
-                ></v-select>
-            </v-col>
-
-            <v-col
-                    cols="3"
-            >
-                <v-date-picker
-                        v-model="dates"
-                        multiple
-                ></v-date-picker>
-            </v-col>
-
-            <v-col cols="12">
-                <v-row>
-                    <v-col
-                            cols="2"
-                    >
-                        <v-text-field
-                                label="От"
-                                v-model="from_place"
-                                solo
-                        ></v-text-field>
-                    </v-col>
-
-                    <v-col
-                            cols="2"
-                    >
-                        <v-text-field
-                                label="До"
-                                v-model="to_place"
-                                solo
-                        ></v-text-field>
-                    </v-col>
-
-                    <v-col
-                            cols="2"
-                    >
-                        <v-text-field
-                                label="Цена билета"
-                                v-model="price"
-                                solo
-                        ></v-text-field>
-                    </v-col>
-
-                    <v-col
-                        cols="2"
-                    >
-                        <v-btn
-                                @click="addToPricePlaces"
-                        >Готово</v-btn>
-                    </v-col>
-
-                    <v-col
-                        cols="3"
-                    >
-                        <v-btn
-                                class="btn btn-success"
-                        >
-                            Опубликовать поездку!
-                        </v-btn>
-                    </v-col>
-                </v-row>
-
-                <v-row>
-                    <v-col cols="6">
-                        <v-alert
-                                v-for="(item, i) in price_places" :key="i"
-                                dense
-                                text
-                                type="success"
-                        >
-                            <p>От {{ item.from}} до {{ item.to }}  -&#45;&#45; <strong>{{ item.price }} т</strong></p>
-                        </v-alert>
-                    </v-col>
-                </v-row>
-            </v-col>
-
-            <v-col cols="4">
-
-            </v-col>
-        </v-row>
-    </v-container>-->
 </template>
 
 <script>
@@ -475,7 +369,7 @@
                 }
             },
             getCompanies(){
-                axios.get('http://194.4.56.241:8888/api/v1/cashier/companies/list')
+                axios.get(`${this.$apiUrl}cashier/companies/list`)
                 .then(res => {
                     this.companies = res.data;
                 })
@@ -484,7 +378,7 @@
                 })
             },
             getCompanyCarLists(){
-                axios.get('http://194.4.56.241:8888/api/v1/cashier/companies/' + this.company_id + '/get-cars-list')
+                axios.get(`${this.$apiUrl}cashier/companies/${this.company_id}/get-cars-list`)
                     .then(res => {
                         this.cars = res.data;
                     })
@@ -497,7 +391,7 @@
                 return d.getFullYear()+ "-" + (((d.getMonth()+1) < 10)?"0":"") + (d.getMonth()+1) + "-" + ((d.getDate() < 10)?"0":"") + d.getDate() +"T"+ ((d.getHours() < 10)?"0":"") + d.getHours() + ":"+ ((d.getMinutes() < 10)?"0":"") + d.getMinutes();
             },
             getCities(){
-                axios.get('http://194.4.56.241:8888/api/v1/cashier/cities/list')
+                axios.get(`${this.$apiUrl}cashier/cities/list`)
                     .then(res => {
                         this.cities = res.data;
                     })
@@ -506,7 +400,7 @@
                     })
             },
             getStationsForCity(city_id, type = false){
-                axios.get('http://194.4.56.241:8888/api/v1/cashier/cities/' + city_id + '/get-stations')
+                axios.get(`${this.$apiUrl}cashier/cities/${city_id}/get-stations`)
                     .then(res => {
                         if (type) {
                             this.stations2 = res.data;
@@ -519,7 +413,7 @@
                     })
             },
             createTrip(){
-                if(this.errors.length !== 0) {
+                if(this.errors.length === 0) {
                     this.overlay = true;
                     let formData = new FormData();
                     formData.append('company_id', this.company_id);
@@ -532,7 +426,7 @@
                     formData.append('destination_time', this.destination_time);
                     formData.append('price_places', JSON.stringify(this.price_places));
 
-                    axios.post('http://194.4.56.241:8888/api/v1/cashier/create-trip', formData)
+                    axios.post(`${this.$apiUrl}cashier/create-trip`, formData)
                         .then(res => {
                             console.log(res)
                             this.overlay = false;
@@ -561,7 +455,7 @@
                     }
                     if (this.errors.length === 0) {
                         this.overlay = true;
-                        axios.get(`http://194.4.56.241:8888/api/v1/cashier/car/${this.car_id}/get-info`)
+                        axios.get(`${this.$apiUrl}cashier/car/${this.car_id}/get-info`)
                         .then(res => {
                             this.overlay = false;
                             this.car = res.data;

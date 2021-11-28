@@ -4,11 +4,12 @@ import Auth from '../layouts/Auth.vue';
 import Intercity from "../views/cashier/Intercity";
 import DefaultCashier from "../layouts/DefaultCashier";
 import Tours from "../views/cashier/Tours";
-import Hotels from "../views/cashier/Hotels";
 import CreateTrip from "../views/cashier/CreateTrip";
 import store from '../store'
 import auth from '../middleware/auth'
 import middlewarePipeline from '../middleware/middlewarePipeline'
+import Ticket from "../views/cashier/Ticket";
+import Register from "../views/Register";
 
 Vue.use(VueRouter)
 
@@ -17,6 +18,11 @@ const routes = [
     path: '/',
     name: 'Auth',
     component: Auth
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
   },
   {
     path: '/cashier',
@@ -39,9 +45,9 @@ const routes = [
         component: CreateTrip
       },
       {
-        path: '/cashier/hotels',
-        name: 'Hotels',
-        component: Hotels
+        path: '/cashier/tickets',
+        name: 'Ticket',
+        component: Ticket
       },
       {
         path: '/cashier/tours',

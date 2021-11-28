@@ -141,7 +141,7 @@
         methods: {
             getTravels(){
                 this.overlay = true;
-                axios.get('http://194.4.56.241:8888/api/v1/cashier/get-travels-upcoming')
+                axios.get(`${this.$apiUrl}cashier/get-travels-upcoming`)
                 .then(res => {
                     this.overlay = false;
                     this.travels = res.data;
