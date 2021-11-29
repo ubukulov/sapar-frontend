@@ -5,7 +5,7 @@
             <v-row>
                 <v-col cols="6" v-for="(item, i) in leftItems" :key="i">
                     <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place">{{ item.number }}</div>
-                    <div v-if="item.status === 'take'" class="place taken_place">{{ item.number }}</div>
+                    <div v-if="item.status === 'take'" title="Место уже продано" class="place taken_place">{{ item.number }}</div>
                 </v-col>
             </v-row>
         </v-col>
@@ -22,7 +22,7 @@
                 <v-col class="not_place" cols="6"></v-col>
                 <v-col cols="6"  v-for="(item, i) in rightItems" :key="i">
                     <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place">{{ item.number }}</div>
-                    <div v-if="item.status === 'take'" class="place taken_place">{{ item.number }}</div>
+                    <div v-if="item.status === 'take'" title="Место уже продано" class="place taken_place">{{ item.number }}</div>
                 </v-col>
             </v-row>
         </v-col>
@@ -32,7 +32,7 @@
             <v-row>
                 <v-col cols="3"  v-for="(item, i) in bottomItems" :key="i">
                     <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place">{{ item.number }}</div>
-                    <div v-if="item.status === 'take'" class="place taken_place">{{ item.number }}</div>
+                    <div v-if="item.status === 'take'" title="Место уже продано" class="place taken_place">{{ item.number }}</div>
                 </v-col>
             </v-row>
         </v-col>
@@ -53,16 +53,17 @@
                         solo
                     ></v-text-field>
 
-                    <v-text-field
-                            v-model="phone"
-                            label="Телефон номер"
-                            dense
-                            solo
-                    ></v-text-field>
+                    <VuePhoneNumberInput
+                        default-country-code="KZ"
+                        :only-countries="['KZ']"
+                        error-color="red"
+                        v-model="phone" />
 
                     <v-text-field
                             v-model="iin"
                             label="ИИН"
+                            class="mt-5"
+                            counter="12"
                             dense
                             solo
                     ></v-text-field>
@@ -90,21 +91,36 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <v-overlay :value="overlay">
+            <v-progress-circular
+                    indeterminate
+                    size="64"
+            ></v-progress-circular>
+        </v-overlay>
     </v-row>
 </template>
 
 <script>
+    import VuePhoneNumberInput from 'vue-phone-number-input';
+    import 'vue-phone-number-input/dist/vue-phone-number-input.css';
+    import axios from 'axios';
     export default {
+        components: {
+            VuePhoneNumberInput
+        },
         props: [
             'places'
         ],
         data(){
             return {
                 dialog: false,
+                overlay: false,
                 first_name: '',
                 phone: '',
                 iin: '',
                 place_id: 0,
+                car_travel_id: 0,
                 place_number: 0,
                 errors: []
             }
@@ -149,6 +165,7 @@
         },
         methods: {
             showOrderPlace(item){
+                this.car_travel_id = item.car_travel_id;
                 this.place_id = item.id;
                 this.place_number = item.number;
                 this.dialog = true;
@@ -166,7 +183,28 @@
                 }
 
                 if (this.errors.length === 0) {
-                    //
+                    this.overlay = true;
+                    let formData = new FormData();
+                    formData.append('car_travel_id', this.car_travel_id);
+                    formData.append('first_name', this.first_name);
+                    formData.append('phone', this.phone);
+                    formData.append('iin', this.iin);
+                    formData.append('place_id', this.place_id);
+                    formData.append('place_number', this.place_number);
+
+                    axios.post(`${this.$apiUrl}cashier/car-travel/${this.car_travel_id}/selling`, formData)
+                    .then(res => {
+                        console.log(res);
+                        this.overlay = false;
+                        this.dialog = false;
+                        this.first_name = '';
+                        this.phone = '';
+                        this.place_id = 0;
+                        this.$parent.getTicketsForToday();
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
                 }
             }
         }
@@ -182,6 +220,7 @@
         text-align: center;
         font-size: 25px;
         color: #fff;
+        cursor: pointer;
     }
     .free_place{
         background-image: url("~@/assets/free_place70.png");
