@@ -1,49 +1,72 @@
 <template>
-    <v-container>
-        <v-row class="text-center">
-            <v-col class="mt-4 mb-4">
-                <v-col class="login__form">
-                    <h1 class="display-2 font-weight-bold mb-3">
-                        Авторизация
-                    </h1>
+    <v-app>
+        <v-container>
+            <v-row class="text-center">
+                <v-col class="mt-4 mb-4">
+                    <v-col class="login__form">
+                        <h1 class="display-2 font-weight-bold mb-3">
+                            Авторизация
+                        </h1>
 
-                    <form>
-                        <v-text-field
-                                v-model="email"
-                                :error-messages="nameErrors"
-                                :counter="10"
-                                label="Логин"
-                                type="email"
-                                required
-                                @input="$v.name.$touch()"
-                                @blur="$v.name.$touch()"
-                        ></v-text-field>
-                        <v-text-field
-                                v-model="password"
-                                :error-messages="nameErrors"
-                                :counter="10"
-                                label="Пароль"
-                                type="password"
-                                required
-                                @input="$v.name.$touch()"
-                                @blur="$v.name.$touch()"
-                        ></v-text-field>
+                        <form>
+                            <v-text-field
+                                    v-model="email"
+                                    :error-messages="nameErrors"
+                                    :counter="10"
+                                    label="Логин"
+                                    type="email"
+                                    required
+                                    @input="$v.name.$touch()"
+                                    @blur="$v.name.$touch()"
+                            ></v-text-field>
+                            <v-text-field
+                                    v-model="password"
+                                    :error-messages="nameErrors"
+                                    :counter="10"
+                                    label="Пароль"
+                                    type="password"
+                                    required
+                                    @input="$v.name.$touch()"
+                                    @blur="$v.name.$touch()"
+                            ></v-text-field>
 
-                        <v-btn
-                                class="mr-4"
-                                @click="submit"
-                        >
-                            Войти
-                        </v-btn>
-                    </form>
+                            <v-row class="mt-2">
+                                <v-col>
+                                    <v-btn
+                                        class="mr-4 deep-purple"
+                                        @click="submit"
+                                    >
+                                        Войти
+                                    </v-btn>
+                                </v-col>
 
-                    <router-link to="/register">
-                        Регистрация
-                    </router-link>
+                                <v-col>
+                                    <v-btn
+                                        class="orange"
+                                        to="/register"
+                                    >
+                                        Регистрация
+                                    </v-btn>
+                                </v-col>
+                            </v-row>
+                        </form>
+
+                        <div v-if="hasError" class="mt-4">
+                            <v-divider></v-divider>
+                            <v-alert
+                                    dense
+                                    border="left"
+                                    type="warning"
+                                    v-if="hasError"
+                            >
+                                {{ errorMessage }}
+                            </v-alert>
+                        </div>
+                    </v-col>
                 </v-col>
-            </v-col>
-        </v-row>
-    </v-container>
+            </v-row>
+        </v-container>
+    </v-app>
 </template>
 
 <script>
@@ -62,6 +85,8 @@
         data: () => ({
             email: '',
             password: '',
+            hasError: false,
+            errorMessage: ''
         }),
 
         computed: {
@@ -89,12 +114,18 @@
                 formData.append('password', this.password)
                 axios.post(`${this.$apiUrl}cashier/login`, formData)
                 .then(res => {
+                    this.hasError = false;
+                    this.errorMessage = '';
                     this.$store.commit('logged')
                     this.$store.commit('setUser', res.data.user)
                     this.$router.push({name: 'Cabinet'})
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.log(err.response)
+                    if (err.response.status === 409 || err.response.status === 400 || err.response.status === 404) {
+                        this.hasError = true;
+                        this.errorMessage = err.response.data;
+                    }
                 })
             },
         },
