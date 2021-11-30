@@ -9,7 +9,8 @@ export default new Vuex.Store({
     user: {
       isAuth: false,
       data: []
-    }
+    },
+    overlay: false
   },
   getters: {
     auth(state) {
@@ -17,6 +18,9 @@ export default new Vuex.Store({
     },
     getUserData(state){
       return state.user.data
+    },
+    getOverlay(state){
+      return state.overlay
     }
   },
   mutations: {
@@ -28,6 +32,9 @@ export default new Vuex.Store({
     },
     setUser(state, user){
       state.user.data = user
+    },
+    setOverlay(state, boolean){
+      state.overlay = boolean
     }
   },
   plugins: [createPersistedState()]

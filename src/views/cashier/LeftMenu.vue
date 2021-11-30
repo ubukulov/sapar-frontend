@@ -81,12 +81,12 @@
         data: () => ({
             intercity: [
                 {
-                    icon: 'mdi-party-popper',
+                    icon: 'mdi-bus-clock',
                     text: 'Плановые поездки',
                     link: '/cashier/intercity'
                 },
                 {
-                    icon: 'mdi-party-popper',
+                    icon: 'mdi-tag-multiple',
                     text: 'Продажа билетов',
                     link: '/cashier/tickets'
                 }

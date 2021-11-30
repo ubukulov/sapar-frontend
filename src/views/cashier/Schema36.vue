@@ -1,11 +1,12 @@
 <template>
-    <v-row>
+    <v-row class="mt-2">
         <v-col cols="3"></v-col>
         <v-col cols="3">
             <v-row>
                 <v-col cols="6" v-for="(item, i) in leftItems" :key="i">
-                    <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place">{{ item.number }}</div>
-                    <div v-if="item.status === 'take'" title="Место уже продано" class="place taken_place">{{ item.number }}</div>
+                    <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place"><span>{{ item.number }}</span></div>
+                    <div v-if="item.status === 'take'" title="Место уже продано" class="place taken_place"><span>{{ item.number }}</span></div>
+                    <div v-if="item.status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ item.number }}</span></div>
                 </v-col>
             </v-row>
         </v-col>
@@ -21,22 +22,24 @@
                 <v-col class="not_place" cols="6"></v-col>
                 <v-col class="not_place" cols="6"></v-col>
                 <v-col cols="6"  v-for="(item, i) in rightItems" :key="i">
-                    <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place">{{ item.number }}</div>
-                    <div v-if="item.status === 'take'" title="Место уже продано" class="place taken_place">{{ item.number }}</div>
+                    <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place"><span>{{ item.number }}</span></div>
+                    <div v-if="item.status === 'take'" title="Место уже продано" class="place taken_place"><span>{{ item.number }}</span></div>
+                    <div v-if="item.status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ item.number }}</span></div>
                 </v-col>
             </v-row>
         </v-col>
 
         <v-col cols="5"></v-col>
-        <v-col cols="6">
+        <v-col cols="6" class="mt-7">
             <v-row>
                 <v-col cols="3"  v-for="(item, i) in bottomItems" :key="i">
-                    <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place">{{ item.number }}</div>
-                    <div v-if="item.status === 'take'" title="Место уже продано" class="place taken_place">{{ item.number }}</div>
+                    <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place"><span>{{ item.number }}</span></div>
+                    <div v-if="item.status === 'take'" title="Место уже продано" class="place taken_place"><span>{{ item.number }}</span></div>
+                    <div v-if="item.status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ item.number }}</span></div>
                 </v-col>
             </v-row>
         </v-col>
-        <v-col cols="3"></v-col>
+        <v-col cols="1"></v-col>
 
         <v-dialog
                 v-model="dialog"
@@ -92,12 +95,7 @@
             </v-card>
         </v-dialog>
 
-        <v-overlay :value="overlay">
-            <v-progress-circular
-                    indeterminate
-                    size="64"
-            ></v-progress-circular>
-        </v-overlay>
+        <WaitingLoader></WaitingLoader>
     </v-row>
 </template>
 
@@ -105,9 +103,11 @@
     import VuePhoneNumberInput from 'vue-phone-number-input';
     import 'vue-phone-number-input/dist/vue-phone-number-input.css';
     import axios from 'axios';
+    import WaitingLoader from "../../dialogs/WaitingLoader";
     export default {
         components: {
-            VuePhoneNumberInput
+            VuePhoneNumberInput,
+            WaitingLoader
         },
         props: [
             'places'
@@ -115,7 +115,6 @@
         data(){
             return {
                 dialog: false,
-                overlay: false,
                 first_name: '',
                 phone: '',
                 iin: '',
@@ -183,7 +182,7 @@
                 }
 
                 if (this.errors.length === 0) {
-                    this.overlay = true;
+                    this.$store.commit('setOverlay', true);
                     let formData = new FormData();
                     formData.append('car_travel_id', this.car_travel_id);
                     formData.append('first_name', this.first_name);
@@ -195,12 +194,11 @@
                     axios.post(`${this.$apiUrl}cashier/car-travel/${this.car_travel_id}/selling`, formData)
                     .then(res => {
                         console.log(res);
-                        this.overlay = false;
+                        this.$store.commit('setOverlay', false);
                         this.dialog = false;
                         this.first_name = '';
                         this.phone = '';
                         this.place_id = 0;
-                        this.$parent.getTicketsForToday();
                     })
                     .catch(err => {
                         console.log(err)
@@ -227,6 +225,9 @@
     }
     .taken_place{
         background-image: url("~@/assets/taken_place70.png");
+    }
+    .process_place {
+        background-image: url("~@/assets/in_process_place70.png");
     }
 
     .not_place {

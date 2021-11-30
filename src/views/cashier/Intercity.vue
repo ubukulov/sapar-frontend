@@ -117,12 +117,7 @@
 
             <router-view></router-view>
 
-            <v-overlay :value="overlay">
-                <v-progress-circular
-                        indeterminate
-                        size="64"
-                ></v-progress-circular>
-            </v-overlay>
+            <WaitingLoader></WaitingLoader>
 
         </v-row>
     </div>
@@ -130,7 +125,11 @@
 
 <script>
     import axios from 'axios'
+    import WaitingLoader from "../../dialogs/WaitingLoader";
     export default {
+        components: {
+            WaitingLoader
+        },
         data(){
             return {
                 travels: [],
@@ -140,10 +139,10 @@
         },
         methods: {
             getTravels(){
-                this.overlay = true;
+                this.$store.commit('setOverlay', true);
                 axios.get(`${this.$apiUrl}cashier/get-travels-upcoming`)
                 .then(res => {
-                    this.overlay = false;
+                    this.$store.commit('setOverlay', false);
                     this.travels = res.data;
                     console.log(this.travels)
                 })

@@ -5,27 +5,28 @@
             background-color="deep-purple accent-4"
             dark
             icons-and-text
+            class="mt-2"
         >
             <v-tabs-slider></v-tabs-slider>
 
             <v-tab href="#tab-1">
                 Сегодняшние
-                <v-icon>mdi-phone</v-icon>
+                <v-icon>mdi-calendar-today</v-icon>
             </v-tab>
 
             <v-tab href="#tab-2">
                 Запланированные
-                <v-icon>mdi-heart</v-icon>
+                <v-icon>mdi-calendar-clock</v-icon>
             </v-tab>
 
             <v-tab href="#tab-3">
                 Проданные билеты
-                <v-icon>mdi-account-box</v-icon>
+                <v-icon>mdi-ticket</v-icon>
             </v-tab>
 
             <v-tab href="#tab-4">
                 Возврат билета
-                <v-icon>mdi-account-box</v-icon>
+                <v-icon>mdi-keyboard-return</v-icon>
             </v-tab>
         </v-tabs>
 
@@ -33,15 +34,27 @@
             <v-tab-item :value="'tab-1'">
                 <TodayTickets></TodayTickets>
             </v-tab-item>
+
+            <v-tab-item :value="'tab-2'">
+                <!--<PlannedTickets></PlannedTickets>-->
+            </v-tab-item>
+
+            <v-tab-item :value="'tab-3'">
+                <SoldTickets></SoldTickets>
+            </v-tab-item>
         </v-tabs-items>
     </v-card>
 </template>
 
 <script>
     import TodayTickets from "./TodayTickets";
+    import SoldTickets from "./SoldTickets";
+    //import PlannedTickets from "./PlannedTickets";
     export default {
         components: {
             TodayTickets,
+            SoldTickets,
+            //PlannedTickets
         },
         data() {
             return {

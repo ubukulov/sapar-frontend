@@ -66,6 +66,8 @@
                 </v-col>
             </v-row>
         </v-container>
+
+        <WaitingLoader></WaitingLoader>
     </v-app>
 </template>
 
@@ -73,8 +75,12 @@
     import { validationMixin } from 'vuelidate'
     import {required, maxLength, email} from 'vuelidate/lib/validators'
     import axios from 'axios'
+    import WaitingLoader from "../dialogs/WaitingLoader";
 
     export default {
+        components: {
+            WaitingLoader
+        },
         mixins: [validationMixin],
 
         validations: {
@@ -86,7 +92,7 @@
             email: '',
             password: '',
             hasError: false,
-            errorMessage: ''
+            errorMessage: '',
         }),
 
         computed: {
@@ -112,9 +118,11 @@
                 let formData = new FormData()
                 formData.append('email', this.email)
                 formData.append('password', this.password)
+                this.$store.commit('setOverlay', true);
                 axios.post(`${this.$apiUrl}cashier/login`, formData)
                 .then(res => {
                     this.hasError = false;
+                    this.$store.commit('setOverlay', false);
                     this.errorMessage = '';
                     this.$store.commit('logged')
                     this.$store.commit('setUser', res.data.user)
@@ -125,6 +133,7 @@
                     if (err.response.status === 409 || err.response.status === 400 || err.response.status === 404) {
                         this.hasError = true;
                         this.errorMessage = err.response.data;
+                        this.$store.commit('setOverlay', false);
                     }
                 })
             },

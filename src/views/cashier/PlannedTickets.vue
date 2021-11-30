@@ -65,7 +65,7 @@
         <v-row>
             <v-col cols="7">
                 <v-card-title>
-                    Билеты на сегодня
+                    Запланированные билеты
                     <v-spacer></v-spacer>
                     <v-text-field
                             v-model="search"
@@ -83,7 +83,6 @@
                         loading-text="Загружается... Пожалуйста подождите"
                         @click:row="showItemData"
                 >
-
                     <template v-slot:item.place = "{ item }">
                         {{ item.count_free_places }} / {{ item.car.car_type_count_places }}
                     </template>
@@ -100,23 +99,19 @@
 
             <v-col cols="4" style="padding-bottom: 40px;">
                 <Schema36
-                    :places="placesForRoute"
+                        :places="placesForRoute"
                 ></Schema36>
             </v-col>
         </v-row>
-
-        <WaitingLoader></WaitingLoader>
     </v-card>
 </template>
 
 <script>
     import axios from 'axios'
     import Schema36 from "./Schema36";
-    import WaitingLoader from "../../dialogs/WaitingLoader";
     export default {
         components: {
-            Schema36,
-            WaitingLoader
+            Schema36
         },
         data(){
             return {
@@ -142,7 +137,6 @@
                     { text: 'Фирмы', value: 'company_car.company.title' },
                     { text: 'Место', value: 'place' },
                     { text: 'Цена', value: 'price' },
-                    { text: 'Дата отправление', value: 'departure_date' },
                     { text: 'Время', value: 'departure_time' },
                 ],
                 items: [],
@@ -176,28 +170,24 @@
                 this.getPlacesForRoute(item.id);
             },
             getTicketsForToday(){
-                this.$store.commit('setOverlay', true);
                 axios.get(`${this.$apiUrl}cashier/tickets/get-tickets-for-today`)
-                .then(res => {
-                    this.$store.commit('setOverlay', false);
-                    this.items = res.data;
-                    this.getPlacesForRoute(this.items[0].id);
-                    console.log(res.data)
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+                    .then(res => {
+                        this.items = res.data;
+                        this.getPlacesForRoute(this.items[0].id);
+                        console.log(res.data)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
             },
             getPlacesForRoute(car_travel_id){
-                this.$store.commit('setOverlay', true);
                 axios.get(`${this.$apiUrl}cashier/car-travel/${car_travel_id}/get-all-places-for-route`)
-                .then(res => {
-                    this.$store.commit('setOverlay', false);
-                    this.placesForRoute = res.data;
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+                    .then(res => {
+                        this.placesForRoute = res.data;
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
             }
         },
         created() {
@@ -207,9 +197,6 @@
     }
 </script>
 
-<style>
-.active_bg {
-    background: green;
-    color: #fff;
-}
+<style scoped>
+
 </style>

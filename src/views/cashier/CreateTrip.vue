@@ -303,12 +303,7 @@
             </v-card>
         </v-dialog>
 
-        <v-overlay :value="overlay">
-            <v-progress-circular
-                    indeterminate
-                    size="64"
-            ></v-progress-circular>
-        </v-overlay>
+        <WaitingLoader></WaitingLoader>
     </div>
 </template>
 
@@ -318,9 +313,11 @@
     import 'vue-datetime/dist/vue-datetime.css'
     import 'bootstrap/dist/css/bootstrap.css'
     import 'bootstrap-vue/dist/bootstrap-vue.css'
+    import WaitingLoader from "../../dialogs/WaitingLoader";
     export default {
         components: {
-            datetime: Datetime
+            datetime: Datetime,
+            WaitingLoader
         },
         data(){
             return {
@@ -347,7 +344,6 @@
                 to_station_id: 0,
                 dialog: false,
                 errors: [],
-                overlay: false,
             }
         },
         methods: {
@@ -414,7 +410,7 @@
             },
             createTrip(){
                 if(this.errors.length === 0) {
-                    this.overlay = true;
+                    this.$store.commit('setOverlay', true);
                     let formData = new FormData();
                     formData.append('company_id', this.company_id);
                     formData.append('car_id', this.car_id);
@@ -429,7 +425,7 @@
                     axios.post(`${this.$apiUrl}cashier/create-trip`, formData)
                         .then(res => {
                             console.log(res)
-                            this.overlay = false;
+                            this.$store.commit('setOverlay', false);
                             this.dialog = true;
                         })
                         .catch(err => {
@@ -454,10 +450,10 @@
                         this.errors.push('Выберите машину/автобус');
                     }
                     if (this.errors.length === 0) {
-                        this.overlay = true;
+                        this.$store.commit('setOverlay', true);
                         axios.get(`${this.$apiUrl}cashier/car/${this.car_id}/get-info`)
                         .then(res => {
-                            this.overlay = false;
+                            this.$store.commit('setOverlay', false);
                             this.car = res.data;
                             this.e1 = 2;
                             console.log('car', this.car)
