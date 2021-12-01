@@ -29,6 +29,7 @@ export default new Vuex.Store({
     },
     logout(state){
       state.user.isAuth = false
+      state.overlay = false;
     },
     setUser(state, user){
       state.user.data = user

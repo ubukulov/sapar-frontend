@@ -3,20 +3,12 @@
         <v-col cols="12">
             <v-card>
                 <v-card-title>
-                    Проданные билеты
+                    Заявки на возврат билета
                     <v-spacer></v-spacer>
-                    <v-select
-                            :items="filters"
-                            :hint="`${filters.id}, ${filters.title}`"
-                            item-value="id"
-                            v-model="filter_id"
-                            item-text="title"
-                            @change="getTicketsByFilterId()"
-                    ></v-select>
                 </v-card-title>
 
                 <v-data-table
-                        :items="actualSoldTicketsForToday"
+                        :items="actualReturnTicketsForToday"
                         :headers="headers"
                         :search="search"
                         :loading="isLoaded"
@@ -25,16 +17,6 @@
                     <template v-slot:item.dt = "{ item }">
                         {{ item.dep_date }} / {{ item.dep_time }}
                     </template>
-
-                    <template v-slot:item.print="{ item }">
-                        <v-icon
-                            title="Распечатать билет"
-                            middle
-                            @click="showPrintTicketWindow(item)"
-                        >
-                            mdi-printer
-                        </v-icon>
-                    </template>
                 </v-data-table>
             </v-card>
         </v-col>
@@ -42,9 +24,9 @@
         <WaitingLoader></WaitingLoader>
 
         <v-dialog
-            v-model="dialog"
-            persistent
-            max-width="375"
+                v-model="dialog"
+                persistent
+                max-width="375"
         >
             <v-card>
                 <v-card-text id="ticket" class="print_tickets_block">
@@ -87,9 +69,9 @@
 
                             <div>
                                 <VueBarcode
-                                    :value="ticket.id"
-                                    height="50"
-                                    display-value="false"
+                                        :value="ticket.id"
+                                        height="50"
+                                        display-value="false"
                                 ></VueBarcode>
                             </div>
                         </v-col>
@@ -97,15 +79,15 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-btn
-                        color="btn gray"
-                        @click="dialog = false"
+                            color="btn gray"
+                            @click="dialog = false"
                     >
                         Отмена
                     </v-btn>
                     <v-spacer></v-spacer>
                     <v-btn
-                        color="green darken-1"
-                        @click="printTicket()"
+                            color="green darken-1"
+                            @click="printTicket()"
                     >
                         Печать
                     </v-btn>
@@ -128,7 +110,7 @@
         },
         data(){
             return {
-                actualSoldTicketsForToday: [],
+                actualReturnTicketsForToday: [],
                 headers: [
                     {
                         text: 'Номер машины',
@@ -145,94 +127,60 @@
                     {text: 'Имя', value: 'first_name'},
                     {text: 'Телефон', value: 'phone'},
                     {text: 'ИИН', value: 'iin'},
-                    {text: 'Печать', value: 'print'},
+                    {text: 'Причина возврата', value: 'reason_for_return'},
                 ],
                 isLoaded: false,
                 dialog: false,
                 search: '',
-                filters: [
-                    {
-                        'title': 'Актуальные билеты',
-                        'id': 0
-                    },
-                    {
-                        'title': 'Запланированные билеты',
-                        'id': 1
-                    },
-                    {
-                        'title': 'История',
-                        'id': 2
-                    },
-                ],
-                filter_id: 0,
                 ticket: [],
             }
         },
         methods: {
-            getActualSoldTicketsForToday(){
-                axios.get(`${this.$apiUrl}cashier/tickets/get-sold-tickets-for-today`)
-                .then(res => {
-                    this.actualSoldTicketsForToday = res.data;
-                    console.log('ac', res.data)
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+            getActualReturnTicketsForToday(){
+                axios.get(`${this.$apiUrl}cashier/tickets/get-return-tickets`)
+                    .then(res => {
+                        this.actualReturnTicketsForToday = res.data;
+                        console.log('ac', res.data)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
             },
-            getTicketsByFilterId(){
-                this.actualSoldTicketsForToday = [];
-                this.$store.commit('setOverlay', true);
-                axios.get(`${this.$apiUrl}cashier/tickets/${this.filter_id}/get-tickets-by-filter`)
-                .then(res => {
-                    this.$store.commit('setOverlay', false);
-                    this.actualSoldTicketsForToday = res.data;
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-            },
-            showPrintTicketWindow(item) {
-                this.ticket = item;
-                this.dialog = true;
-            },
-            printTicket(){
-                this.$htmlToPaper('ticket');
-            }
         },
         created() {
-            this.getActualSoldTicketsForToday();
+            this.getActualReturnTicketsForToday();
         }
     }
 </script>
 
 <style scoped>
-.print_tickets_block {
-    font-weight: bold;
-    font-size: 18px;
-    padding: 30px 25px !important;
-}
-@media screen {
-    /*#print {
-        display: none;
-    }*/
-}
-
-@media print {
-    body * {
-        visibility:hidden;
+    .print_tickets_block {
+        font-weight: bold;
+        font-size: 18px;
+        padding: 30px 25px !important;
+    }
+    @media screen {
+        /*#print {
+            display: none;
+        }*/
     }
 
-    #print, #print * {
-        visibility:visible;
-        font-size: 30px;
+    @media print {
+        body * {
+            visibility:hidden;
+        }
+
+        #print, #print * {
+            visibility:visible;
+            font-size: 30px;
+        }
+        #print {
+            position:relative;
+            left:0;
+            top:0;
+        }
+        @page {
+            size: landscape
+        }
     }
-    #print {
-        position:relative;
-        left:0;
-        top:0;
-    }
-    @page {
-        size: landscape
-    }
-}
 </style>

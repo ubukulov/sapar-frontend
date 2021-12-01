@@ -352,6 +352,31 @@
                 if ((this.to_place > this.car.car_type.count_places) || (this.from_place > this.car.car_type.count_places)) {
                     this.errors.push(`Максимальное количество место: ${this.car.car_type.count_places}`)
                 }
+
+                if (this.from_place === null || this.to_place === null) {
+                    this.errors.push('Укажите место правильно')
+                }
+
+                if (this.price === null || this.price === '') {
+                    this.errors.push('Укажите цену')
+                }
+
+                if (this.price_places.length !== 0) {
+                    for(let i=0; i<this.price_places.length; i++) {
+                        if (parseInt(this.from_place) >= parseInt(this.price_places[i].from) && parseInt(this.from_place) <= parseInt(this.price_places[i].to)) {
+                            this.errors.push(`Место: ${this.from_place} уже указано ранее`);
+                        }
+
+                        if (parseInt(this.to_place) <= parseInt(this.price_places[i].to)) {
+                            this.errors.push(`Место: ${this.to_place} уже указано ранее`);
+                        }
+
+                        if (parseInt(this.from_place) === parseInt(this.to_place)) {
+                            this.errors.push(`Место - ${this.from_place} и место ${this.to_place} не должно быть равно`);
+                        }
+                    }
+                }
+
                 if (this.errors.length === 0) {
                     let arr = {};
                     arr.from = this.from_place;

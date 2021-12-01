@@ -137,6 +137,7 @@
                     { text: 'Фирмы', value: 'company_car.company.title' },
                     { text: 'Место', value: 'place' },
                     { text: 'Цена', value: 'price' },
+                    { text: 'Дата отправление', value: 'departure_date' },
                     { text: 'Время', value: 'departure_time' },
                 ],
                 items: [],
@@ -169,8 +170,8 @@
             showItemData(item){
                 this.getPlacesForRoute(item.id);
             },
-            getTicketsForToday(){
-                axios.get(`${this.$apiUrl}cashier/tickets/get-tickets-for-today`)
+            getTicketsForNextDays(){
+                axios.get(`${this.$apiUrl}cashier/tickets/get-tickets-for-next-days`)
                     .then(res => {
                         this.items = res.data;
                         this.getPlacesForRoute(this.items[0].id);
@@ -192,7 +193,7 @@
         },
         created() {
             this.getCities();
-            this.getTicketsForToday();
+            this.getTicketsForNextDays();
         }
     }
 </script>

@@ -36,11 +36,15 @@
             </v-tab-item>
 
             <v-tab-item :value="'tab-2'">
-                <!--<PlannedTickets></PlannedTickets>-->
+                <PlannedTickets></PlannedTickets>
             </v-tab-item>
 
             <v-tab-item :value="'tab-3'">
                 <SoldTickets></SoldTickets>
+            </v-tab-item>
+
+            <v-tab-item :value="'tab-4'">
+                <ReturnTickets></ReturnTickets>
             </v-tab-item>
         </v-tabs-items>
     </v-card>
@@ -49,12 +53,14 @@
 <script>
     import TodayTickets from "./TodayTickets";
     import SoldTickets from "./SoldTickets";
-    //import PlannedTickets from "./PlannedTickets";
+    import PlannedTickets from "./PlannedTickets";
+    import ReturnTickets from "./ReturnTickets";
     export default {
         components: {
             TodayTickets,
             SoldTickets,
-            //PlannedTickets
+            PlannedTickets,
+            ReturnTickets
         },
         data() {
             return {
