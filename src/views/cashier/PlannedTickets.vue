@@ -108,7 +108,7 @@
 
 <script>
     import axios from 'axios'
-    import Schema36 from "./Schema36";
+    import Schema36 from "./Schemes/Schema36";
     export default {
         components: {
             Schema36

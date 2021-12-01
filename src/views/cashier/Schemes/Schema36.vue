@@ -1,5 +1,37 @@
 <template>
     <v-row class="mt-2">
+        <v-row>
+            <v-col cols="6">
+                <v-row>
+                    <v-col cols="6" v-for="(item, i) in firstBlocks" :key="i" :class="'schema36_2div'+i">
+                        <div class="place free_place">
+                            <span v-if="item.number > 32 && item.number < 35">0 <v-icon>mdi-arrow-down</v-icon></span>
+                            <span v-if="item.number > 34 && item.number < 37">0 <v-icon>mdi-arrow-up</v-icon></span>
+                        </div>
+                    </v-col>
+                </v-row>
+            </v-col>
+
+            <v-col cols="4" class="text-right" style="padding-top: 65px;">
+                <div>Выход</div>
+                <div><v-icon>mdi-arrow-right</v-icon></div>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="3" v-for="(item, i) in secondBlocks" :key="i" :class="'schema36_div'+i">
+                <div class="place free_place"><span>{{ item.number }}</span></div>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="3" v-for="(item, i) in thirdBlocks" :key="i" :class="'schema36_div'+i">
+                <div class="place free_place"><span>{{ item.number }}</span></div>
+            </v-col>
+        </v-row>
+
+
+
         <v-col cols="3"></v-col>
         <v-col cols="3">
             <v-row>
@@ -142,7 +174,7 @@
     import VuePhoneNumberInput from 'vue-phone-number-input';
     import 'vue-phone-number-input/dist/vue-phone-number-input.css';
     import axios from 'axios';
-    import WaitingLoader from "../../dialogs/WaitingLoader";
+    import WaitingLoader from "../../../dialogs/WaitingLoader";
     export default {
         components: {
             VuePhoneNumberInput,
@@ -166,7 +198,43 @@
             }
         },
         computed: {
-            leftItems(){
+            firstBlocks(){
+                let items = [];
+                let places = [33,34,35,36];
+                items = this.places.filter(function(item){
+                    for(let i = 0; i<places.length; i++) {
+                        if (places[i] === item.number) {
+                            return item.number;
+                        }
+                    }
+                })
+                return items;
+            },
+            secondBlocks(){
+                let items = [];
+                let places = [1,2,3,4,5,6,7,8,9,10,11,12,17,18,19,20,21,22,23,24,25,26,27,28];
+                items = this.places.filter(function(item){
+                    for(let i = 0; i<places.length; i++) {
+                        if (places[i] === item.number) {
+                            return item.number;
+                        }
+                    }
+                })
+                return items;
+            },
+            thirdBlocks(){
+                let items = [];
+                let places = [13,14,15,16,29,30,31,32];
+                items = this.places.filter(function(item){
+                    for(let i = 0; i<places.length; i++) {
+                        if (places[i] === item.number) {
+                            return item.number;
+                        }
+                    }
+                })
+                return items;
+            },
+            /*leftItems(){
                 let leftItems = [];
                 let places = [1,17,3,5,7,9,11,19,21,23,25,27,33,34,35,36];
                 leftItems = this.places.filter(function(item){
@@ -201,7 +269,7 @@
                     }
                 })
                 return bottomItems;
-            }
+            }*/
         },
         methods: {
             showOrderPlace(item){
@@ -295,30 +363,21 @@
 </script>
 
 <style scoped>
-    .place {
-        width: 70px;
-        height: 70px;
-        background-position: center;
-        background-size: contain;
-        text-align: center;
-        font-size: 25px;
-        color: #fff;
-        cursor: pointer;
-    }
-    .free_place{
-        background-image: url("~@/assets/free_place70.png");
-    }
-    .taken_place{
-        background-image: url("~@/assets/taken_place70.png");
-    }
-    .process_place {
-        background-image: url("~@/assets/in_process_place70.png");
+    .schema36_div1,.schema36_div5,.schema36_div9,.schema36_div13,.schema36_div17,.schema36_div21,.schema36_div25,.schema36_div29,.schema36_div33,.schema36_div37,.schema36_div41,.schema36_div45,.schema36_div49,
+    .schema36_div53,.schema36_div57,.schema36_div61{
+        margin-left: -60px;
     }
 
-    .not_place {
-        height: 70px;
+    .schema36_div2,.schema36_div6,.schema36_div10,.schema36_div14,.schema36_div18,.schema36_div22,.schema36_div26,.schema36_div30,.schema36_div34,
+    .schema36_div38,.schema36_div42,.schema36_div46,.schema36_div50,.schema36_div54,.schema36_div58 {
+        margin-left: 70px;
     }
-    .col {
-        padding: 0 !important;
+
+    .schema36_div3,.schema36_div7,.schema36_div11,.schema36_div15,.schema36_div19,.schema36_div23,.schema36_div27,.schema36_div31,.schema36_div35,
+    .schema36_div39,.schema36_div43,.schema36_div47,.schema36_div51,.schema36_div55,.schema36_div59{
+        margin-left: -60px;
+    }
+    .schema36_2div1,.schema36_2div3{
+        margin-left: -60px;
     }
 </style>
