@@ -98,20 +98,60 @@
             </v-col>
 
             <v-col cols="4" style="padding-bottom: 40px;">
+                <Schema4
+                        v-if="Object.keys(selected_item).length > 0 && selected_item.car.car_type_count_places === 4"
+                        :places="placesForRoute"
+                ></Schema4>
+
+                <Schema6
+                        v-if="Object.keys(selected_item).length > 0 && selected_item.car.car_type_count_places === 6"
+                        :places="placesForRoute"
+                ></Schema6>
+
+                <Schema7
+                        v-if="Object.keys(selected_item).length > 0 && selected_item.car.car_type_count_places === 7"
+                        :places="placesForRoute"
+                ></Schema7>
+
                 <Schema36
+                        v-if="Object.keys(selected_item).length > 0 && selected_item.car.car_type_count_places === 36"
                         :places="placesForRoute"
                 ></Schema36>
+
+                <Schema53
+                        v-if="Object.keys(selected_item).length > 0 && selected_item.car.car_type_count_places === 53"
+                        :places="placesForRoute"
+                ></Schema53>
+
+                <Schema62
+                        v-if="Object.keys(selected_item).length > 0 && selected_item.car.car_type_count_places === 62"
+                        :places="placesForRoute"
+                ></Schema62>
             </v-col>
         </v-row>
+
+        <WaitingLoader></WaitingLoader>
     </v-card>
 </template>
 
 <script>
     import axios from 'axios'
+    import Schema4 from "./Schemes/Schema4";
+    import Schema6 from "./Schemes/Schema6";
+    import Schema7 from "./Schemes/Schema7";
     import Schema36 from "./Schemes/Schema36";
+    import Schema53 from "./Schemes/Schema53";
+    import Schema62 from "./Schemes/Schema62";
+    import WaitingLoader from "../../dialogs/WaitingLoader";
     export default {
         components: {
-            Schema36
+            Schema4,
+            Schema6,
+            Schema7,
+            Schema36,
+            Schema53,
+            Schema62,
+            WaitingLoader
         },
         data(){
             return {
@@ -141,6 +181,7 @@
                     { text: 'Время', value: 'departure_time' },
                 ],
                 items: [],
+                selected_item: [],
                 placesForRoute: [],
             }
         },
@@ -168,25 +209,32 @@
                     })
             },
             showItemData(item){
+                this.selected_item = item;
                 this.getPlacesForRoute(item.id);
             },
             getTicketsForNextDays(){
+                this.$store.commit('setOverlay', true);
                 axios.get(`${this.$apiUrl}cashier/tickets/get-tickets-for-next-days`)
                     .then(res => {
+                        this.$store.commit('setOverlay', false);
                         this.items = res.data;
                         this.getPlacesForRoute(this.items[0].id);
                         console.log(res.data)
                     })
                     .catch(err => {
+                        this.$store.commit('setOverlay', false);
                         console.log(err)
                     })
             },
             getPlacesForRoute(car_travel_id){
+                this.$store.commit('setOverlay', true);
                 axios.get(`${this.$apiUrl}cashier/car-travel/${car_travel_id}/get-all-places-for-route`)
                     .then(res => {
+                        this.$store.commit('setOverlay', false);
                         this.placesForRoute = res.data;
                     })
                     .catch(err => {
+                        this.$store.commit('setOverlay', false);
                         console.log(err)
                     })
             }

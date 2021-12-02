@@ -175,6 +175,8 @@
                     formData.append('first_name', this.first_name);
                     formData.append('place_id', this.place_id);
                     formData.append('place_number', this.place_number);
+                    formData.append('phone', this.phone);
+                    formData.append('iin', this.iin);
 
                     axios.post(`${this.$apiUrl}cashier/car-travel/${this.car_travel_id}/selling`, formData)
                         .then(res => {

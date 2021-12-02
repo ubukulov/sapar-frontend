@@ -208,51 +208,6 @@
             </v-col>
         </v-row>
 
-
-
-
-
-        <v-col cols="3"></v-col>
-        <v-col cols="3">
-            <v-row>
-                <v-col cols="6" v-for="(item, i) in leftItems" :key="i">
-                    <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place"><span>{{ item.number }}</span></div>
-                    <div v-if="item.status === 'take'" @click="showReturnPlace(item)" title="Место уже продано" class="place taken_place"><span>{{ item.number }}</span></div>
-                    <div v-if="item.status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ item.number }}</span></div>
-                </v-col>
-            </v-row>
-        </v-col>
-
-        <v-col cols="3">
-
-        </v-col>
-
-        <v-col cols="3">
-            <v-row>
-                <v-col class="not_place" cols="6"></v-col>
-                <v-col class="not_place" cols="6"></v-col>
-                <v-col class="not_place" cols="6"></v-col>
-                <v-col class="not_place" cols="6"></v-col>
-                <v-col cols="6"  v-for="(item, i) in rightItems" :key="i">
-                    <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place"><span>{{ item.number }}</span></div>
-                    <div v-if="item.status === 'take'" @click="showReturnPlace(item)" title="Место уже продано" class="place taken_place"><span>{{ item.number }}</span></div>
-                    <div v-if="item.status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ item.number }}</span></div>
-                </v-col>
-            </v-row>
-        </v-col>
-
-        <v-col cols="5"></v-col>
-        <v-col cols="6" class="mt-7">
-            <v-row>
-                <v-col cols="3"  v-for="(item, i) in bottomItems" :key="i">
-                    <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place"><span>{{ item.number }}</span></div>
-                    <div v-if="item.status === 'take'" @click="showReturnPlace(item)" title="Место уже продано" class="place taken_place"><span>{{ item.number }}</span></div>
-                    <div v-if="item.status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ item.number }}</span></div>
-                </v-col>
-            </v-row>
-        </v-col>
-        <v-col cols="1"></v-col>
-
         <v-dialog
                 v-model="dialog"
                 persistent
@@ -486,42 +441,6 @@
                 })
                 return items;
             },
-            /*leftItems(){
-                let leftItems = [];
-                let places = [1,17,3,5,7,9,11,19,21,23,25,27,33,34,35,36];
-                leftItems = this.places.filter(function(item){
-                    for(let i = 0; i<places.length; i++) {
-                        if (places[i] === item.number) {
-                            return item.number;
-                        }
-                    }
-                })
-                return leftItems;
-            },
-            rightItems(){
-                let rightItems = [];
-                let places = [2,4,6,8,10,12,18,20,22,24,26,28];
-                rightItems = this.places.filter(function(item){
-                    for(let i = 0; i<places.length; i++) {
-                        if (places[i] === item.number) {
-                            return item.number;
-                        }
-                    }
-                })
-                return rightItems;
-            },
-            bottomItems(){
-                let bottomItems = [];
-                let places = [13,14,15,16,29,30,31,32];
-                bottomItems = this.places.filter(function(item){
-                    for(let i = 0; i<places.length; i++) {
-                        if (places[i] === item.number) {
-                            return item.number;
-                        }
-                    }
-                })
-                return bottomItems;
-            }*/
         },
         methods: {
             showOrderPlace(item){
@@ -558,6 +477,8 @@
                     formData.append('first_name', this.first_name);
                     formData.append('place_id', this.place_id);
                     formData.append('place_number', this.place_number);
+                    formData.append('phone', this.phone);
+                    formData.append('iin', this.iin);
 
                     axios.post(`${this.$apiUrl}cashier/car-travel/${this.car_travel_id}/selling`, formData)
                     .then(res => {
@@ -567,9 +488,6 @@
                         this.first_name = '';
                         this.phone = '';
                         this.place_id = 0;
-                        //this.$parent.getTicketsForToday();
-                        //this.$emit('get-tickets-for-today')
-                        //this.$router.push({name: 'Ticket'}).catch(()=>{});
                         window.location.href = '/cashier/tickets';
                     })
                     .catch(err => {

@@ -100,14 +100,11 @@
                     </v-card-text>
 
                     <v-card-actions>
-                        <v-btn
-                                color="red lighten-2"
-                        >
-                            Удалить
-                        </v-btn>
+
                         <v-spacer></v-spacer>
                         <v-btn
-                                color="deep-purple lighten-2"
+                            color="deep-purple lighten-2"
+                            to="/cashier/tickets" link
                         >
                             Посмотреть
                         </v-btn>

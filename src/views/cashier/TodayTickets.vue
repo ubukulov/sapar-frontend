@@ -1,67 +1,5 @@
 <template>
     <v-card style="padding: 10px;">
-        <!--<v-row>
-            <v-col cols="2">
-                <v-select
-                        :items="cities"
-                        label="Выберите город"
-                        :hint="`${cities.id}, ${cities.name}`"
-                        item-value="id"
-                        v-model="from_city_id"
-                        prepend-icon="mdi-map-marker"
-                        item-text="name"
-                        @change="getStationsForCity(from_city_id)"
-                        dense
-                        solo
-                ></v-select>
-            </v-col>
-
-            <v-col cols="2">
-                <v-select
-                        :items="stations1"
-                        label="Выберите станцию"
-                        :hint="`${stations1.id}, ${stations1.name}`"
-                        item-value="id"
-                        v-model="from_station_id"
-                        prepend-icon="mdi-location"
-                        item-text="name"
-                        dense
-                        solo
-                ></v-select>
-            </v-col>
-        </v-row>
-
-        <v-row>
-            <v-col cols="2">
-                <v-select
-                        :items="cities"
-                        label="Выберите город"
-                        :hint="`${cities.id}, ${cities.name}`"
-                        item-value="id"
-                        v-model="to_city_id"
-                        prepend-icon="mdi-flag"
-                        item-text="name"
-                        @change="getStationsForCity(to_city_id, true)"
-                        dense
-                        solo
-                ></v-select>
-            </v-col>
-
-            <v-col cols="2">
-                <v-select
-                        :items="stations2"
-                        label="Выберите станцию"
-                        :hint="`${stations2.id}, ${stations2.name}`"
-                        item-value="id"
-                        v-model="to_station_id"
-                        prepend-icon="mdi-location"
-                        item-text="name"
-                        dense
-                        solo
-                ></v-select>
-            </v-col>
-        </v-row>-->
-
         <v-row>
             <v-col cols="7">
                 <v-card-title>
@@ -219,9 +157,11 @@
                 .then(res => {
                     this.$store.commit('setOverlay', false);
                     this.items = res.data;
+                    this.getPlacesForRoute(this.items[0].id);
                     console.log(res.data)
                 })
                 .catch(err => {
+                    this.$store.commit('setOverlay', false);
                     console.log(err)
                 })
             },
@@ -233,6 +173,7 @@
                     this.placesForRoute = res.data;
                 })
                 .catch(err => {
+                    this.$store.commit('setOverlay', false);
                     console.log(err)
                 })
             }
