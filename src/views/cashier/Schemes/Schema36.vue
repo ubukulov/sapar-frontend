@@ -4,15 +4,15 @@
             <v-col cols="6">
                 <v-row v-if="firstBlocks.length > 0">
                     <v-col cols="6" v-for="(item, i) in firstBlocks" :key="i" :class="'schema36_2div'+i">
-                        <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place">
+                        <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place" :class="checkForUpperOrLowerPlace(item.number)">
                             <span v-if="item.number > 32 && item.number < 35">0 <v-icon>mdi-arrow-down</v-icon></span>
                             <span v-if="item.number > 34 && item.number < 37">0 <v-icon>mdi-arrow-up</v-icon></span>
                         </div>
-                        <div v-if="item.status === 'take'" title="Место уже продано" @click="showReturnPlace(item)" class="place taken_place">
+                        <div v-if="item.status === 'take'" title="Место уже продано" @click="showReturnPlace(item)" class="place taken_place" :class="checkForUpperOrLowerPlace(item.number)">
                             <span v-if="item.number > 32 && item.number < 35">0 <v-icon>mdi-arrow-down</v-icon></span>
                             <span v-if="item.number > 34 && item.number < 37">0 <v-icon>mdi-arrow-up</v-icon></span>
                         </div>
-                        <div v-if="item.status === 'in_process'" title="Место уже на броне" class="place process_place">
+                        <div v-if="item.status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(item.number)">
                             <span v-if="item.number > 32 && item.number < 35">0 <v-icon>mdi-arrow-down</v-icon></span>
                             <span v-if="item.number > 34 && item.number < 37">0 <v-icon>mdi-arrow-up</v-icon></span>
                         </div>
@@ -28,183 +28,183 @@
 
         <v-row v-if="fourthBlocks.length > 0">
             <v-col cols="3" class="schema36_div0">
-                <div v-if="fourthBlocks[0].status === 'free'" @click="showOrderPlace(fourthBlocks[0])" class="place free_place"><span>{{ fourthBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks[0].status === 'take'" @click="showReturnPlace(fourthBlocks[0])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks[0].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks[0].status === 'free'" @click="showOrderPlace(fourthBlocks[0])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks[0].number)"><span>{{ fourthBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks[0].status === 'take'" @click="showReturnPlace(fourthBlocks[0])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks[0].number)"><span>{{ fourthBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks[0].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks[0].number)"><span>{{ fourthBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div2">
-                <div v-if="fourthBlocks[2].status === 'free'" @click="showOrderPlace(fourthBlocks[2])" class="place free_place"><span>{{ fourthBlocks[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks[2].status === 'take'" @click="showReturnPlace(fourthBlocks[2])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks[2].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks[2].status === 'free'" @click="showOrderPlace(fourthBlocks[2])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks[2].number)"><span>{{ fourthBlocks[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks[2].status === 'take'" @click="showReturnPlace(fourthBlocks[2])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks[2].number)"><span>{{ fourthBlocks[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks[2].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks[2].number)"><span>{{ fourthBlocks[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div3">
-                <div v-if="fourthBlocks[1].status === 'free'" @click="showOrderPlace(fourthBlocks[1])" class="place free_place"><span>{{ fourthBlocks[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks[1].status === 'take'" @click="showReturnPlace(fourthBlocks[1])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks[1].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks[1].status === 'free'" @click="showOrderPlace(fourthBlocks[1])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks[1].number)"><span>{{ fourthBlocks[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks[1].status === 'take'" @click="showReturnPlace(fourthBlocks[1])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks[1].number)"><span>{{ fourthBlocks[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks[1].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks[1].number)"><span>{{ fourthBlocks[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div2">
-                <div v-if="fourthBlocks[3].status === 'free'" @click="showOrderPlace(fourthBlocks[3])" class="place free_place"><span>{{ fourthBlocks[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks[3].status === 'take'" @click="showReturnPlace(fourthBlocks[3])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks[3].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks[3].status === 'free'" @click="showOrderPlace(fourthBlocks[3])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks[3].number)"><span>{{ fourthBlocks[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks[3].status === 'take'" @click="showReturnPlace(fourthBlocks[3])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks[3].number)"><span>{{ fourthBlocks[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks[3].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks[3].number)"><span>{{ fourthBlocks[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
         </v-row>
 
         <v-row v-if="fourthBlocks2.length > 0">
             <v-col cols="3" class="schema36_div0">
-                <div v-if="fourthBlocks2[0].status === 'free'" @click="showOrderPlace(fourthBlocks2[0])" class="place free_place"><span>{{ fourthBlocks2[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks2[0].status === 'take'" @click="showReturnPlace(fourthBlocks2[0])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks2[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks2[0].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks2[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks2[0].status === 'free'" @click="showOrderPlace(fourthBlocks2[0])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks2[0].number)"><span>{{ fourthBlocks2[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks2[0].status === 'take'" @click="showReturnPlace(fourthBlocks2[0])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks2[0].number)"><span>{{ fourthBlocks2[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks2[0].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks2[0].number)"><span>{{ fourthBlocks2[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div2">
-                <div v-if="fourthBlocks2[2].status === 'free'" @click="showOrderPlace(fourthBlocks2[2])" class="place free_place"><span>{{ fourthBlocks2[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks2[2].status === 'take'" @click="showReturnPlace(fourthBlocks2[2])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks2[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks2[2].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks2[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks2[2].status === 'free'" @click="showOrderPlace(fourthBlocks2[2])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks2[2].number)"><span>{{ fourthBlocks2[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks2[2].status === 'take'" @click="showReturnPlace(fourthBlocks2[2])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks2[2].number)"><span>{{ fourthBlocks2[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks2[2].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks2[2].number)"><span>{{ fourthBlocks2[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div3">
-                <div v-if="fourthBlocks2[1].status === 'free'" @click="showOrderPlace(fourthBlocks2[1])" class="place free_place"><span>{{ fourthBlocks2[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks2[1].status === 'take'" @click="showReturnPlace(fourthBlocks2[1])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks2[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks2[1].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks2[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks2[1].status === 'free'" @click="showOrderPlace(fourthBlocks2[1])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks2[1].number)"><span>{{ fourthBlocks2[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks2[1].status === 'take'" @click="showReturnPlace(fourthBlocks2[1])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks2[1].number)"><span>{{ fourthBlocks2[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks2[1].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks2[1].number)"><span>{{ fourthBlocks2[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div2">
-                <div v-if="fourthBlocks2[3].status === 'free'" @click="showOrderPlace(fourthBlocks2[3])" class="place free_place"><span>{{ fourthBlocks2[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks2[3].status === 'take'" @click="showReturnPlace(fourthBlocks2[3])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks2[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks2[3].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks2[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks2[3].status === 'free'" @click="showOrderPlace(fourthBlocks2[3])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks2[3].number)"><span>{{ fourthBlocks2[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks2[3].status === 'take'" @click="showReturnPlace(fourthBlocks2[3])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks2[3].number)"><span>{{ fourthBlocks2[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks2[3].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks2[3].number)"><span>{{ fourthBlocks2[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
         </v-row>
 
         <v-row v-if="fourthBlocks3.length > 0">
             <v-col cols="3" class="schema36_div0">
-                <div v-if="fourthBlocks3[0].status === 'free'" @click="showOrderPlace(fourthBlocks3[0])" class="place free_place"><span>{{ fourthBlocks3[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks3[0].status === 'take'" @click="showReturnPlace(fourthBlocks3[0])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks3[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks3[0].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks3[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks3[0].status === 'free'" @click="showOrderPlace(fourthBlocks3[0])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks3[0].number)"><span>{{ fourthBlocks3[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks3[0].status === 'take'" @click="showReturnPlace(fourthBlocks3[0])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks3[0].number)"><span>{{ fourthBlocks3[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks3[0].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks3[0].number)"><span>{{ fourthBlocks3[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div2">
-                <div v-if="fourthBlocks3[2].status === 'free'" @click="showOrderPlace(fourthBlocks3[2])" class="place free_place"><span>{{ fourthBlocks3[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks3[2].status === 'take'" @click="showReturnPlace(fourthBlocks3[2])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks3[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks3[2].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks3[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks3[2].status === 'free'" @click="showOrderPlace(fourthBlocks3[2])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks3[2].number)"><span>{{ fourthBlocks3[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks3[2].status === 'take'" @click="showReturnPlace(fourthBlocks3[2])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks3[2].number)"><span>{{ fourthBlocks3[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks3[2].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks3[2].number)"><span>{{ fourthBlocks3[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div3">
-                <div v-if="fourthBlocks3[1].status === 'free'" @click="showOrderPlace(fourthBlocks3[1])" class="place free_place"><span>{{ fourthBlocks3[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks3[1].status === 'take'" @click="showReturnPlace(fourthBlocks3[1])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks3[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks3[1].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks3[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks3[1].status === 'free'" @click="showOrderPlace(fourthBlocks3[1])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks3[1].number)"><span>{{ fourthBlocks3[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks3[1].status === 'take'" @click="showReturnPlace(fourthBlocks3[1])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks3[1].number)"><span>{{ fourthBlocks3[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks3[1].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks3[1].number)"><span>{{ fourthBlocks3[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div2">
-                <div v-if="fourthBlocks3[3].status === 'free'" @click="showOrderPlace(fourthBlocks3[3])" class="place free_place"><span>{{ fourthBlocks3[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks3[3].status === 'take'" @click="showReturnPlace(fourthBlocks3[3])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks3[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks3[3].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks3[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks3[3].status === 'free'" @click="showOrderPlace(fourthBlocks3[3])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks3[3].number)"><span>{{ fourthBlocks3[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks3[3].status === 'take'" @click="showReturnPlace(fourthBlocks3[3])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks3[3].number)"><span>{{ fourthBlocks3[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks3[3].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks3[3].number)"><span>{{ fourthBlocks3[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
         </v-row>
 
         <v-row v-if="fourthBlocks4.length > 0">
             <v-col cols="3" class="schema36_div0">
-                <div v-if="fourthBlocks4[0].status === 'free'" @click="showOrderPlace(fourthBlocks4[0])" class="place free_place"><span>{{ fourthBlocks4[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks4[0].status === 'take'" @click="showReturnPlace(fourthBlocks4[0])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks4[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks4[0].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks4[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks4[0].status === 'free'" @click="showOrderPlace(fourthBlocks4[0])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks4[0].number)"><span>{{ fourthBlocks4[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks4[0].status === 'take'" @click="showReturnPlace(fourthBlocks4[0])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks4[0].number)"><span>{{ fourthBlocks4[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks4[0].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks4[0].number)"><span>{{ fourthBlocks4[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div2">
-                <div v-if="fourthBlocks4[2].status === 'free'" @click="showOrderPlace(fourthBlocks4[2])" class="place free_place"><span>{{ fourthBlocks4[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks4[2].status === 'take'" @click="showReturnPlace(fourthBlocks4[2])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks4[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks4[2].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks4[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks4[2].status === 'free'" @click="showOrderPlace(fourthBlocks4[2])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks4[2].number)"><span>{{ fourthBlocks4[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks4[2].status === 'take'" @click="showReturnPlace(fourthBlocks4[2])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks4[2].number)"><span>{{ fourthBlocks4[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks4[2].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks4[2].number)"><span>{{ fourthBlocks4[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div3">
-                <div v-if="fourthBlocks4[1].status === 'free'" @click="showOrderPlace(fourthBlocks4[1])" class="place free_place"><span>{{ fourthBlocks4[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks4[1].status === 'take'" @click="showReturnPlace(fourthBlocks4[1])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks4[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks4[1].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks4[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks4[1].status === 'free'" @click="showOrderPlace(fourthBlocks4[1])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks4[1].number)"><span>{{ fourthBlocks4[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks4[1].status === 'take'" @click="showReturnPlace(fourthBlocks4[1])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks4[1].number)"><span>{{ fourthBlocks4[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks4[1].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks4[1].number)"><span>{{ fourthBlocks4[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div2">
-                <div v-if="fourthBlocks4[3].status === 'free'" @click="showOrderPlace(fourthBlocks4[3])" class="place free_place"><span>{{ fourthBlocks4[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks4[3].status === 'take'" @click="showReturnPlace(fourthBlocks4[3])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks4[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks4[3].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks4[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks4[3].status === 'free'" @click="showOrderPlace(fourthBlocks4[3])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks4[3].number)"><span>{{ fourthBlocks4[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks4[3].status === 'take'" @click="showReturnPlace(fourthBlocks4[3])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks4[3].number)"><span>{{ fourthBlocks4[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks4[3].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks4[3].number)"><span>{{ fourthBlocks4[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
         </v-row>
 
         <v-row v-if="fourthBlocks5.length > 0">
             <v-col cols="3" class="schema36_div0">
-                <div v-if="fourthBlocks5[0].status === 'free'" @click="showOrderPlace(fourthBlocks5[0])" class="place free_place"><span>{{ fourthBlocks5[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks5[0].status === 'take'" @click="showReturnPlace(fourthBlocks5[0])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks5[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks5[0].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks5[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks5[0].status === 'free'" @click="showOrderPlace(fourthBlocks5[0])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks5[0].number)"><span>{{ fourthBlocks5[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks5[0].status === 'take'" @click="showReturnPlace(fourthBlocks5[0])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks5[0].number)"><span>{{ fourthBlocks5[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks5[0].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks5[0].number)"><span>{{ fourthBlocks5[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div2">
-                <div v-if="fourthBlocks5[2].status === 'free'" @click="showOrderPlace(fourthBlocks5[2])" class="place free_place"><span>{{ fourthBlocks5[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks5[2].status === 'take'" @click="showReturnPlace(fourthBlocks5[2])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks5[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks5[2].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks5[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks5[2].status === 'free'" @click="showOrderPlace(fourthBlocks5[2])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks5[2].number)"><span>{{ fourthBlocks5[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks5[2].status === 'take'" @click="showReturnPlace(fourthBlocks5[2])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks5[2].number)"><span>{{ fourthBlocks5[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks5[2].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks5[2].number)"><span>{{ fourthBlocks5[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div3">
-                <div v-if="fourthBlocks5[1].status === 'free'" @click="showOrderPlace(fourthBlocks5[1])" class="place free_place"><span>{{ fourthBlocks5[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks5[1].status === 'take'" @click="showReturnPlace(fourthBlocks5[1])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks5[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks5[1].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks5[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks5[1].status === 'free'" @click="showOrderPlace(fourthBlocks5[1])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks5[1].number)"><span>{{ fourthBlocks5[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks5[1].status === 'take'" @click="showReturnPlace(fourthBlocks5[1])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks5[1].number)"><span>{{ fourthBlocks5[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks5[1].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks5[1].number)"><span>{{ fourthBlocks5[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div2">
-                <div v-if="fourthBlocks5[3].status === 'free'" @click="showOrderPlace(fourthBlocks5[3])" class="place free_place"><span>{{ fourthBlocks5[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks5[3].status === 'take'" @click="showReturnPlace(fourthBlocks5[3])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks5[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks5[3].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks5[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks5[3].status === 'free'" @click="showOrderPlace(fourthBlocks5[3])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks5[3].number)"><span>{{ fourthBlocks5[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks5[3].status === 'take'" @click="showReturnPlace(fourthBlocks5[3])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks5[3].number)"><span>{{ fourthBlocks5[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks5[3].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks5[3].number)"><span>{{ fourthBlocks5[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
         </v-row>
 
         <v-row v-if="fourthBlocks6.length > 0">
             <v-col cols="3" class="schema36_div0">
-                <div v-if="fourthBlocks6[0].status === 'free'" @click="showOrderPlace(fourthBlocks6[0])" class="place free_place"><span>{{ fourthBlocks6[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks6[0].status === 'take'" @click="showReturnPlace(fourthBlocks6[0])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks6[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks6[0].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks6[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks6[0].status === 'free'" @click="showOrderPlace(fourthBlocks6[0])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks6[0].number)"><span>{{ fourthBlocks6[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks6[0].status === 'take'" @click="showReturnPlace(fourthBlocks6[0])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks6[0].number)"><span>{{ fourthBlocks6[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks6[0].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks6[0].number)"><span>{{ fourthBlocks6[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div2">
-                <div v-if="fourthBlocks6[2].status === 'free'" @click="showOrderPlace(fourthBlocks6[2])" class="place free_place"><span>{{ fourthBlocks6[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks6[2].status === 'take'" @click="showReturnPlace(fourthBlocks6[2])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks6[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks6[2].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks6[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks6[2].status === 'free'" @click="showOrderPlace(fourthBlocks6[2])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks6[2].number)"><span>{{ fourthBlocks6[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks6[2].status === 'take'" @click="showReturnPlace(fourthBlocks6[2])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks6[2].number)"><span>{{ fourthBlocks6[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks6[2].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks6[2].number)"><span>{{ fourthBlocks6[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div3">
-                <div v-if="fourthBlocks6[1].status === 'free'" @click="showOrderPlace(fourthBlocks6[1])" class="place free_place"><span>{{ fourthBlocks6[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks6[1].status === 'take'" @click="showReturnPlace(fourthBlocks6[1])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks6[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="fourthBlocks6[1].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks6[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks6[1].status === 'free'" @click="showOrderPlace(fourthBlocks6[1])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks6[1].number)"><span>{{ fourthBlocks6[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks6[1].status === 'take'" @click="showReturnPlace(fourthBlocks6[1])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks6[1].number)"><span>{{ fourthBlocks6[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="fourthBlocks6[1].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks6[1].number)"><span>{{ fourthBlocks6[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_div2">
-                <div v-if="fourthBlocks6[3].status === 'free'" @click="showOrderPlace(fourthBlocks6[3])" class="place free_place"><span>{{ fourthBlocks6[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks6[3].status === 'take'" @click="showReturnPlace(fourthBlocks6[3])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks6[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="fourthBlocks6[3].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ fourthBlocks6[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks6[3].status === 'free'" @click="showOrderPlace(fourthBlocks6[3])" class="place free_place" :class="checkForUpperOrLowerPlace(fourthBlocks6[3].number)"><span>{{ fourthBlocks6[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks6[3].status === 'take'" @click="showReturnPlace(fourthBlocks6[3])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(fourthBlocks6[3].number)"><span>{{ fourthBlocks6[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="fourthBlocks6[3].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(fourthBlocks6[3].number)"><span>{{ fourthBlocks6[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
         </v-row>
 
         <v-row v-if="thirdBlocks.length > 0">
             <v-col cols="3" class="schema36_3div">
-                <div v-if="thirdBlocks[0].status === 'free'" @click="showOrderPlace(thirdBlocks[0])" class="place free_place"><span>{{ thirdBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="thirdBlocks[0].status === 'take'" @click="showReturnPlace(thirdBlocks[0])" title="Место уже продано" class="place taken_place"><span>{{ thirdBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="thirdBlocks[0].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ thirdBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="thirdBlocks[0].status === 'free'" @click="showOrderPlace(thirdBlocks[0])" class="place free_place" :class="checkForUpperOrLowerPlace(thirdBlocks[0].number)"><span>{{ thirdBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="thirdBlocks[0].status === 'take'" @click="showReturnPlace(thirdBlocks[0])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(thirdBlocks[0].number)"><span>{{ thirdBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="thirdBlocks[0].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(thirdBlocks[0].number)"><span>{{ thirdBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_8div0">
-                <div v-if="thirdBlocks[4].status === 'free'" @click="showOrderPlace(thirdBlocks[4])" class="place free_place"><span>{{ thirdBlocks[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="thirdBlocks[4].status === 'take'" @click="showReturnPlace(thirdBlocks[4])" title="Место уже продано" class="place taken_place"><span>{{ thirdBlocks[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="thirdBlocks[4].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ thirdBlocks[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="thirdBlocks[4].status === 'free'" @click="showOrderPlace(thirdBlocks[4])" class="place free_place" :class="checkForUpperOrLowerPlace(thirdBlocks[4].number)"><span>{{ thirdBlocks[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="thirdBlocks[4].status === 'take'" @click="showReturnPlace(thirdBlocks[4])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(thirdBlocks[4].number)"><span>{{ thirdBlocks[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="thirdBlocks[4].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(thirdBlocks[4].number)"><span>{{ thirdBlocks[0].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_8div0">
-                <div v-if="thirdBlocks[1].status === 'free'" @click="showOrderPlace(thirdBlocks[1])" class="place free_place"><span>{{ thirdBlocks[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="thirdBlocks[1].status === 'take'" @click="showReturnPlace(thirdBlocks[1])" title="Место уже продано" class="place taken_place"><span>{{ thirdBlocks[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="thirdBlocks[1].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ thirdBlocks[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="thirdBlocks[1].status === 'free'" @click="showOrderPlace(thirdBlocks[1])" class="place free_place" :class="checkForUpperOrLowerPlace(thirdBlocks[1].number)"><span>{{ thirdBlocks[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="thirdBlocks[1].status === 'take'" @click="showReturnPlace(thirdBlocks[1])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(thirdBlocks[1].number)"><span>{{ thirdBlocks[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="thirdBlocks[1].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(thirdBlocks[1].number)"><span>{{ thirdBlocks[1].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_8div0">
-                <div v-if="thirdBlocks[5].status === 'free'" @click="showOrderPlace(thirdBlocks[5])" class="place free_place"><span>{{ thirdBlocks[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="thirdBlocks[5].status === 'take'" @click="showReturnPlace(thirdBlocks[5])" title="Место уже продано" class="place taken_place"><span>{{ thirdBlocks[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="thirdBlocks[5].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ thirdBlocks[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="thirdBlocks[5].status === 'free'" @click="showOrderPlace(thirdBlocks[5])" class="place free_place" :class="checkForUpperOrLowerPlace(thirdBlocks[5].number)"><span>{{ thirdBlocks[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="thirdBlocks[5].status === 'take'" @click="showReturnPlace(thirdBlocks[5])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(thirdBlocks[5].number)"><span>{{ thirdBlocks[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="thirdBlocks[5].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(thirdBlocks[5].number)"><span>{{ thirdBlocks[1].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
 
             <v-col cols="3" class="schema36_3div">
-                <div v-if="thirdBlocks[2].status === 'free'" @click="showOrderPlace(thirdBlocks[2])" class="place free_place"><span>{{ thirdBlocks[2].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="thirdBlocks[2].status === 'take'" @click="showReturnPlace(thirdBlocks[2])" title="Место уже продано" class="place taken_place"><span>{{ thirdBlocks[2].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="thirdBlocks[2].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ thirdBlocks[2].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="thirdBlocks[2].status === 'free'" @click="showOrderPlace(thirdBlocks[2])" class="place free_place" :class="checkForUpperOrLowerPlace(thirdBlocks[2].number)"><span>{{ thirdBlocks[2].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="thirdBlocks[2].status === 'take'" @click="showReturnPlace(thirdBlocks[2])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(thirdBlocks[2].number)"><span>{{ thirdBlocks[2].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="thirdBlocks[2].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(thirdBlocks[2].number)"><span>{{ thirdBlocks[2].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_8div0">
-                <div v-if="thirdBlocks[6].status === 'free'" @click="showOrderPlace(thirdBlocks[6])" class="place free_place"><span>{{ thirdBlocks[2].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="thirdBlocks[6].status === 'take'" @click="showReturnPlace(thirdBlocks[6])" title="Место уже продано" class="place taken_place"><span>{{ thirdBlocks[2].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="thirdBlocks[6].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ thirdBlocks[2].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="thirdBlocks[6].status === 'free'" @click="showOrderPlace(thirdBlocks[6])" class="place free_place" :class="checkForUpperOrLowerPlace(thirdBlocks[6].number)"><span>{{ thirdBlocks[2].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="thirdBlocks[6].status === 'take'" @click="showReturnPlace(thirdBlocks[6])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(thirdBlocks[6].number)"><span>{{ thirdBlocks[2].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="thirdBlocks[6].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(thirdBlocks[6].number)"><span>{{ thirdBlocks[2].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_8div0">
-                <div v-if="thirdBlocks[3].status === 'free'" @click="showOrderPlace(thirdBlocks[3])" class="place free_place"><span>{{ thirdBlocks[3].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="thirdBlocks[3].status === 'take'" @click="showReturnPlace(thirdBlocks[3])" title="Место уже продано" class="place taken_place"><span>{{ thirdBlocks[3].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
-                <div v-if="thirdBlocks[3].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ thirdBlocks[3].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="thirdBlocks[3].status === 'free'" @click="showOrderPlace(thirdBlocks[3])" class="place free_place" :class="checkForUpperOrLowerPlace(thirdBlocks[3].number)"><span>{{ thirdBlocks[3].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="thirdBlocks[3].status === 'take'" @click="showReturnPlace(thirdBlocks[3])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(thirdBlocks[3].number)"><span>{{ thirdBlocks[3].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
+                <div v-if="thirdBlocks[3].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(thirdBlocks[3].number)"><span>{{ thirdBlocks[3].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
             </v-col>
             <v-col cols="3" class="schema36_8div0">
-                <div v-if="thirdBlocks[7].status === 'free'" @click="showOrderPlace(thirdBlocks[7])" class="place free_place"><span>{{ thirdBlocks[3].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="thirdBlocks[7].status === 'take'" @click="showReturnPlace(thirdBlocks[7])" title="Место уже продано" class="place taken_place"><span>{{ thirdBlocks[3].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
-                <div v-if="thirdBlocks[7].status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ thirdBlocks[3].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="thirdBlocks[7].status === 'free'" @click="showOrderPlace(thirdBlocks[7])" class="place free_place" :class="checkForUpperOrLowerPlace(thirdBlocks[7].number)"><span>{{ thirdBlocks[3].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="thirdBlocks[7].status === 'take'" @click="showReturnPlace(thirdBlocks[7])" title="Место уже продано" class="place taken_place" :class="checkForUpperOrLowerPlace(thirdBlocks[7].number)"><span>{{ thirdBlocks[3].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
+                <div v-if="thirdBlocks[7].status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(thirdBlocks[7].number)"><span>{{ thirdBlocks[3].number }}<v-icon>mdi-arrow-up</v-icon></span></div>
             </v-col>
         </v-row>
 
@@ -318,6 +318,8 @@
         props: [
             'places',
             'linkAfterAction',
+            'upperPlace',
+            'lowerPlace',
         ],
         data(){
             return {
@@ -444,6 +446,24 @@
             },
         },
         methods: {
+            checkForUpperOrLowerPlace (place){
+                if (this.upperPlace) {
+                    let upperPlaces = [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,35,36];
+                    for(let i = 0; i<upperPlaces.length; i++) {
+                        if (upperPlaces[i] === place) {
+                            return 'upper';
+                        }
+                    }
+                }
+                if (this.lowerPlace) {
+                    let lowerPlaces = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,33,34];
+                    for(let i = 0; i<lowerPlaces.length; i++) {
+                        if (lowerPlaces[i] === place) {
+                            return 'lower';
+                        }
+                    }
+                }
+            },
             showOrderPlace(item){
                 this.car_travel_id = item.car_travel_id;
                 this.place_id = item.id;
@@ -561,5 +581,11 @@
     }
     .schema36_8div0 {
         margin-left: -70px;
+    }
+    .place{
+        opacity: 0.2;
+    }
+    .upper,.lower {
+        opacity: 1 !important;
     }
 </style>

@@ -2,10 +2,27 @@
     <div class="mt-2">
         <v-row>
             <v-col cols="4">
+                <v-row>
+                    <v-col>
+                        <v-checkbox
+                            v-model="upperPlace"
+                            label="Верхний"
+                        ></v-checkbox>
+
+                    </v-col>
+                    <v-col>
+                        <v-checkbox
+                                v-model="lowerPlace"
+                                label="Нижний"
+                        ></v-checkbox>
+                    </v-col>
+                </v-row>
                 <component
                         :is="schema"
                         :places="placesForRoute"
                         :linkAfterAction="`/cashier/intercity/${carTravelId}`"
+                        :upperPlace="upperPlace"
+                        :lowerPlace="lowerPlace"
                 ></component>
             </v-col>
 
@@ -221,7 +238,9 @@
                 ],
                 carTravelId: 0,
                 ticket: [],
-                carTravel: []
+                carTravel: [],
+                upperPlace: true,
+                lowerPlace: true,
             }
         },
         methods: {
@@ -307,8 +326,5 @@
     .card_car_info_span__danger{
         color: #cc0000;
         font-weight: bold;
-    }
-    .row {
-        margin-top: 0px !important;
     }
 </style>

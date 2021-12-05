@@ -37,6 +37,22 @@
             </v-col>
 
             <v-col cols="4" style="padding-bottom: 40px;">
+                <v-row>
+                    <v-col>
+                        <v-checkbox
+                                v-model="upperPlace"
+                                label="Верхний"
+                        ></v-checkbox>
+
+                    </v-col>
+                    <v-col>
+                        <v-checkbox
+                                v-model="lowerPlace"
+                                label="Нижний"
+                        ></v-checkbox>
+                    </v-col>
+                </v-row>
+
                 <Schema4
                     v-if="Object.keys(selected_item).length > 0 && selected_item.car.car_type_count_places === 4"
                     :places="placesForRoute"
@@ -59,6 +75,8 @@
                         v-if="Object.keys(selected_item).length > 0 && selected_item.car.car_type_count_places === 36"
                         :places="placesForRoute"
                         linkAfterAction="/cashier/tickets"
+                        :upperPlace="upperPlace"
+                        :lowerPlace="lowerPlace"
                 ></Schema36>
 
                 <Schema53
@@ -128,6 +146,8 @@
                 items: [],
                 selected_item: [],
                 placesForRoute: [],
+                upperPlace: true,
+                lowerPlace: true,
             }
         },
         methods: {
