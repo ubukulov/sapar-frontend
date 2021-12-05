@@ -32,7 +32,7 @@
         style="margin-top: 60px;"
     >
         <v-list>
-            <v-list-item
+            <!--<v-list-item
                 to="/cashier" link
             >
                 <v-list-item-icon>
@@ -40,7 +40,7 @@
                 </v-list-item-icon>
 
                 <v-list-item-title>Главная</v-list-item-title>
-            </v-list-item>
+            </v-list-item>-->
 
             <v-list-group
                     :value="true"

@@ -10,6 +10,7 @@ import auth from '../middleware/auth'
 import middlewarePipeline from '../middleware/middlewarePipeline'
 import Ticket from "../views/cashier/Ticket";
 import Register from "../views/Register";
+import CarDetail from "../views/cashier/CarDetail";
 
 Vue.use(VueRouter)
 
@@ -43,6 +44,11 @@ const routes = [
         path: '/cashier/intercity/create',
         name: 'CreateTrip',
         component: CreateTrip
+      },
+      {
+        path: '/cashier/intercity/:carTravelId',
+        name: 'CarDetail',
+        component: CarDetail
       },
       {
         path: '/cashier/tickets',

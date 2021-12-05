@@ -1,0 +1,314 @@
+<template>
+    <div class="mt-2">
+        <v-row>
+            <v-col cols="4">
+                <component
+                        :is="schema"
+                        :places="placesForRoute"
+                        :linkAfterAction="`/cashier/intercity/${carTravelId}`"
+                ></component>
+            </v-col>
+
+            <v-col v-if="Object.keys(carTravel).length > 0" cols="8">
+                <v-row>
+                    <v-col cols="3">
+                        <v-img
+                                lazy-src="https://picsum.photos/id/11/10/6"
+                                max-height="250"
+                                :src="`http://194.4.56.241:8888/${carTravel.car.image}`"
+                        ></v-img>
+                    </v-col>
+
+                    <v-col cols="4">
+                        <p>Номер машины: {{ carTravel.car.state_number }}</p>
+                        <p>Дата отправление: {{ carTravel.departure_time }}</p>
+                        <p>Дата прибытие: {{ carTravel.destination_time }}</p>
+                    </v-col>
+
+                    <v-col cols="5">
+                        <v-row>
+                            <v-col cols="4" class="text-right">
+                                <div><strong>{{ carTravel.from.city }}</strong></div>
+                                <div><span>{{carTravel.from.station}}</span></div>
+                            </v-col>
+
+                            <v-col cols="4" class="text-center">
+                                <v-icon size="40">
+                                    mdi-chevron-right-circle-outline
+                                </v-icon>
+                            </v-col>
+
+                            <v-col cols="4" class="text-left">
+                                <div><strong>{{ carTravel.to.city }}</strong></div>
+                                <div><span>{{carTravel.to.station}}</span></div>
+                            </v-col>
+                        </v-row>
+
+                        <v-row>
+                            <v-col>
+                                <span class="card_car_info_span__success">Свободно: {{ carTravel.count_free_places }}</span>
+                            </v-col>
+
+                            <v-col>
+                                <span class="card_car_info_span__danger">Занято: {{ carTravel.car.car_type_count_places - carTravel.count_free_places }}</span>
+                            </v-col>
+                        </v-row>
+                    </v-col>
+                </v-row>
+                <v-card>
+                    <v-card-title>
+                        Проданные билеты
+                        <v-spacer></v-spacer>
+
+                    </v-card-title>
+
+                    <v-data-table
+                            :items="soldTicketsForCurrentCarTravel"
+                            :headers="headers"
+                            :search="search"
+                            :loading="isLoaded"
+                            loading-text="Загружается... Пожалуйста подождите"
+                    >
+                        <template v-slot:item.dt = "{ item }">
+                            {{ item.dep_date }} / {{ item.dep_time }}
+                        </template>
+
+                        <template v-slot:item.print="{ item }">
+                            <v-icon
+                                    title="Распечатать билет"
+                                    middle
+                                    @click="showPrintTicketWindow(item)"
+                            >
+                                mdi-printer
+                            </v-icon>
+                        </template>
+                    </v-data-table>
+                </v-card>
+            </v-col>
+        </v-row>
+
+        <v-dialog
+                v-model="dialog"
+                persistent
+                max-width="375"
+                v-if="Object.keys(carTravel).length > 0"
+        >
+            <v-card>
+                <v-card-text id="ticket" class="print_tickets_block">
+                    <v-row>
+                        <v-col cols="6" class="text-right">
+                            <div><strong>Отправление</strong></div>
+                            <div><strong>{{ carTravel.from.city }}</strong></div>
+                            <div><span>{{carTravel.from.station}}</span></div>
+                            <div>
+                                <span>Дата: {{ ticket.dep_date }}</span>
+                            </div>
+                            <div>
+                                <span>Время: {{ ticket.dep_time }}</span>
+                            </div>
+                        </v-col>
+                        <v-col cols="6">
+                            <div><strong>Прибытие</strong></div>
+                            <div><strong>{{ carTravel.to.city }}</strong></div>
+                            <div><span>{{carTravel.to.station}}</span></div>
+                            <div>
+                                <span>Дата: {{ ticket.des_date }}</span>
+                            </div>
+                            <div>
+                                <span>Время: {{ ticket.des_time }}</span>
+                            </div>
+                        </v-col>
+
+                        <v-col cols="12" class="text-center">
+                            <div>
+                                <span>Автобус: {{ ticket.state_number }}</span>
+                            </div>
+
+                            <div>
+                                <span>Место: {{ ticket.number }}</span>
+                            </div>
+
+                            <div>
+                                <span>Имя: {{ ticket.first_name }}</span>
+                            </div>
+
+                            <div>
+                                <span>Сумма: {{ ticket.price }}тг</span>
+                            </div>
+
+                            <div>
+                                <VueBarcode
+                                        :value="ticket.id"
+                                        height="50"
+                                        display-value="false"
+                                ></VueBarcode>
+                            </div>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn
+                            color="btn gray"
+                            @click="dialog = false"
+                    >
+                        Отмена
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                            color="green darken-1"
+                            @click="printTicket()"
+                    >
+                        Печать
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <WaitingLoader></WaitingLoader>
+    </div>
+</template>
+
+<script>
+    import axios from 'axios'
+    import Schema4 from "./Schemes/Schema4";
+    import Schema6 from "./Schemes/Schema6";
+    import Schema7 from "./Schemes/Schema7";
+    import Schema36 from "./Schemes/Schema36";
+    import Schema53 from "./Schemes/Schema53";
+    import Schema62 from "./Schemes/Schema62";
+    import WaitingLoader from "../../dialogs/WaitingLoader";
+    import VueBarcode from 'vue-barcode';
+    export default {
+        components: {
+            WaitingLoader,
+            Schema4,
+            Schema6,
+            Schema7,
+            Schema36,
+            Schema53,
+            Schema62,
+            VueBarcode,
+        },
+        data(){
+            return {
+                schema: '',
+                placesForRoute: [],
+                soldTicketsForCurrentCarTravel: [],
+                headers: [
+                    {text: 'Место', value: 'number'},
+                    {text: 'Цена', value: 'price'},
+                    {text: 'Имя', value: 'first_name'},
+                    {text: 'Телефон', value: 'phone'},
+                    {text: 'ИИН', value: 'iin'},
+                    {text: 'Печать', value: 'print'},
+                ],
+                isLoaded: false,
+                dialog: false,
+                search: '',
+                filters: [
+                    {
+                        'title': 'Актуальные билеты',
+                        'id': 0
+                    },
+                    {
+                        'title': 'Запланированные билеты',
+                        'id': 1
+                    },
+                    {
+                        'title': 'История',
+                        'id': 2
+                    },
+                ],
+                carTravelId: 0,
+                ticket: [],
+                carTravel: []
+            }
+        },
+        methods: {
+            getSchemaForCar(){
+                this.$store.commit('setOverlay', true);
+                axios.get(`${this.$apiUrl}cashier/car-travel/${this.carTravelId}/get-information-about-car-travel`)
+                .then(res => {
+                    this.$store.commit('setOverlay', false);
+                    this.carTravel = res.data[0];
+                    switch (this.carTravel.car.car_type_id) {
+                        case 1:
+                            this.schema = 'Schema53'
+                            break;
+                        case 2:
+                            this.schema = 'Schema36'
+                            break;
+                        case 3:
+                            this.schema = 'Schema6'
+                            break;
+                        case 5:
+                            this.schema = 'Schema4'
+                            break;
+                        case 6:
+                            this.schema = 'Schema7'
+                            break;
+                        case 7:
+                            this.schema = 'Schema62'
+                            break;
+                    }
+                    this.getPlacesForRoute();
+                    this.getSoldTicketsForCurrentCarTravel();
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            },
+            getPlacesForRoute(){
+                this.$store.commit('setOverlay', true);
+                axios.get(`${this.$apiUrl}cashier/car-travel/${this.carTravelId}/get-all-places-for-route`)
+                    .then(res => {
+                        this.$store.commit('setOverlay', false);
+                        this.placesForRoute = res.data;
+                    })
+                    .catch(err => {
+                        this.$store.commit('setOverlay', false);
+                        console.log(err)
+                    })
+            },
+            getSoldTicketsForCurrentCarTravel(){
+                axios.get(`${this.$apiUrl}cashier/car-travel/${this.carTravelId}/get-sold-tickets-for-current-route`)
+                    .then(res => {
+                        this.soldTicketsForCurrentCarTravel = res.data;
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            },
+            showPrintTicketWindow(item) {
+                this.ticket = item;
+                this.dialog = true;
+            },
+            printTicket(){
+                this.$htmlToPaper('ticket');
+            }
+        },
+        created() {
+            this.carTravelId = this.$route.params.carTravelId;
+            this.getSchemaForCar();
+        }
+    }
+</script>
+
+<style scoped>
+    .print_tickets_block {
+        font-weight: bold;
+        font-size: 18px;
+        padding: 30px 25px !important;
+    }
+    .card_car_info_span__success {
+        color: green;
+        font-weight: bold;
+    }
+    .card_car_info_span__danger{
+        color: #cc0000;
+        font-weight: bold;
+    }
+    .row {
+        margin-top: 0px !important;
+    }
+</style>

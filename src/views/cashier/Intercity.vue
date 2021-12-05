@@ -13,7 +13,58 @@
                     <span class="mdc-button__label">Создать поездку</span>
                 </router-link>
             </v-col>
+        </v-row>
 
+        <v-row>
+            <v-col cols="2">
+                <v-select
+                        :items="cities"
+                        label="Выберите город"
+                        :hint="`${cities.id}, ${cities.name}`"
+                        item-value="id"
+                        v-model="from_city_id"
+                        prepend-icon="mdi-map-marker"
+                        item-text="name"
+                        dense
+                        solo
+                ></v-select>
+            </v-col>
+            <v-col cols="2">
+                <v-select
+                        :items="cities"
+                        label="Выберите город"
+                        :hint="`${cities.id}, ${cities.name}`"
+                        item-value="id"
+                        v-model="to_city_id"
+                        prepend-icon="mdi-location"
+                        item-text="name"
+                        dense
+                        solo
+                ></v-select>
+            </v-col>
+
+            <v-col cols="3">
+                <v-select
+                        :items="filters"
+                        :hint="`${filters.id}, ${filters.title}`"
+                        item-value="id"
+                        v-model="filter_id"
+                        solo
+                        dense
+                        item-text="title"
+                ></v-select>
+            </v-col>
+
+            <v-col cols="2">
+                <v-btn
+                        @click="getTravelsByFilter()"
+                >
+                    Показать
+                </v-btn>
+            </v-col>
+        </v-row>
+
+        <v-row>
             <v-col cols="3" v-for="(item,i) in travels" :key="i">
                 <v-card
                     :loading="loading"
@@ -33,39 +84,17 @@
                             :src="`http://194.4.56.241:8888/${item.car.image}`"
                     ></v-img>
 
-                    <v-card-title>{{ item.car.car_type }}</v-card-title>
+                    <v-card-title>
+                        <v-row>
+                            <v-col>
+                                {{ item.car.car_type }}
+                            </v-col>
 
-                    <v-card-text>
-                        <v-row
-                                align="center"
-                                class="mx-0"
-                        >
-                            <v-rating
-                                    :value="4.5"
-                                    color="amber"
-                                    dense
-                                    half-increments
-                                    readonly
-                                    size="14"
-                            ></v-rating>
-
-                            <div class="grey--text ms-4">
-                                4.5 (413)
-                            </div>
+                            <v-col>
+                                &#8376; {{ item.min_price }} - {{ item.max_price }}
+                            </v-col>
                         </v-row>
-
-                        <div class="my-4 text-subtitle-1">
-                            &#8376; {{ item.min_price }} - {{ item.max_price }}
-                        </div>
-
-                        <div>
-                            <p v-if="item.car.tv === 1">• Телевизор - <span style="font-weight: bold; color: green;">есть</span></p>
-                            <p v-if="item.car.conditioner === 1">• Кондиционер - <span style="font-weight: bold; color: green;">есть</span></p>
-                            <p v-if="item.car.baggage === 1">• Багажник - <span style="font-weight: bold; color: green;">есть</span></p>
-                        </div>
-                    </v-card-text>
-
-                    <v-divider class="mx-4"></v-divider>
+                    </v-card-title>
 
                     <v-card-title style="justify-content: center;">{{ item.departure_time }}</v-card-title>
 
@@ -103,20 +132,21 @@
 
                         <v-spacer></v-spacer>
                         <v-btn
-                            color="deep-purple lighten-2"
-                            to="/cashier/tickets" link
+                                color="deep-purple lighten-2"
+                                :to="`/cashier/intercity/${item.id}`" link
                         >
                             Посмотреть
                         </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
-
-            <router-view></router-view>
-
-            <WaitingLoader></WaitingLoader>
-
         </v-row>
+
+
+
+        <router-view></router-view>
+
+        <WaitingLoader></WaitingLoader>
     </div>
 </template>
 
@@ -132,6 +162,20 @@
                 travels: [],
                 loading: false,
                 overlay: false,
+                cities: [],
+                from_city_id: 0,
+                to_city_id: 0,
+                filters: [
+                    {
+                        'title': 'Сегодняшние поездки',
+                        'id': 0
+                    },
+                    {
+                        'title': 'Запланированные поезки',
+                        'id': 1
+                    },
+                ],
+                filter_id: 0,
             }
         },
         methods: {
@@ -141,15 +185,42 @@
                 .then(res => {
                     this.$store.commit('setOverlay', false);
                     this.travels = res.data;
-                    console.log(this.travels)
                 })
                 .catch(err => {
                     console.log(err)
                 })
+            },
+            getCities(){
+                axios.get(`${this.$apiUrl}cashier/cities/list`)
+                    .then(res => {
+                        this.cities = res.data;
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            },
+            getTravelsByFilter(){
+                if (this.from_city_id !== 0 && this.to_city_id !== 0) {
+                    this.travels = [];
+                    let formData = new FormData();
+                    formData.append('from_city_id', this.from_city_id);
+                    formData.append('to_city_id', this.to_city_id);
+                    formData.append('filter_id', this.filter_id);
+                    this.$store.commit('setOverlay', true);
+                    axios.post(`${this.$apiUrl}cashier/intercity/get-travels-by-filter`, formData)
+                        .then(res => {
+                            this.$store.commit('setOverlay', false);
+                            this.travels = res.data;
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                }
             }
         },
         created() {
             this.getTravels();
+            this.getCities();
         }
     }
 </script>

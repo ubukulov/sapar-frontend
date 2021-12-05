@@ -1,6 +1,6 @@
 <template>
     <v-row class="mt-2">
-        <v-row>
+        <v-row v-if="firstBlocks.length > 0">
             <v-col cols="3" v-for="(item, i) in firstBlocks" :key="i" :class="'schema62_div'+i">
                 <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place"><span>{{ item.number }}</span></div>
                 <div v-if="item.status === 'take'" @click="showReturnPlace(item)" title="Место уже продано" class="place taken_place"><span>{{ item.number }}</span></div>
@@ -13,7 +13,7 @@
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="secondBlocks.length > 0">
             <v-col cols="3" v-for="(item, i) in secondBlocks" :key="i" :class="'schema62_div'+i">
                 <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place"><span>{{ item.number }}</span></div>
                 <div v-if="item.status === 'take'" @click="showReturnPlace(item)" title="Место уже продано" class="place taken_place"><span>{{ item.number }}</span></div>
@@ -21,7 +21,7 @@
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="thirdBlocks.length > 0">
             <v-col cols="6">
                 <v-row>
                     <v-col cols="6" v-for="(item, i) in thirdBlocks" :key="i" :class="'schema62_2div'+i">
@@ -38,7 +38,7 @@
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="fourthBlocks.length > 0">
             <v-col cols="3" v-for="(item, i) in fourthBlocks" :key="i" :class="'schema62_div'+i">
                 <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place"><span>{{ item.number }}</span></div>
                 <div v-if="item.status === 'take'" @click="showReturnPlace(item)" title="Место уже продано" class="place taken_place"><span>{{ item.number }}</span></div>
@@ -155,7 +155,8 @@
             WaitingLoader
         },
         props: [
-            'places'
+            'places',
+            'linkAfterAction',
         ],
         data(){
             return {
@@ -217,7 +218,7 @@
                             this.first_name = '';
                             this.phone = '';
                             this.place_id = 0;
-                            window.location.href = '/cashier/tickets';
+                            window.location.href = this.linkAfterAction;
                         })
                         .catch(err => {
                             this.$store.commit('setOverlay', false);
@@ -247,7 +248,7 @@
                             this.$store.commit('setOverlay', false);
                             this.dialog2 = false;
                             this.reason_for_return = '';
-                            window.location.href = '/cashier/tickets';
+                            window.location.href = this.linkAfterAction;
                         })
                         .catch(err => {
                             this.$store.commit('setOverlay', false);

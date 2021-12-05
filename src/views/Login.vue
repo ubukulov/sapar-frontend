@@ -126,7 +126,7 @@
                     this.errorMessage = '';
                     this.$store.commit('logged')
                     this.$store.commit('setUser', res.data.user)
-                    this.$router.push({name: 'Cabinet'})
+                    this.$router.push({name: 'Intercity'})
                 })
                 .catch(err => {
                     console.log(err.response)

@@ -40,31 +40,37 @@
                 <Schema4
                     v-if="Object.keys(selected_item).length > 0 && selected_item.car.car_type_count_places === 4"
                     :places="placesForRoute"
+                    linkAfterAction="/cashier/tickets"
                 ></Schema4>
 
                 <Schema6
                         v-if="Object.keys(selected_item).length > 0 && selected_item.car.car_type_count_places === 6"
                         :places="placesForRoute"
+                        linkAfterAction="/cashier/tickets"
                 ></Schema6>
 
                 <Schema7
                         v-if="Object.keys(selected_item).length > 0 && selected_item.car.car_type_count_places === 7"
                         :places="placesForRoute"
+                        linkAfterAction="/cashier/tickets"
                 ></Schema7>
 
                 <Schema36
                         v-if="Object.keys(selected_item).length > 0 && selected_item.car.car_type_count_places === 36"
                         :places="placesForRoute"
+                        linkAfterAction="/cashier/tickets"
                 ></Schema36>
 
                 <Schema53
                         v-if="Object.keys(selected_item).length > 0 && selected_item.car.car_type_count_places === 53"
                         :places="placesForRoute"
+                        linkAfterAction="/cashier/tickets"
                 ></Schema53>
 
                 <Schema62
                         v-if="Object.keys(selected_item).length > 0 && selected_item.car.car_type_count_places === 62"
                         :places="placesForRoute"
+                        linkAfterAction="/cashier/tickets"
                 ></Schema62>
             </v-col>
         </v-row>

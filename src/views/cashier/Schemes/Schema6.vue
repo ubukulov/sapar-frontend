@@ -1,7 +1,7 @@
 <template>
     <v-row class="mt-2">
         <v-col cols="8">
-            <v-row>
+            <v-row v-if="places.length > 0">
                 <v-col cols="7" class="mb-10">
                     <img src="~@/assets/rul.png" alt="">
                 </v-col>
@@ -123,7 +123,8 @@
             WaitingLoader
         },
         props: [
-            'places'
+            'places',
+            'linkAfterAction',
         ],
         data(){
             return {
@@ -185,7 +186,7 @@
                             this.first_name = '';
                             this.phone = '';
                             this.place_id = 0;
-                            window.location.href = '/cashier/tickets';
+                            window.location.href = this.linkAfterAction;
                         })
                         .catch(err => {
                             this.$store.commit('setOverlay', false);
@@ -215,7 +216,7 @@
                             this.$store.commit('setOverlay', false);
                             this.dialog2 = false;
                             this.reason_for_return = '';
-                            window.location.href = '/cashier/tickets';
+                            window.location.href = this.linkAfterAction;
                         })
                         .catch(err => {
                             this.$store.commit('setOverlay', false);

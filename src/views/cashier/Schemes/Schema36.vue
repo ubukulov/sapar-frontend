@@ -2,7 +2,7 @@
     <v-row class="mt-2">
         <v-row>
             <v-col cols="6">
-                <v-row>
+                <v-row v-if="firstBlocks.length > 0">
                     <v-col cols="6" v-for="(item, i) in firstBlocks" :key="i" :class="'schema36_2div'+i">
                         <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place">
                             <span v-if="item.number > 32 && item.number < 35">0 <v-icon>mdi-arrow-down</v-icon></span>
@@ -26,7 +26,7 @@
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="fourthBlocks.length > 0">
             <v-col cols="3" class="schema36_div0">
                 <div v-if="fourthBlocks[0].status === 'free'" @click="showOrderPlace(fourthBlocks[0])" class="place free_place"><span>{{ fourthBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
                 <div v-if="fourthBlocks[0].status === 'take'" @click="showReturnPlace(fourthBlocks[0])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
@@ -49,7 +49,7 @@
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="fourthBlocks2.length > 0">
             <v-col cols="3" class="schema36_div0">
                 <div v-if="fourthBlocks2[0].status === 'free'" @click="showOrderPlace(fourthBlocks2[0])" class="place free_place"><span>{{ fourthBlocks2[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
                 <div v-if="fourthBlocks2[0].status === 'take'" @click="showReturnPlace(fourthBlocks2[0])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks2[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
@@ -72,7 +72,7 @@
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="fourthBlocks3.length > 0">
             <v-col cols="3" class="schema36_div0">
                 <div v-if="fourthBlocks3[0].status === 'free'" @click="showOrderPlace(fourthBlocks3[0])" class="place free_place"><span>{{ fourthBlocks3[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
                 <div v-if="fourthBlocks3[0].status === 'take'" @click="showReturnPlace(fourthBlocks3[0])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks3[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
@@ -95,7 +95,7 @@
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="fourthBlocks4.length > 0">
             <v-col cols="3" class="schema36_div0">
                 <div v-if="fourthBlocks4[0].status === 'free'" @click="showOrderPlace(fourthBlocks4[0])" class="place free_place"><span>{{ fourthBlocks4[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
                 <div v-if="fourthBlocks4[0].status === 'take'" @click="showReturnPlace(fourthBlocks4[0])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks4[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
@@ -118,7 +118,7 @@
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="fourthBlocks5.length > 0">
             <v-col cols="3" class="schema36_div0">
                 <div v-if="fourthBlocks5[0].status === 'free'" @click="showOrderPlace(fourthBlocks5[0])" class="place free_place"><span>{{ fourthBlocks5[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
                 <div v-if="fourthBlocks5[0].status === 'take'" @click="showReturnPlace(fourthBlocks5[0])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks5[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
@@ -141,7 +141,7 @@
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="fourthBlocks6.length > 0">
             <v-col cols="3" class="schema36_div0">
                 <div v-if="fourthBlocks6[0].status === 'free'" @click="showOrderPlace(fourthBlocks6[0])" class="place free_place"><span>{{ fourthBlocks6[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
                 <div v-if="fourthBlocks6[0].status === 'take'" @click="showReturnPlace(fourthBlocks6[0])" title="Место уже продано" class="place taken_place"><span>{{ fourthBlocks6[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
@@ -164,7 +164,7 @@
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="thirdBlocks.length > 0">
             <v-col cols="3" class="schema36_3div">
                 <div v-if="thirdBlocks[0].status === 'free'" @click="showOrderPlace(thirdBlocks[0])" class="place free_place"><span>{{ thirdBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
                 <div v-if="thirdBlocks[0].status === 'take'" @click="showReturnPlace(thirdBlocks[0])" title="Место уже продано" class="place taken_place"><span>{{ thirdBlocks[0].number }}<v-icon>mdi-arrow-down</v-icon></span></div>
@@ -316,7 +316,8 @@
             WaitingLoader
         },
         props: [
-            'places'
+            'places',
+            'linkAfterAction',
         ],
         data(){
             return {
@@ -488,7 +489,7 @@
                         this.first_name = '';
                         this.phone = '';
                         this.place_id = 0;
-                        window.location.href = '/cashier/tickets';
+                        window.location.href = this.linkAfterAction;
                     })
                     .catch(err => {
                         this.$store.commit('setOverlay', false);
@@ -518,7 +519,7 @@
                             this.$store.commit('setOverlay', false);
                             this.dialog2 = false;
                             this.reason_for_return = '';
-                            window.location.href = '/cashier/tickets';
+                            window.location.href = this.linkAfterAction;
                         })
                         .catch(err => {
                             this.$store.commit('setOverlay', false);
