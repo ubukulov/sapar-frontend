@@ -76,7 +76,13 @@
                     <v-card-title>
                         Проданные билеты
                         <v-spacer></v-spacer>
-
+                        <v-btn
+                            @click="createPDF()"
+                            class="primary"
+                        >
+                            <v-icon>mdi-file-pdf-outline</v-icon>&nbsp;
+                            Скачать
+                        </v-btn>
                     </v-card-title>
 
                     <v-data-table
@@ -84,6 +90,7 @@
                             :headers="headers"
                             :search="search"
                             :loading="isLoaded"
+                            ref="soldTickets"
                             loading-text="Загружается... Пожалуйста подождите"
                     >
                         <template v-slot:item.dt = "{ item }">
@@ -113,6 +120,9 @@
             <v-card>
                 <v-card-text id="ticket" class="print_tickets_block">
                     <v-row>
+                        <v-col cols="12" class="text-center">
+                            <img src="/img/logo2.png" height="83" alt="Logo">
+                        </v-col>
                         <v-col cols="6" class="text-right">
                             <div><strong>Отправление</strong></div>
                             <div><strong>{{ carTravel.from.city }}</strong></div>
@@ -122,6 +132,9 @@
                             </div>
                             <div>
                                 <span>Время: {{ ticket.dep_time }}</span>
+                            </div>
+                            <div>
+                                <span>Автобус:</span>
                             </div>
                         </v-col>
                         <v-col cols="6">
@@ -134,23 +147,55 @@
                             <div>
                                 <span>Время: {{ ticket.des_time }}</span>
                             </div>
+                            <div>
+                                <span>{{ ticket.state_number }}</span>
+                            </div>
                         </v-col>
 
                         <v-col cols="12" class="text-center">
                             <div>
-                                <span>Автобус: {{ ticket.state_number }}</span>
-                            </div>
-
-                            <div>
-                                <span>Место: {{ ticket.number }}</span>
+                                <span>Место: {{ ticket.number }} {{ checkPlaceForUpperOrLower(ticket.number) }}</span>
                             </div>
 
                             <div>
                                 <span>Имя: {{ ticket.first_name }}</span>
                             </div>
+                            <div>
+                                <span>ИИН: {{ ticket.iin }}</span>
+                            </div>
 
                             <div>
                                 <span>Сумма: {{ ticket.price }}тг</span>
+                            </div>
+                        </v-col>
+
+                        <br>
+
+                        <v-col cols="4" class="text-right">
+                            <img src="/img/QRCode.png" height="83" alt="QRCode">
+                        </v-col>
+
+                        <v-col cols="7" class="text-center">
+                            <span style="font-size: 12px; line-height: 15px; font-weight: normal;">
+                                отсканируя этот <strong>QR-код</strong>, вы можете
+купить билет онлайн. Скачайте
+приложение <strong>Saparline</strong>
+с Playmarket или AppStore.
+Подробнее на сайте www.saparline.kz
+
+                            </span>
+                        </v-col>
+
+                        <v-col cols="1">
+
+                        </v-col>
+
+                        <v-col cols="12" class="text-center">
+                            <div>
+                                <span>
+                                Телефон для  экстренной связи: <br>
+                                    +7707 190 90 09
+                            </span>
                             </div>
 
                             <div>
@@ -212,6 +257,7 @@
                 placesForRoute: [],
                 soldTicketsForCurrentCarTravel: [],
                 headers: [
+                    {text: 'ID', value: 'id'},
                     {text: 'Место', value: 'number'},
                     {text: 'Цена', value: 'price'},
                     {text: 'Имя', value: 'first_name'},
@@ -250,6 +296,7 @@
                 .then(res => {
                     this.$store.commit('setOverlay', false);
                     this.carTravel = res.data[0];
+                    console.log('carTravel', this.carTravel)
                     switch (this.carTravel.car.car_type_id) {
                         case 1:
                             this.schema = 'Schema53'
@@ -293,6 +340,7 @@
                 axios.get(`${this.$apiUrl}cashier/car-travel/${this.carTravelId}/get-sold-tickets-for-current-route`)
                     .then(res => {
                         this.soldTicketsForCurrentCarTravel = res.data;
+                        console.log('ss', res.data)
                     })
                     .catch(err => {
                         console.log(err)
@@ -304,6 +352,28 @@
             },
             printTicket(){
                 this.$htmlToPaper('ticket');
+				this.dialog = false;
+            },
+            checkPlaceForUpperOrLower(place){
+                if (this.carTravel.car.car_type_id === 2) {
+                    let upperPlaces = [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,35,36];
+                    let lowerPlaces = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,33,34];
+                    for(let i = 0; i<upperPlaces.length; i++) {
+                        if (upperPlaces[i] === place) {
+                            return '(верхний)';
+                        }
+                    }
+                    for(let i = 0; i<lowerPlaces.length; i++) {
+                        if (lowerPlaces[i] === place) {
+                            return '(нижний)';
+                        }
+                    }
+                } else {
+                    return '';
+                }
+            },
+            createPDF(){
+
             }
         },
         created() {
