@@ -38,8 +38,8 @@
 
                     <v-col cols="4">
                         <p>Номер машины: {{ carTravel.car.state_number }}</p>
-                        <p>Дата отправление: {{ carTravel.departure_time }}</p>
-                        <p>Дата прибытие: {{ carTravel.destination_time }}</p>
+                        <p>Дата отправление: <br>{{ moment(carTravel.departure_time).format('LLL') }}</p>
+                        <p>Дата прибытие: <br>{{ moment(carTravel.destination_time).format('LLL') }}</p>
                     </v-col>
 
                     <v-col cols="5">
@@ -80,7 +80,7 @@
                             @click="createPDF()"
                             class="primary"
                         >
-                            <v-icon>mdi-file-pdf-outline</v-icon>&nbsp;
+                            <v-icon>mdi-file-pdf-box</v-icon>&nbsp;
                             Скачать
                         </v-btn>
                     </v-card-title>
@@ -227,6 +227,74 @@
         </v-dialog>
 
         <WaitingLoader></WaitingLoader>
+
+        <vue-html2pdf
+                :show-layout="false"
+                :float-layout="true"
+                :enable-download="true"
+                :preview-modal="false"
+                :paginate-elements-by-height="1400"
+                :filename="carTravel.car.state_number"
+                :pdf-quality="2"
+                :manual-pagination="false"
+                pdf-format="a4"
+                pdf-orientation="portrait"
+                pdf-content-width="800px"
+
+                @progress="onProgress($event)"
+                @hasStartedGeneration="hasStartedGeneration()"
+                @hasGenerated="hasGenerated($event)"
+                ref="html2Pdf"
+        >
+            <section slot="pdf-content" style="padding: 10px;">
+                <section class="pdf-item">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align: center;">
+                            <img src="/img/logo2.png" height="40" alt="Logo">
+                        </div>
+
+                        <div class="col-md-6">
+                            <p>Номер машины: <strong>{{ carTravel.car.state_number }}</strong></p>
+                            <p>Дата отправление: <strong>{{ moment(carTravel.departure_time).format('LLL') }}</strong></p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <p><strong>{{ carTravel.from.city }}</strong> ({{carTravel.from.station}}) - <strong>{{ carTravel.to.city }}</strong> ({{carTravel.to.station}})</p>
+                            <p>Дата прибытие: <strong>{{ moment(carTravel.destination_time).format('LLL') }}</strong></p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="pdf-item">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <h4>Список проданных билетов</h4>
+                            <table class="table table-border">
+                                <thead>
+                                <tr>
+                                    <th>Место</th>
+                                    <th>Цена</th>
+                                    <th>Имя</th>
+                                    <th>Телефон</th>
+                                    <th>ИИН</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr v-for="(item, i) in soldTicketsForCurrentCarTravel" :key="i">
+                                    <td>{{ item.number }}</td>
+                                    <td>{{ item.price }}</td>
+                                    <td>{{ item.first_name }}</td>
+                                    <td>{{ item.phone }}</td>
+                                    <td>{{ item.iin }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </section>
+        </vue-html2pdf>
     </div>
 </template>
 
@@ -240,6 +308,9 @@
     import Schema62 from "./Schemes/Schema62";
     import WaitingLoader from "../../dialogs/WaitingLoader";
     import VueBarcode from 'vue-barcode';
+    import VueHtml2pdf from 'vue-html2pdf'
+    import moment from 'moment'
+    import 'moment/locale/ru'
     export default {
         components: {
             WaitingLoader,
@@ -250,6 +321,7 @@
             Schema53,
             Schema62,
             VueBarcode,
+            VueHtml2pdf,
         },
         data(){
             return {
@@ -287,6 +359,7 @@
                 carTravel: [],
                 upperPlace: true,
                 lowerPlace: true,
+                moment: moment
             }
         },
         methods: {
@@ -373,7 +446,7 @@
                 }
             },
             createPDF(){
-
+                this.$refs.html2Pdf.generatePdf()
             }
         },
         created() {
