@@ -2,7 +2,7 @@
     <div class="mt-2">
         <v-row>
             <v-col cols="4">
-                <v-row>
+                <v-row v-if="schema==='Schema36'">
                     <v-col>
                         <v-checkbox
                             v-model="upperPlace"

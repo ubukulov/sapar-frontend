@@ -72,6 +72,7 @@
                             label="ИИН"
                             class="mt-5"
                             counter="12"
+                            v-mask="'############'"
                             dense
                             solo
                     ></v-text-field>
