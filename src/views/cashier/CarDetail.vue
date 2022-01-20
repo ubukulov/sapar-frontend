@@ -153,8 +153,12 @@
                         </v-col>
 
                         <v-col cols="12" class="text-center">
-                            <div>
-                                <span>Место: {{ ticket.number }} {{ checkPlaceForUpperOrLower(ticket.number) }}</span>
+                            <div v-if="this.carTravel.car.car_type_id === 2">
+                                <span>Место: {{ checkPlaceForUpperOrLow(ticket.number) }} {{ checkPlaceForUpperOrLower(ticket.number) }}</span>
+                            </div>
+
+                            <div v-if="this.carTravel.car.car_type_id !== 2">
+                                <span>Место: {{ ticket.number }}</span>
                             </div>
 
                             <div>
@@ -413,7 +417,6 @@
                 axios.get(`${this.$apiUrl}cashier/car-travel/${this.carTravelId}/get-sold-tickets-for-current-route`)
                     .then(res => {
                         this.soldTicketsForCurrentCarTravel = res.data;
-                        console.log('ss', res.data)
                     })
                     .catch(err => {
                         console.log(err)
@@ -429,8 +432,8 @@
             },
             checkPlaceForUpperOrLower(place){
                 if (this.carTravel.car.car_type_id === 2) {
-                    let upperPlaces = [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,35,36];
-                    let lowerPlaces = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,33,34];
+                    let upperPlaces = [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34];
+                    let lowerPlaces = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,35,36];
                     for(let i = 0; i<upperPlaces.length; i++) {
                         if (upperPlaces[i] === place) {
                             return '(верхний)';
@@ -447,6 +450,22 @@
             },
             createPDF(){
                 this.$refs.html2Pdf.generatePdf()
+            },
+            checkPlaceForUpperOrLow(place){
+                if(place > 32) {
+                    return 0;
+                }
+                if(place < 17) {
+                    return place;
+                }
+                if (place > 16 && place < 32) {
+                    let uItems = [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32];
+                    for(let i = 0; i < uItems.length; i++) {
+                        if (uItems[i] === place) {
+                            return uItems[i] - 16;
+                        }
+                    }
+                }
             }
         },
         created() {

@@ -25,15 +25,16 @@
                         v-model="from_city_id"
                         prepend-icon="mdi-map-marker"
                         item-text="name"
+                        disabled
                         dense
                         solo
                 ></v-select>
             </v-col>
             <v-col cols="2">
                 <v-select
-                        :items="cities"
+                        :items="to_cities"
                         label="Выберите город"
-                        :hint="`${cities.id}, ${cities.name}`"
+                        :hint="`${to_cities.id}, ${to_cities.name}`"
                         item-value="id"
                         v-model="to_city_id"
                         prepend-icon="mdi-location"
@@ -176,6 +177,14 @@
                     },
                 ],
                 filter_id: 0,
+                user: []
+            }
+        },
+        computed: {
+            to_cities(){
+                return this.cities.filter((item) => {
+                    return item.id !== this.from_city_id;
+                })
             }
         },
         methods: {
@@ -221,6 +230,8 @@
         created() {
             this.getTravels();
             this.getCities();
+            this.user = this.$store.getters.getUserData;
+            this.from_city_id = this.user.city_id;
         }
     }
 </script>

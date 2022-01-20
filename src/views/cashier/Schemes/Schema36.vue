@@ -5,16 +5,16 @@
                 <v-row v-if="firstBlocks.length > 0">
                     <v-col cols="6" v-for="(item, i) in firstBlocks" :key="i" :class="'schema36_2div'+i">
                         <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place" :class="checkForUpperOrLowerPlace(item.number)">
-                            <span v-if="item.number > 32 && item.number < 35">0 <v-icon>mdi-arrow-down</v-icon></span>
-                            <span v-if="item.number > 34 && item.number < 37">0 <v-icon>mdi-arrow-up</v-icon></span>
+                            <span v-if="item.number > 32 && item.number < 35">0 <v-icon>mdi-arrow-up</v-icon></span>
+                            <span v-if="item.number > 34 && item.number < 37">0 <v-icon>mdi-arrow-down</v-icon></span>
                         </div>
                         <div v-if="item.status === 'take'" title="Место уже продано" @click="showReturnPlace(item)" class="place taken_place" :class="checkForUpperOrLowerPlace(item.number)">
-                            <span v-if="item.number > 32 && item.number < 35">0 <v-icon>mdi-arrow-down</v-icon></span>
-                            <span v-if="item.number > 34 && item.number < 37">0 <v-icon>mdi-arrow-up</v-icon></span>
+                            <span v-if="item.number > 32 && item.number < 35">0 <v-icon>mdi-arrow-up</v-icon></span>
+                            <span v-if="item.number > 34 && item.number < 37">0 <v-icon>mdi-arrow-down</v-icon></span>
                         </div>
                         <div v-if="item.status === 'in_process'" title="Место уже на броне" class="place process_place" :class="checkForUpperOrLowerPlace(item.number)">
-                            <span v-if="item.number > 32 && item.number < 35">0 <v-icon>mdi-arrow-down</v-icon></span>
-                            <span v-if="item.number > 34 && item.number < 37">0 <v-icon>mdi-arrow-up</v-icon></span>
+                            <span v-if="item.number > 32 && item.number < 35">0 <v-icon>mdi-arrow-up</v-icon></span>
+                            <span v-if="item.number > 34 && item.number < 37">0 <v-icon>mdi-arrow-down</v-icon></span>
                         </div>
                     </v-col>
                 </v-row>
@@ -214,7 +214,7 @@
                 max-width="340"
         >
             <v-card>
-                <v-card-title>Место: {{ place_number }} - укажите данные</v-card-title>
+                <v-card-title>Место: {{ this.$parent.checkPlaceForUpperOrLow(place_number) }} {{ (this.$parent.checkPlaceForUpperOrLower(place_number)) }}</v-card-title>
                 <v-card-text class="dialog_text">
                     <v-text-field
                         v-model="first_name"
@@ -449,7 +449,7 @@
         methods: {
             checkForUpperOrLowerPlace (place){
                 if (this.upperPlace) {
-                    let upperPlaces = [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,35,36];
+                    let upperPlaces = [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34];
                     for(let i = 0; i<upperPlaces.length; i++) {
                         if (upperPlaces[i] === place) {
                             return 'upper';
@@ -457,7 +457,7 @@
                     }
                 }
                 if (this.lowerPlace) {
-                    let lowerPlaces = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,33,34];
+                    let lowerPlaces = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,35,36];
                     for(let i = 0; i<lowerPlaces.length; i++) {
                         if (lowerPlaces[i] === place) {
                             return 'lower';
@@ -588,5 +588,17 @@
     }
     .upper,.lower {
         opacity: 1 !important;
+    }
+    .free_place{
+        background-image: url("~@/assets/free_b_place70.png") !important;
+    }
+    .taken_place{
+        background-image: url("~@/assets/taken_b_place70.png") !important;
+    }
+    .process_place {
+        background-image: url("~@/assets/in_process_b_place70.png") !important;
+    }
+    .place {
+        height: 90px !important;
     }
 </style>
