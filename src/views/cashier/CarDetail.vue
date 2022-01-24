@@ -97,6 +97,16 @@
                             {{ item.dep_date }} / {{ item.dep_time }}
                         </template>
 
+                        <template v-slot:item.number = "{ item }">
+                            <div v-if="carTravel.car.car_type_id === 2">
+                                {{ checkPlaceForUpperOrLow(item.number) }} {{ checkPlaceForUpperOrLower(item.number) }}
+                            </div>
+
+                            <div v-if="carTravel.car.car_type_id !== 2">
+                                {{ item.number }}
+                            </div>
+                        </template>
+
                         <template v-slot:item.print="{ item }">
                             <v-icon
                                     title="Распечатать билет"
@@ -417,6 +427,7 @@
                 axios.get(`${this.$apiUrl}cashier/car-travel/${this.carTravelId}/get-sold-tickets-for-current-route`)
                     .then(res => {
                         this.soldTicketsForCurrentCarTravel = res.data;
+                        console.log('ss', res.data)
                     })
                     .catch(err => {
                         console.log(err)
