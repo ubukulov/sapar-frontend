@@ -37,7 +37,7 @@
             </v-col>
 
             <v-col cols="4" style="padding-bottom: 40px;">
-                <v-row>
+                <v-row v-if="selected_item.car.car_type_id === 2">
                     <v-col>
                         <v-checkbox
                                 v-model="upperPlace"
@@ -183,8 +183,8 @@
                 .then(res => {
                     this.$store.commit('setOverlay', false);
                     this.items = res.data;
+                    this.selected_item = this.items[0];
                     this.getPlacesForRoute(this.items[0].id);
-                    console.log(res.data)
                 })
                 .catch(err => {
                     this.$store.commit('setOverlay', false);

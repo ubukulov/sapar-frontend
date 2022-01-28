@@ -62,55 +62,7 @@
             </v-col>
         </v-row>-->
 
-        <v-row>
-            <v-col cols="2">
-                <v-select
-                        :items="cities"
-                        label="Выберите город"
-                        :hint="`${cities.id}, ${cities.name}`"
-                        item-value="id"
-                        v-model="from_city_id"
-                        prepend-icon="mdi-map-marker"
-                        item-text="name"
-                        disabled
-                        dense
-                        solo
-                ></v-select>
-            </v-col>
-            <v-col cols="2">
-                <v-select
-                        :items="to_cities"
-                        label="Выберите город"
-                        :hint="`${to_cities.id}, ${to_cities.name}`"
-                        item-value="id"
-                        v-model="to_city_id"
-                        prepend-icon="mdi-location"
-                        item-text="name"
-                        dense
-                        solo
-                ></v-select>
-            </v-col>
-
-            <v-col cols="3">
-                <v-select
-                        :items="filters"
-                        :hint="`${filters.id}, ${filters.title}`"
-                        item-value="id"
-                        v-model="filter_id"
-                        solo
-                        dense
-                        item-text="title"
-                ></v-select>
-            </v-col>
-
-            <v-col cols="2">
-                <v-btn
-                        @click="getTravelsByFilter()"
-                >
-                    Показать
-                </v-btn>
-            </v-col>
-        </v-row>
+        <SearchTrips></SearchTrips>
 
         <v-row>
             <v-col cols="7">
@@ -127,7 +79,7 @@
                 </v-card-title>
                 <v-data-table
                         :headers="headers"
-                        :items="items"
+                        :items="travels"
                         :search="search"
                         :loading="isLoaded"
                         loading-text="Загружается... Пожалуйста подождите"
@@ -217,6 +169,7 @@
     import Schema53 from "./Schemes/Schema53";
     import Schema62 from "./Schemes/Schema62";
     import WaitingLoader from "../../dialogs/WaitingLoader";
+    import SearchTrips from "../../components/SearchTrips";
     export default {
         components: {
             Schema4,
@@ -225,7 +178,8 @@
             Schema36,
             Schema53,
             Schema62,
-            WaitingLoader
+            WaitingLoader,
+            SearchTrips
         },
         data(){
             return {
@@ -254,23 +208,12 @@
                     { text: 'Дата отправление', value: 'departure_date' },
                     { text: 'Время', value: 'departure_time' },
                 ],
-                items: [],
+                travels: [],
                 user: [],
                 selected_item: [],
                 placesForRoute: [],
                 upperPlace: true,
                 lowerPlace: true,
-                filters: [
-                    {
-                        'title': 'Сегодняшние поездки',
-                        'id': 0
-                    },
-                    {
-                        'title': 'Запланированные поезки',
-                        'id': 1
-                    },
-                ],
-                filter_id: 0,
             }
         },
         computed: {
@@ -312,9 +255,10 @@
                 axios.get(`${this.$apiUrl}cashier/tickets/get-tickets-for-next-days`)
                     .then(res => {
                         this.$store.commit('setOverlay', false);
-                        this.items = res.data;
-                        this.getPlacesForRoute(this.items[0].id);
-                        console.log(res.data)
+                        this.travels = res.data;
+                        this.selected_item = this.travels[0];
+                        this.getPlacesForRoute(this.travels[0].id);
+                        console.log('selected_item', this.selected_item)
                     })
                     .catch(err => {
                         this.$store.commit('setOverlay', false);
@@ -333,22 +277,38 @@
                         console.log(err)
                     })
             },
-            getTravelsByFilter(){
-                if (this.from_city_id !== 0 && this.to_city_id !== 0) {
-                    this.items = [];
-                    let formData = new FormData();
-                    formData.append('from_city_id', this.from_city_id);
-                    formData.append('to_city_id', this.to_city_id);
-                    formData.append('filter_id', this.filter_id);
-                    this.$store.commit('setOverlay', true);
-                    axios.post(`${this.$apiUrl}cashier/intercity/get-travels-by-filter`, formData)
-                        .then(res => {
-                            this.$store.commit('setOverlay', false);
-                            this.items = res.data;
-                        })
-                        .catch(err => {
-                            console.log(err)
-                        })
+            checkPlaceForUpperOrLower(place){
+                if (this.selected_item.count_free_places === 36) {
+                    let upperPlaces = [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34];
+                    let lowerPlaces = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,35,36];
+                    for(let i = 0; i<upperPlaces.length; i++) {
+                        if (upperPlaces[i] === place) {
+                            return '(верхний)';
+                        }
+                    }
+                    for(let i = 0; i<lowerPlaces.length; i++) {
+                        if (lowerPlaces[i] === place) {
+                            return '(нижний)';
+                        }
+                    }
+                } else {
+                    return '';
+                }
+            },
+            checkPlaceForUpperOrLow(place){
+                if(place > 32) {
+                    return 0;
+                }
+                if(place < 17) {
+                    return place;
+                }
+                if (place > 16 && place < 32) {
+                    let uItems = [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32];
+                    for(let i = 0; i < uItems.length; i++) {
+                        if (uItems[i] === place) {
+                            return uItems[i] - 16;
+                        }
+                    }
                 }
             }
         },
