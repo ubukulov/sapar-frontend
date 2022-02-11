@@ -82,13 +82,19 @@
                     </v-card-text>
 
                     <v-card-actions>
-
-                        <v-spacer></v-spacer>
                         <v-btn
                                 color="deep-purple lighten-2"
                                 :to="`/cashier/intercity/${item.id}`" link
                         >
                             Посмотреть
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                v-if="item.car.car_type_count_places - item.count_free_places == 0"
+                                color="red"
+                                @click="destroyTravel(item.id)"
+                        >
+                            Удалить
                         </v-btn>
                     </v-card-actions>
                 </v-card>
@@ -133,6 +139,21 @@
                     console.log(err)
                 })
             },
+            destroyTravel(car_travel_id){
+                if(confirm("Вы действительно хотите удалить?")) {
+                    this.$store.commit('setOverlay', true);
+                    axios.get(`${this.$apiUrl}cashier/intercity/${car_travel_id}/destroy`)
+                        .then(res => {
+                            this.$store.commit('setOverlay', false);
+                            console.log(res);
+                            this.$router.go(this.$router.currentRoute)
+                        })
+                        .catch(err => {
+                            this.$store.commit('setOverlay', false);
+                            console.log(err);
+                        })
+                }
+            }
         },
         created() {
             this.user = this.$store.getters.getUserData;
