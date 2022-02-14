@@ -23,6 +23,7 @@
                         :linkAfterAction="`/cashier/intercity/${carTravelId}`"
                         :upperPlace="upperPlace"
                         :lowerPlace="lowerPlace"
+                        :carTypeId="carTravel.car.car_type_id"
                 ></component>
             </v-col>
 
@@ -40,6 +41,8 @@
                         <p>Номер машины: {{ carTravel.car.state_number }}</p>
                         <p>Дата отправление: <br>{{ moment(carTravel.departure_time).format('LLL') }}</p>
                         <p>Дата прибытие: <br>{{ moment(carTravel.destination_time).format('LLL') }}</p>
+                        <br>
+                        <v-btn color="warning" @click="changeCar">Изменить автобус</v-btn>
                     </v-col>
 
                     <v-col cols="5">
@@ -129,6 +132,11 @@
 
         <WaitingLoader></WaitingLoader>
 
+        <ChangeCarDialog
+            :changeDialog="changeDialog"
+            :carTravelId="carTravelId"
+        ></ChangeCarDialog>
+
         <vue-html2pdf
                 :show-layout="false"
                 :float-layout="true"
@@ -183,9 +191,15 @@
 
                                 <tbody>
                                 <tr v-for="(item, i) in soldTicketsForCurrentCarTravel" :key="i">
-                                    <td>{{ item.number }}</td>
+                                    <td v-if="carTravel.car.car_type_id === 2">
+                                        {{ checkPlaceForUpperOrLow(item.number) }} {{ checkPlaceForUpperOrLower(item.number) }}
+                                    </td>
+
+                                    <td v-if="carTravel.car.car_type_id !== 2">
+                                        {{ item.number }}
+                                    </td>
                                     <td>{{ item.price }}</td>
-                                    <td>{{ item.first_name }}</td>
+                                    <td style="text-align: left !important;">{{ item.first_name }}</td>
                                     <td>{{ item.phone }}</td>
                                     <td>{{ item.iin }}</td>
                                 </tr>
@@ -213,6 +227,7 @@
     import moment from 'moment'
     import 'moment/locale/ru'
     import PrintTicketDialog from "../../dialogs/PrintTicketDialog";
+    import ChangeCarDialog from "../../dialogs/ChangeCarDialog";
     export default {
         components: {
             WaitingLoader,
@@ -224,7 +239,8 @@
             Schema62,
             VueBarcode,
             VueHtml2pdf,
-            PrintTicketDialog
+            PrintTicketDialog,
+            ChangeCarDialog
         },
         data(){
             return {
@@ -242,6 +258,7 @@
                 ],
                 isLoaded: false,
                 dialog: false,
+                changeDialog: false,
                 search: '',
                 filters: [
                     {
@@ -316,7 +333,7 @@
                 axios.get(`${this.$apiUrl}cashier/car-travel/${this.carTravelId}/get-sold-tickets-for-current-route`)
                     .then(res => {
                         this.soldTicketsForCurrentCarTravel = res.data;
-                        console.log('ss', res.data)
+                        console.log('ss2', res.data)
                     })
                     .catch(err => {
                         console.log(err)
@@ -362,6 +379,9 @@
                         }
                     }
                 }
+            },
+            changeCar(){
+                this.changeDialog = true;
             }
         },
         created() {

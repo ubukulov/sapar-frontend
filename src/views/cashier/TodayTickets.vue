@@ -77,6 +77,7 @@
                         linkAfterAction="/cashier/tickets"
                         :upperPlace="upperPlace"
                         :lowerPlace="lowerPlace"
+                        :carTypeId="selected_item.car.car_type_id"
                 ></Schema36>
 
                 <Schema53
@@ -183,8 +184,10 @@
                 .then(res => {
                     this.$store.commit('setOverlay', false);
                     this.items = res.data;
-                    this.selected_item = this.items[0];
-                    this.getPlacesForRoute(this.items[0].id);
+                    if(this.items.length !== 0) {
+                        this.selected_item = this.items[0];
+                        this.getPlacesForRoute(this.items[0].id);
+                    }
                 })
                 .catch(err => {
                     this.$store.commit('setOverlay', false);

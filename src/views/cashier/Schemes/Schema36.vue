@@ -214,7 +214,7 @@
                 max-width="340"
         >
             <v-card>
-                <v-card-title>Место: {{ this.$parent.checkPlaceForUpperOrLow(place_number) }} {{ (this.$parent.checkPlaceForUpperOrLower(place_number)) }}</v-card-title>
+                <v-card-title>Место: {{ checkPlaceForUpperOrLow(place_number) }} {{ (checkPlaceForUpperOrLower(place_number)) }}</v-card-title>
                 <v-card-text class="dialog_text">
                     <v-text-field
                         v-model="first_name"
@@ -321,6 +321,7 @@
             'linkAfterAction',
             'upperPlace',
             'lowerPlace',
+            'carTypeId'
         ],
         data(){
             return {
@@ -550,6 +551,43 @@
                         })
                 }
             },
+            checkPlaceForUpperOrLow(place){
+                if(place > 32) {
+                    return 0;
+                }
+                if(place < 17) {
+                    return place;
+                }
+                if (place > 16 && place < 32) {
+                    let uItems = [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32];
+                    for(let i = 0; i < uItems.length; i++) {
+                        if (uItems[i] === place) {
+                            return uItems[i] - 16;
+                        }
+                    }
+                }
+            },
+            checkPlaceForUpperOrLower(place){
+                if (this.carTypeId === 2) {
+                    let upperPlaces = [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34];
+                    let lowerPlaces = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,35,36];
+                    for(let i = 0; i<upperPlaces.length; i++) {
+                        if (upperPlaces[i] === place) {
+                            return '(верхний)';
+                        }
+                    }
+                    for(let i = 0; i<lowerPlaces.length; i++) {
+                        if (lowerPlaces[i] === place) {
+                            return '(нижний)';
+                        }
+                    }
+                } else {
+                    return '';
+                }
+            },
+        },
+        created() {
+            console.log('places', this.places)
         }
     }
 </script>

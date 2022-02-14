@@ -40,7 +40,7 @@
                     <v-card-title>
                         <v-row>
                             <v-col>
-                                {{ item.car.car_type }}
+                                {{ item.car.state_number }}
                             </v-col>
 
                             <v-col>
