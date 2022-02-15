@@ -38,7 +38,7 @@
 </template>
 
 <script>
-    import LeftMenu from "@/views/cashier/LeftMenu";
+    import LeftMenu from "@/views/menu/LeftMenu";
     export default {
         components: {
             LeftMenu,

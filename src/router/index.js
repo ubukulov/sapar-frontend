@@ -3,7 +3,6 @@ import VueRouter from 'vue-router'
 import Auth from '../layouts/Auth.vue';
 import Intercity from "../views/cashier/Intercity";
 import DefaultCashier from "../layouts/DefaultCashier";
-import Tours from "../views/cashier/Tours";
 import CreateTrip from "../views/cashier/CreateTrip";
 import store from '../store'
 import auth from '../middleware/auth'
@@ -11,6 +10,8 @@ import middlewarePipeline from '../middleware/middlewarePipeline'
 import Ticket from "../views/cashier/Ticket";
 import Register from "../views/Register";
 import CarDetail from "../views/cashier/CarDetail";
+import Tours from "../views/tour/Tours";
+import CreateTour from "../views/tour/CreateTour";
 
 Vue.use(VueRouter)
 
@@ -55,10 +56,27 @@ const routes = [
         name: 'Ticket',
         component: Ticket
       },
+    ]
+  },
+  {
+    path: '/tours',
+    name: 'Tours',
+    component: DefaultCashier,
+    meta: {
+      middleware: [
+        auth
+      ]
+    },
+    children: [
       {
-        path: '/cashier/tours',
+        path: '/tours/lists',
         name: 'Tours',
-        component: Tours
+        component: Tours,
+      },
+      {
+        path: '/tours/lists/create',
+        name: 'CreateTour',
+        component: CreateTour
       },
     ]
   },
