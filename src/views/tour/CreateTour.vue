@@ -60,7 +60,7 @@
                     <v-card
                             class="mb-12"
                             color="lighten-1"
-                            height="400px"
+                            height="auto"
                     >
                         <v-row>
                             <v-col cols="2">
@@ -126,6 +126,10 @@
                                         v-model="description"
                                 ></v-textarea>
                             </v-col>
+                        </v-row>
+                        <v-divider></v-divider>
+                        <v-row>
+                            <upload-image></upload-image>
                         </v-row>
                     </v-card>
 
@@ -261,10 +265,12 @@
     import 'bootstrap/dist/css/bootstrap.css'
     import 'bootstrap-vue/dist/bootstrap-vue.css'
     import WaitingLoader from "../../dialogs/WaitingLoader";
+    import UploadImage from "../../components/UploadImage";
     export default {
         components: {
             datetime: Datetime,
-            WaitingLoader
+            WaitingLoader,
+            UploadImage
         },
         data(){
             return {
@@ -293,8 +299,8 @@
                 errors: [],
                 meeting_places: [],
                 resting_places: [],
-                tour_price: 0,
-                seat_price: 0,
+                tour_price: null,
+                seat_price: null,
                 description: "",
             }
         },
