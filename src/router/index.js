@@ -12,6 +12,7 @@ import Register from "../views/Register";
 import CarDetail from "../views/cashier/CarDetail";
 import Tours from "../views/tour/Tours";
 import CreateTour from "../views/tour/CreateTour";
+import TourDetail from "../views/tour/TourDetail";
 
 Vue.use(VueRouter)
 
@@ -77,6 +78,11 @@ const routes = [
         path: '/tours/lists/create',
         name: 'CreateTour',
         component: CreateTour
+      },
+      {
+        path: '/tours/lists/:tourId',
+        name: 'TourDetail',
+        component: TourDetail
       },
     ]
   },

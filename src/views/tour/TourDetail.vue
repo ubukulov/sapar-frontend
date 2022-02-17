@@ -1,12 +1,22 @@
 <template>
     <div class="mt-2">
         <v-row>
+            <v-col cols="12">
+                <v-carousel :show-arrows="false">
+                    <v-carousel-item
+                            v-for="(item,i) in tour.images"
+                            :key="i"
+                            :src="`http://194.4.56.241:8888/${item.image}`"
+                    ></v-carousel-item>
+                </v-carousel>
+            </v-col>
+
             <v-col cols="4">
                 <v-row v-if="schema==='Schema36'">
                     <v-col>
                         <v-checkbox
-                            v-model="upperPlace"
-                            label="Верхний"
+                                v-model="upperPlace"
+                                label="Верхний"
                         ></v-checkbox>
 
                     </v-col>
@@ -20,51 +30,43 @@
                 <component
                         :is="schema"
                         :places="placesForRoute"
-                        :linkAfterAction="`/cashier/intercity/${carTravelId}`"
+                        :linkAfterAction="`/tours/lists/${tourId}`"
                         :upperPlace="upperPlace"
                         :lowerPlace="lowerPlace"
-                        :carTypeId="carTravel.car.car_type_id"
+                        :carTypeId="tour.car.car_type_id"
                 ></component>
             </v-col>
 
-            <v-col v-if="Object.keys(carTravel).length > 0" cols="8">
+            <v-col v-if="Object.keys(tour).length > 0" cols="8">
                 <v-row>
                     <v-col cols="3">
                         <v-img
                                 lazy-src="https://picsum.photos/id/11/10/6"
                                 max-height="250"
-                                :src="`http://194.4.56.241:8888/${carTravel.car.image}`"
+                                :src="`http://194.4.56.241:8888/${tour.car.image}`"
                         ></v-img>
                     </v-col>
 
                     <v-col cols="4">
-                        <p>Номер машины: {{ carTravel.car.state_number }}</p>
-                        <p>Дата отправление: <br>{{ moment(carTravel.departure_time).format('LLL') }}</p>
-                        <p>Дата прибытие: <br>{{ moment(carTravel.destination_time).format('LLL') }}</p>
-                        <br>
-                        <v-btn color="warning" @click="changeCar">Изменить автобус</v-btn>
+                        <p>Номер машины: {{ tour.car.state_number }}</p>
+                        <p>Дата отправление: <br>{{ moment(tour.departure_time).format('LLL') }}</p>
+                        <p>Дата прибытие: <br>{{ moment(tour.destination_time).format('LLL') }}</p>
+                        <!--<br>
+                        <v-btn color="warning" @click="changeCar">Изменить автобус</v-btn>-->
                     </v-col>
 
                     <v-col cols="5">
                         <v-row>
-                            <v-col cols="4" class="text-right">
-                                <div><strong>{{ carTravel.from.city }}</strong></div>
-                                <div><span>{{carTravel.from.station}}</span></div>
-                            </v-col>
+                            <v-col cols="12" class="text-right">
+                                <div><strong>{{ tour.city.name }}</strong></div>
+                                <div><span>{{tour.meeting_place.title}}</span></div>
 
-                            <v-col cols="4" class="text-center">
-                                <v-icon size="40">
-                                    mdi-chevron-right-circle-outline
-                                </v-icon>
-                            </v-col>
-
-                            <v-col cols="4" class="text-left">
-                                <div><strong>{{ carTravel.to.city }}</strong></div>
-                                <div><span>{{carTravel.to.station}}</span></div>
+                                <div><strong>{{ tour.resting_place.title }}</strong></div>
+                                <div><span></span></div>
                             </v-col>
                         </v-row>
 
-                        <v-row>
+                        <!--<v-row>
                             <v-col>
                                 <span class="card_car_info_span__success">Свободно: {{ carTravel.count_free_places }}</span>
                             </v-col>
@@ -72,7 +74,7 @@
                             <v-col>
                                 <span class="card_car_info_span__danger">Занято: {{ carTravel.car.car_type_count_places - carTravel.count_free_places }}</span>
                             </v-col>
-                        </v-row>
+                        </v-row>-->
                     </v-col>
                 </v-row>
                 <v-card>
@@ -80,8 +82,8 @@
                         Проданные билеты
                         <v-spacer></v-spacer>
                         <v-btn
-                            @click="createPDF()"
-                            class="primary"
+                                @click="createPDF()"
+                                class="primary"
                         >
                             <v-icon>mdi-file-pdf-box</v-icon>&nbsp;
                             Скачать
@@ -89,7 +91,7 @@
                     </v-card-title>
 
                     <v-data-table
-                            :items="soldTicketsForCurrentCarTravel"
+                            :items="soldTicketsForCurrentTour"
                             :headers="headers"
                             :search="search"
                             :loading="isLoaded"
@@ -101,11 +103,11 @@
                         </template>
 
                         <template v-slot:item.number = "{ item }">
-                            <div v-if="carTravel.car.car_type_id === 2">
+                            <div v-if="tour.car.car_type_id === 2">
                                 {{ checkPlaceForUpperOrLow(item.number) }} {{ checkPlaceForUpperOrLower(item.number) }}
                             </div>
 
-                            <div v-if="carTravel.car.car_type_id !== 2">
+                            <div v-if="tour.car.car_type_id !== 2">
                                 {{ item.number }}
                             </div>
                         </template>
@@ -125,16 +127,16 @@
         </v-row>
 
         <PrintTicketDialog
-            :ticket="ticket"
-            :carTravel="carTravel"
-            :dialog="dialog"
+                :ticket="ticket"
+                :carTravel="tour"
+                :dialog="dialog"
         ></PrintTicketDialog>
 
         <WaitingLoader></WaitingLoader>
 
         <ChangeCarDialog
-            :changeDialog="changeDialog"
-            :carTravelId="carTravelId"
+                :changeDialog="changeDialog"
+                :carTravelId="tourId"
         ></ChangeCarDialog>
 
         <vue-html2pdf
@@ -143,7 +145,7 @@
                 :enable-download="true"
                 :preview-modal="false"
                 :paginate-elements-by-height="1400"
-                :filename="carTravel.car.state_number"
+                :filename="tour.car.state_number"
                 :pdf-quality="2"
                 :manual-pagination="false"
                 pdf-format="a4"
@@ -163,13 +165,13 @@
                         </div>
 
                         <div class="col-md-6">
-                            <p>Номер машины: <strong>{{ carTravel.car.state_number }}</strong></p>
-                            <p>Дата отправление: <strong>{{ moment(carTravel.departure_time).format('LLL') }}</strong></p>
+                            <p>Номер машины: <strong>{{ tour.car.state_number }}</strong></p>
+                            <p>Дата отправление: <strong>{{ moment(tour.departure_time).format('LLL') }}</strong></p>
                         </div>
 
                         <div class="col-md-6">
-                            <p><strong>{{ carTravel.from.city }}</strong> ({{carTravel.from.station}}) - <strong>{{ carTravel.to.city }}</strong> ({{carTravel.to.station}})</p>
-                            <p>Дата прибытие: <strong>{{ moment(carTravel.destination_time).format('LLL') }}</strong></p>
+                            <p><strong>{{ tour.city.name }}</strong></p>
+                            <p>Дата прибытие: <strong>{{ moment(tour.destination_time).format('LLL') }}</strong></p>
                         </div>
                     </div>
                 </section>
@@ -190,12 +192,12 @@
                                 </thead>
 
                                 <tbody>
-                                <tr v-for="(item, i) in soldTicketsForCurrentCarTravel" :key="i">
-                                    <td v-if="carTravel.car.car_type_id === 2">
+                                <tr v-for="(item, i) in soldTicketsForCurrentTour" :key="i">
+                                    <td v-if="tour.car.car_type_id === 2">
                                         {{ checkPlaceForUpperOrLow(item.number) }} {{ checkPlaceForUpperOrLower(item.number) }}
                                     </td>
 
-                                    <td v-if="carTravel.car.car_type_id !== 2">
+                                    <td v-if="tour.car.car_type_id !== 2">
                                         {{ item.number }}
                                     </td>
                                     <td>{{ item.price }}</td>
@@ -215,12 +217,12 @@
 
 <script>
     import axios from 'axios'
-    import Schema4 from "../schemes/Schema4";
-    import Schema6 from "../schemes/Schema6";
-    import Schema7 from "../schemes/Schema7";
-    import Schema36 from "../schemes/Schema36";
-    import Schema53 from "../schemes/Schema53";
-    import Schema62 from "../schemes/Schema62";
+    import Schema4 from "../schemesTour/Schema4";
+    import Schema6 from "../schemesTour/Schema6";
+    import Schema7 from "../schemesTour/Schema7";
+    import Schema36 from "../schemesTour/Schema36";
+    import Schema53 from "../schemesTour/Schema53";
+    import Schema62 from "../schemesTour/Schema62";
     import WaitingLoader from "../../dialogs/WaitingLoader";
     import VueBarcode from 'vue-barcode';
     import VueHtml2pdf from 'vue-html2pdf'
@@ -246,7 +248,7 @@
             return {
                 schema: '',
                 placesForRoute: [],
-                soldTicketsForCurrentCarTravel: [],
+                soldTicketsForCurrentTour: [],
                 headers: [
                     {text: 'ID', value: 'id'},
                     {text: 'Место', value: 'number'},
@@ -260,23 +262,9 @@
                 dialog: false,
                 changeDialog: false,
                 search: '',
-                filters: [
-                    {
-                        'title': 'Актуальные билеты',
-                        'id': 0
-                    },
-                    {
-                        'title': 'Запланированные билеты',
-                        'id': 1
-                    },
-                    {
-                        'title': 'История',
-                        'id': 2
-                    },
-                ],
-                carTravelId: 0,
+                tourId: 0,
                 ticket: [],
-                carTravel: [],
+                tour: [],
                 upperPlace: true,
                 lowerPlace: true,
                 moment: moment
@@ -285,41 +273,41 @@
         methods: {
             getSchemaForCar(){
                 this.$store.commit('setOverlay', true);
-                axios.get(`${this.$apiUrl}cashier/car-travel/${this.carTravelId}/get-information-about-car-travel`)
-                .then(res => {
-                    this.$store.commit('setOverlay', false);
-                    this.carTravel = res.data[0];
-                    console.log('carTravel', this.carTravel)
-                    switch (this.carTravel.car.car_type_id) {
-                        case 1:
-                            this.schema = 'Schema53'
-                            break;
-                        case 2:
-                            this.schema = 'Schema36'
-                            break;
-                        case 3:
-                            this.schema = 'Schema6'
-                            break;
-                        case 5:
-                            this.schema = 'Schema4'
-                            break;
-                        case 6:
-                            this.schema = 'Schema7'
-                            break;
-                        case 7:
-                            this.schema = 'Schema62'
-                            break;
-                    }
-                    this.getPlacesForRoute();
-                    this.getSoldTicketsForCurrentCarTravel();
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+                axios.get(`${this.$apiUrl}tours/${this.tourId}/get-information-about-tour`)
+                    .then(res => {
+                        this.$store.commit('setOverlay', false);
+                        this.tour = res.data;
+                        console.log('tour', res.data)
+                        switch (this.tour.car.car_type_id) {
+                            case 1:
+                                this.schema = 'Schema53'
+                                break;
+                            case 2:
+                                this.schema = 'Schema36'
+                                break;
+                            case 3:
+                                this.schema = 'Schema6'
+                                break;
+                            case 5:
+                                this.schema = 'Schema4'
+                                break;
+                            case 6:
+                                this.schema = 'Schema7'
+                                break;
+                            case 7:
+                                this.schema = 'Schema62'
+                                break;
+                        }
+                        this.getPlacesForRoute();
+                        this.getSoldTicketsForCurrentTour();
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
             },
             getPlacesForRoute(){
                 this.$store.commit('setOverlay', true);
-                axios.get(`${this.$apiUrl}cashier/car-travel/${this.carTravelId}/get-all-places-for-route`)
+                axios.get(`${this.$apiUrl}tours/${this.tourId}/get-all-places-for-tour`)
                     .then(res => {
                         this.$store.commit('setOverlay', false);
                         this.placesForRoute = res.data;
@@ -329,11 +317,10 @@
                         console.log(err)
                     })
             },
-            getSoldTicketsForCurrentCarTravel(){
-                axios.get(`${this.$apiUrl}cashier/car-travel/${this.carTravelId}/get-sold-tickets-for-current-route`)
+            getSoldTicketsForCurrentTour(){
+                axios.get(`${this.$apiUrl}tours/${this.tourId}/get-sold-tickets-for-current-tour`)
                     .then(res => {
-                        this.soldTicketsForCurrentCarTravel = res.data;
-                        console.log('ss2', res.data)
+                        this.soldTicketsForCurrentTour = res.data;
                     })
                     .catch(err => {
                         console.log(err)
@@ -344,7 +331,7 @@
                 this.dialog = true;
             },
             checkPlaceForUpperOrLower(place){
-                if (this.carTravel.car.car_type_id === 2) {
+                if (this.tour.car.car_type_id === 2) {
                     let upperPlaces = [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34];
                     let lowerPlaces = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,35,36];
                     for(let i = 0; i<upperPlaces.length; i++) {
@@ -385,7 +372,7 @@
             }
         },
         created() {
-            this.carTravelId = this.$route.params.carTravelId;
+            this.tourId = this.$route.params.tourId;
             this.getSchemaForCar();
         }
     }

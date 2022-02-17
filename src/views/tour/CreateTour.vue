@@ -26,36 +26,6 @@
             </v-stepper-header>
 
             <v-stepper-items>
-                <v-stepper-content step="2">
-                    <v-card
-                            class="mb-12"
-                            color="lighten-1"
-                            height="200px"
-                    >
-                        <v-row>
-                            <v-col cols="3">
-                                <v-select
-                                        :items="cars"
-                                        label="Выберите автобус/машину"
-                                        :hint="`${cars.id}, ${cars.number}`"
-                                        item-value="id"
-                                        v-model="car_id"
-                                        :item-text="getFieldText"
-                                        dense
-                                        solo
-                                ></v-select>
-                            </v-col>
-                        </v-row>
-                    </v-card>
-
-                    <v-btn
-                            color="primary"
-                            @click="nextStep(3)"
-                    >
-                        Далее
-                    </v-btn>
-                </v-stepper-content>
-
                 <v-stepper-content step="1">
                     <v-card
                             class="mb-12"
@@ -129,7 +99,7 @@
                         </v-row>
                         <v-divider></v-divider>
                         <v-row>
-                            <upload-image></upload-image>
+                            <upload-image @getImagesList="setImagesList"></upload-image>
                         </v-row>
                     </v-card>
 
@@ -145,6 +115,36 @@
                             @click="e1 = 1"
                     >
                         Назад
+                    </v-btn>
+                </v-stepper-content>
+
+                <v-stepper-content step="2">
+                    <v-card
+                            class="mb-12"
+                            color="lighten-1"
+                            height="200px"
+                    >
+                        <v-row>
+                            <v-col cols="3">
+                                <v-select
+                                        :items="cars"
+                                        label="Выберите автобус/машину"
+                                        :hint="`${cars.id}, ${cars.number}`"
+                                        item-value="id"
+                                        v-model="car_id"
+                                        :item-text="getFieldText"
+                                        dense
+                                        solo
+                                ></v-select>
+                            </v-col>
+                        </v-row>
+                    </v-card>
+
+                    <v-btn
+                            color="primary"
+                            @click="nextStep(3)"
+                    >
+                        Далее
                     </v-btn>
                 </v-stepper-content>
 
@@ -200,7 +200,7 @@
 
                     <v-btn
                             class="green btn btn-success"
-                            @click="createTrip()"
+                            @click="createTour()"
                     >
                         Опубликовать поездку!
                     </v-btn>
@@ -281,18 +281,11 @@
                 company_id: 0,
                 dates: [],
                 menu: false,
-                from_place: null,
-                to_place: null,
-                price: null,
-                price_places: [],
                 e1: 1,
                 departure_time: this.currentDateTime(),
                 destination_time: this.currentDateTime(),
                 cities: [],
                 city_id: 0,
-                to_city_id: 0,
-                stations1: [],
-                stations2: [],
                 meeting_place_id: 0,
                 resting_place_id: 0,
                 dialog: false,
@@ -302,51 +295,10 @@
                 tour_price: null,
                 seat_price: null,
                 description: "",
+                imagesList: []
             }
         },
         methods: {
-            addToPricePlaces(){
-                this.errors = [];
-                if ((this.to_place > this.car.car_type.count_places) || (this.from_place > this.car.car_type.count_places)) {
-                    this.errors.push(`Максимальное количество место: ${this.car.car_type.count_places}`)
-                }
-
-                if (this.from_place === null || this.to_place === null) {
-                    this.errors.push('Укажите место правильно')
-                }
-
-                if (this.price === null || this.price === '') {
-                    this.errors.push('Укажите цену')
-                }
-
-                if (this.price_places.length !== 0) {
-                    for(let i=0; i<this.price_places.length; i++) {
-                        if (parseInt(this.from_place) >= parseInt(this.price_places[i].from) && parseInt(this.from_place) <= parseInt(this.price_places[i].to)) {
-                            this.errors.push(`Место: ${this.from_place} уже указано ранее`);
-                        }
-
-                        if (parseInt(this.to_place) <= parseInt(this.price_places[i].to)) {
-                            this.errors.push(`Место: ${this.to_place} уже указано ранее`);
-                        }
-
-                        if (parseInt(this.from_place) === parseInt(this.to_place)) {
-                            this.errors.push(`Место - ${this.from_place} и место ${this.to_place} не должно быть равно`);
-                        }
-                    }
-                }
-
-                if (this.errors.length === 0) {
-                    let arr = {};
-                    arr.from = this.from_place;
-                    arr.to   = this.to_place;
-                    arr.price = this.price;
-                    this.price_places.push(arr);
-
-                    this.from_place =  null
-                    this.to_place = null
-                    this.price = null
-                }
-            },
             getMeetingOrRestingPlacesForCity(city_id){
                 axios.get(`${this.$apiUrl}tours/${city_id}/get-meeting-places`)
                     .then(res => {
@@ -363,6 +315,9 @@
                     .catch(err => {
                         console.log(err)
                     })
+            },
+            setImagesList(list){
+                this.imagesList = list;
             },
             getCompanyCarLists(){
                 axios.get(`${this.$apiUrl}cashier/companies/1/get-cars-list`)
@@ -386,47 +341,44 @@
                         console.log(err)
                     })
             },
-            getStationsForCity(city_id, type = false){
-                axios.get(`${this.$apiUrl}cashier/cities/${city_id}/get-stations`)
-                    .then(res => {
-                        if (type) {
-                            this.stations2 = res.data;
-                        } else {
-                            this.stations1 = res.data;
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-            },
-            createTrip(){
+            createTour(){
                 if(this.errors.length === 0) {
                     this.$store.commit('setOverlay', true);
                     let formData = new FormData();
-                    formData.append('company_id', this.company_id);
                     formData.append('car_id', this.car_id);
-                    formData.append('from_city_id', this.from_city_id);
-                    formData.append('to_city_id', this.to_city_id);
-                    formData.append('from_station_id', this.from_station_id);
-                    formData.append('to_station_id', this.to_station_id);
+                    formData.append('city_id', this.city_id);
+                    formData.append('meeting_place_id', this.meeting_place_id);
+                    formData.append('resting_place_id', this.resting_place_id);
+                    formData.append('description', this.description);
                     formData.append('departure_time', this.departure_time);
                     formData.append('destination_time', this.destination_time);
-                    formData.append('price_places', JSON.stringify(this.price_places));
 
-                    axios.post(`${this.$apiUrl}cashier/create-trip`, formData)
+                    for(let i = 0; i<this.imagesList.length; i++) {
+                        formData.append('images[]', this.imagesList[i]);
+                    }
+
+                    formData.append('tour_price', this.tour_price);
+                    formData.append('seat_price', this.seat_price);
+
+                    axios.post(`${this.$apiUrl}tours/create`, formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        },
+                    })
                         .then(res => {
                             console.log(res)
                             this.$store.commit('setOverlay', false);
                             this.dialog = true;
                         })
                         .catch(err => {
+                            this.$store.commit('setOverlay', false);
                             console.log(err)
                         })
                 }
             },
             closeDialog(){
                 this.dialog = false
-                this.$router.push({name: 'Intercity'})
+                this.$router.push({name: 'Tours'})
             },
             getFieldText(item) {
                 return `${item.number} (${item.car_type_name}, кол-во мест: ${item.count_places})`

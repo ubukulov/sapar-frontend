@@ -100,12 +100,12 @@
 
 <script>
     import axios from 'axios'
-    import Schema4 from "./Schemes/Schema4";
-    import Schema6 from "./Schemes/Schema6";
-    import Schema7 from "./Schemes/Schema7";
-    import Schema36 from "./Schemes/Schema36";
-    import Schema53 from "./Schemes/Schema53";
-    import Schema62 from "./Schemes/Schema62";
+    import Schema4 from "../schemes/Schema4";
+    import Schema6 from "../schemes/Schema6";
+    import Schema7 from "../schemes/Schema7";
+    import Schema36 from "../schemes/Schema36";
+    import Schema53 from "../schemes/Schema53";
+    import Schema62 from "../schemes/Schema62";
     import WaitingLoader from "../../dialogs/WaitingLoader";
     export default {
         components: {

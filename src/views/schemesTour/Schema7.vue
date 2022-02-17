@@ -1,46 +1,18 @@
 <template>
     <v-row class="mt-2">
-        <v-row v-if="firstBlocks.length > 0">
-            <v-col cols="3" v-for="(item, i) in firstBlocks" :key="i" :class="'schema53_div'+i">
-                <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place"><span>{{ item.number }}</span></div>
-                <div v-if="item.status === 'take'" @click="showReturnPlace(item)" title="Место уже продано" class="place taken_place"><span>{{ item.number }}</span></div>
-                <div v-if="item.status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ item.number }}</span></div>
-            </v-col>
+        <v-col cols="8">
+            <v-row v-if="places.length > 0">
+                <v-col cols="7" class="mb-10">
+                    <img src="~@/assets/rul.png" alt="">
+                </v-col>
 
-            <v-col cols="5" class="text-right" style="padding-top: 25px; padding-right: 0px;">
-                <div>Выход</div>
-                <div><v-icon>mdi-arrow-right</v-icon></div>
-            </v-col>
-        </v-row>
-
-        <v-row v-if="secondBlocks.length > 0">
-            <v-col cols="3" v-for="(item, i) in secondBlocks" :key="i" :class="'schema53_div'+i">
-                <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place"><span>{{ item.number }}</span></div>
-                <div v-if="item.status === 'take'" @click="showReturnPlace(item)" title="Место уже продано" class="place taken_place"><span>{{ item.number }}</span></div>
-                <div v-if="item.status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ item.number }}</span></div>
-            </v-col>
-
-            <v-col cols="5" class="text-right" style="padding-top: 25px; padding-right: 0px;">
-                <div>Выход</div>
-                <div><v-icon>mdi-arrow-right</v-icon></div>
-            </v-col>
-        </v-row>
-
-        <v-row v-if="thirdBlocks.length > 0">
-            <v-col cols="3" v-for="(item, i) in thirdBlocks" :key="i" :class="'schema53_div'+i">
-                <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place"><span>{{ item.number }}</span></div>
-                <div v-if="item.status === 'take'" @click="showReturnPlace(item)" title="Место уже продано" class="place taken_place"><span>{{ item.number }}</span></div>
-                <div v-if="item.status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ item.number }}</span></div>
-            </v-col>
-        </v-row>
-
-        <v-row v-if="fourthBlocks.length > 0">
-            <v-col cols="3" v-for="(item, i) in fourthBlocks" :key="i" :class="'schema53_2div'+i">
-                <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place"><span>{{ item.number }}</span></div>
-                <div v-if="item.status === 'take'" @click="showReturnPlace(item)" title="Место уже продано" class="place taken_place"><span>{{ item.number }}</span></div>
-                <div v-if="item.status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ item.number }}</span></div>
-            </v-col>
-        </v-row>
+                <v-col cols="4" v-for="(item, i) in places" :key="i" :class="'schema7_div'+i">
+                    <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place"><span>{{ item.number }}</span></div>
+                    <div v-if="item.status === 'take'" @click="showReturnPlace(item)" title="Место уже продано" class="place taken_place"><span>{{ item.number }}</span></div>
+                    <div v-if="item.status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ item.number }}</span></div>
+                </v-col>
+            </v-row>
+        </v-col>
 
         <v-dialog
                 v-model="dialog"
@@ -145,7 +117,7 @@
     import VuePhoneNumberInput from 'vue-phone-number-input';
     import 'vue-phone-number-input/dist/vue-phone-number-input.css';
     import axios from 'axios';
-    import WaitingLoader from "../../../dialogs/WaitingLoader";
+    import WaitingLoader from "../../dialogs/WaitingLoader";
     export default {
         components: {
             VuePhoneNumberInput,
@@ -163,7 +135,7 @@
                 phone: '',
                 iin: '',
                 place_id: 0,
-                car_travel_id: 0,
+                tour_id: 0,
                 place_number: 0,
                 errors: [],
                 return_cause: ''
@@ -171,13 +143,13 @@
         },
         methods: {
             showOrderPlace(item){
-                this.car_travel_id = item.car_travel_id;
+                this.tour_id = item.tour_id;
                 this.place_id = item.id;
                 this.place_number = item.number;
                 this.dialog = true;
             },
             showReturnPlace(item){
-                this.car_travel_id = item.car_travel_id;
+                this.tour_id = item.tour_id;
                 this.place_id = item.id;
                 this.place_number = item.number;
                 this.dialog2 = true;
@@ -200,14 +172,14 @@
                 if (this.errors.length === 0) {
                     this.$store.commit('setOverlay', true);
                     let formData = new FormData();
-                    formData.append('car_travel_id', this.car_travel_id);
+                    formData.append('tour_id', this.tour_id);
                     formData.append('first_name', this.first_name);
                     formData.append('place_id', this.place_id);
                     formData.append('place_number', this.place_number);
                     formData.append('phone', this.phone);
                     formData.append('iin', this.iin);
 
-                    axios.post(`${this.$apiUrl}cashier/car-travel/${this.car_travel_id}/selling`, formData)
+                    axios.post(`${this.$apiUrl}tours/${this.tour_id}/reservation`, formData)
                         .then(res => {
                             console.log(res);
                             this.$store.commit('setOverlay', false);
@@ -226,7 +198,7 @@
                 }
             },
             returnPlace(){
-                this.errors = [];
+                /*this.errors = [];
                 if(this.return_cause === '') {
                     this.errors.push('Укажите причину возврата');
                 }
@@ -234,12 +206,12 @@
                 if (this.errors.length === 0) {
                     this.$store.commit('setOverlay', true);
                     let formData = new FormData();
-                    formData.append('car_travel_id', this.car_travel_id);
+                    formData.append('tour_id', this.tour_id);
                     formData.append('reason_for_return', this.return_cause);
                     formData.append('place_id', this.place_id);
                     formData.append('place_number', this.place_number);
 
-                    axios.post(`${this.$apiUrl}cashier/tickets/return-sold-tickets`, formData)
+                    axios.post(`${this.$apiUrl}tour/tickets/return-sold-tickets`, formData)
                         .then(res => {
                             console.log(res);
                             this.$store.commit('setOverlay', false);
@@ -253,81 +225,14 @@
                                 this.errors.push(err.response.data)
                             }
                         })
-                }
+                }*/
             }
-        },
-        computed: {
-            firstBlocks(){
-                let items = [];
-                let places = [1,2,3,4,5,6];
-                items = this.places.filter(function(item){
-                    for(let i = 0; i<places.length; i++) {
-                        if (places[i] === item.number) {
-                            return item.number;
-                        }
-                    }
-                })
-                return items;
-            },
-            secondBlocks(){
-                let items = [];
-                let places = [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32];
-                items = this.places.filter(function(item){
-                    for(let i = 0; i<places.length; i++) {
-                        if (places[i] === item.number) {
-                            return item.number;
-                        }
-                    }
-                })
-                return items;
-            },
-            thirdBlocks(){
-                let items = [];
-                let places = [33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48];
-                items = this.places.filter(function(item){
-                    for(let i = 0; i<places.length; i++) {
-                        if (places[i] === item.number) {
-                            return item.number;
-                        }
-                    }
-                })
-                return items;
-            },
-            fourthBlocks(){
-                let items = [];
-                let places = [49,50,51,52,53];
-                items = this.places.filter(function(item){
-                    for(let i = 0; i<places.length; i++) {
-                        if (places[i] === item.number) {
-                            return item.number;
-                        }
-                    }
-                })
-                return items;
-            },
         }
     }
 </script>
 
 <style scoped>
-    .schema53_div1,.schema53_div5,.schema53_div9,.schema53_div13,.schema53_div17,.schema53_div21,.schema53_div25,.schema53_div29,.schema53_div33,.schema53_div37,.schema53_div41,.schema53_div45,.schema53_div49,
-    .schema53_div53,.schema53_div57,.schema53_div61{
-        margin-left: -60px;
-    }
-
-    .schema53_div2,.schema53_div6,.schema53_div10,.schema53_div14,.schema53_div18,.schema53_div22,.schema53_div26,.schema53_div30,.schema53_div34,
-    .schema53_div38,.schema53_div42,.schema53_div46,.schema53_div50,.schema53_div54,.schema53_div58 {
-        margin-left: 70px;
-    }
-
-    .schema53_div3,.schema53_div7,.schema53_div11,.schema53_div15,.schema53_div19,.schema53_div23,.schema53_div27,.schema53_div31,.schema53_div35,
-    .schema53_div39,.schema53_div43,.schema53_div47,.schema53_div51,.schema53_div55,.schema53_div59{
-        margin-left: -60px;
-    }
-    .schema53_2div1 {
-        margin-left: -60px;
-    }
-    .schema53_2div2,.schema53_2div3,.schema53_2div4 {
-        margin-left: -70px;
-    }
+.schema7_div0 {
+    margin-left: 29px;
+}
 </style>

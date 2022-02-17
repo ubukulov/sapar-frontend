@@ -10,12 +10,12 @@
                         @change="selectImage"
                 ></v-file-input>
             </v-col>
-            <v-col cols="4" class="pl-2">
+            <!--<v-col cols="4" class="pl-2">
                 <v-btn color="success" dark small @click="upload">
                     Upload
                     <v-icon right dark>mdi-cloud-upload</v-icon>
                 </v-btn>
-            </v-col>
+            </v-col>-->
         </v-row>
         <div v-if="progress">
             <div>
@@ -64,7 +64,7 @@
             {{ message }}
         </v-alert>
 
-        <v-card v-if="imageInfos.length > 0" class="mx-auto">
+        <!--<v-card v-if="imageInfos.length > 0" class="mx-auto">
             <v-list>
                 <v-subheader>List of Images</v-subheader>
                 <v-list-item-group color="primary">
@@ -73,7 +73,7 @@
                     </v-list-item>
                 </v-list-item-group>
             </v-list>
-        </v-card>
+        </v-card>-->
     </v-container>
 </template>
 
@@ -100,6 +100,8 @@
         methods: {
             selectImage(image) {
                 this.images2 = image
+                console.log('image', image);
+                this.$emit('getImagesList', image);
                 for(let i = 0; i<image.length; i++) {
                     //this.images[i] = URL.createObjectURL(image[i]);
                     this.images.push({

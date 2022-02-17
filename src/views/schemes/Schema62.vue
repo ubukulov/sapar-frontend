@@ -149,7 +149,7 @@
     import VuePhoneNumberInput from 'vue-phone-number-input';
     import 'vue-phone-number-input/dist/vue-phone-number-input.css';
     import axios from 'axios';
-    import WaitingLoader from "../../../dialogs/WaitingLoader";
+    import WaitingLoader from "../../dialogs/WaitingLoader";
     export default {
         components: {
             VuePhoneNumberInput,

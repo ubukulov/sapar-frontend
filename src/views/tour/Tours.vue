@@ -18,7 +18,7 @@
         <SearchTours></SearchTours>
 
         <v-row>
-            <v-col cols="3" v-for="(item,i) in travels" :key="i">
+            <v-col cols="3" v-for="(item,i) in tours" :key="i">
                 <v-card
                         :loading="loading"
                         class="mx-auto my-12"
@@ -34,7 +34,7 @@
 
                     <v-img
                             height="250"
-                            :src="`http://194.4.56.241:8888/${item.car.image}`"
+                            :src="`http://194.4.56.241:8888/${item.images[0].image}`"
                     ></v-img>
 
                     <v-card-title>
@@ -44,7 +44,7 @@
                             </v-col>
 
                             <v-col>
-                                &#8376; {{ item.min_price }} - {{ item.max_price }}
+                                &#8376; {{ item.tour_price }}
                             </v-col>
                         </v-row>
                     </v-card-title>
@@ -53,49 +53,30 @@
 
                     <v-card-text>
                         <v-row>
-                            <v-col cols="4" class="text-right">
-                                <div><strong>{{ item.from.city }}</strong></div>
-                                <div><span>{{item.from.station}}</span></div>
-                            </v-col>
+                            <v-col cols="12" class="text-left">
+                                <div><strong>{{ item.city.name }}</strong></div>
+                                <div><span>{{item.meeting_place.title}}</span></div>
 
-                            <v-col cols="4" class="text-center">
-                                <v-icon size="40">
-                                    mdi-chevron-right-circle-outline
-                                </v-icon>
-                            </v-col>
-
-                            <v-col cols="4" class="text-left">
-                                <div><strong>{{ item.to.city }}</strong></div>
-                                <div><span>{{item.to.station}}</span></div>
+                                <div><strong>{{ item.resting_place.title }}</strong></div>
+                                <div><span></span></div>
                             </v-col>
                         </v-row>
 
-                        <v-row>
-                            <v-col>
-                                <span class="card_car_info_span__success">Свободно: {{ item.count_free_places }}</span>
-                            </v-col>
-
-                            <v-col>
-                                <span class="card_car_info_span__danger">Занято: {{ item.car.car_type_count_places - item.count_free_places }}</span>
-                            </v-col>
-                        </v-row>
                     </v-card-text>
 
                     <v-card-actions>
                         <v-btn
                                 color="deep-purple lighten-2"
-                                :to="`/cashier/intercity/${item.id}`" link
+                                :to="`/tours/lists/${item.id}`" link
                         >
                             Посмотреть
                         </v-btn>
                         <v-spacer></v-spacer>
-                        <v-btn
-                                v-if="item.car.car_type_count_places - item.count_free_places == 0"
+                        <!--<v-btn
                                 color="red"
-                                @click="destroyTravel(item.id)"
                         >
                             Удалить
-                        </v-btn>
+                        </v-btn>-->
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -120,19 +101,19 @@
         },
         data(){
             return {
-                travels: [],
+                tours: [],
                 user: [],
                 loading: false,
                 overlay: false,
             }
         },
         methods: {
-            getTravels(){
+            getTours(){
                 this.$store.commit('setOverlay', true);
-                axios.get(`${this.$apiUrl}cashier/${this.user.id}/get-travels-upcoming`)
+                axios.get(`${this.$apiUrl}tours/get-tours`)
                     .then(res => {
                         this.$store.commit('setOverlay', false);
-                        this.travels = res.data;
+                        this.tours = res.data;
                     })
                     .catch(err => {
                         this.$store.commit('setOverlay', false);
@@ -157,7 +138,7 @@
         },
         created() {
             this.user = this.$store.getters.getUserData;
-            this.getTravels();
+            this.getTours();
         }
     }
 </script>
