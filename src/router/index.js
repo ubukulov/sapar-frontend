@@ -6,6 +6,7 @@ import DefaultCashier from "../layouts/DefaultCashier";
 import CreateTrip from "../views/cashier/CreateTrip";
 import store from '../store'
 import auth from '../middleware/auth'
+import cashier from "../middleware/cashier";
 import middlewarePipeline from '../middleware/middlewarePipeline'
 import Ticket from "../views/cashier/Ticket";
 import Register from "../views/Register";
@@ -33,7 +34,8 @@ const routes = [
     component: DefaultCashier,
     meta: {
       middleware: [
-          auth
+          auth,
+          cashier
       ]
     },
     children: [
@@ -61,7 +63,7 @@ const routes = [
   },
   {
     path: '/tours',
-    name: 'Tours',
+    name: 'ToursDefault',
     component: DefaultCashier,
     meta: {
       middleware: [

@@ -80,24 +80,23 @@
                 return d.getFullYear()+ "-" + (((d.getMonth()+1) < 10)?"0":"") + (d.getMonth()+1) + "-" + ((d.getDate() < 10)?"0":"") + d.getDate() +"T"+ ((d.getHours() < 10)?"0":"") + d.getHours() + ":"+ ((d.getMinutes() < 10)?"0":"") + d.getMinutes();
             },
             getTravelsByFilter(){
-                /*if (this.from_city_id !== 0 && this.to_city_id !== 0) {
-                    this.$parent.travels = [];
+                if (this.city_id !== 0 && this.resting_place_id !== 0) {
+                    this.$parent.tours = [];
                     let formData = new FormData();
-                    formData.append('from_city_id', this.city_id);
-                    formData.append('to_city_id', this.to_city_id);
+                    formData.append('city_id', this.city_id);
+                    formData.append('resting_place_id', this.resting_place_id);
                     formData.append('departure_time', this.departure_time);
                     this.$store.commit('setOverlay', true);
-                    axios.post(`${this.$apiUrl}cashier/intercity/get-travels-by-filter`, formData)
+                    axios.post(`${this.$apiUrl}tours/searching`, formData)
                         .then(res => {
                             this.$store.commit('setOverlay', false);
-                            this.$parent.travels = res.data;
+                            this.$parent.tours = res.data;
                         })
                         .catch(err => {
                             this.$store.commit('setOverlay', false);
                             console.log(err)
                         })
-                }*/
-                alert('Нужно делать')
+                }
             },
             getCities(){
                 axios.get(`${this.$apiUrl}cashier/cities/list`)

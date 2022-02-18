@@ -18,6 +18,7 @@
             <v-list-group
                     :value="true"
                     prepend-icon="mdi-bus-multiple"
+                    v-if="user.type_id === 1"
             >
                 <template v-slot:activator>
                     <v-list-item-title>Межгород</v-list-item-title>
@@ -39,6 +40,7 @@
             <v-list-group
                     :value="true"
                     prepend-icon="mdi-wallet-travel"
+                    v-if="user.type_id === 4 || user.type_id === 3"
             >
                 <template v-slot:activator>
                     <v-list-item-title>Туры</v-list-item-title>
@@ -72,27 +74,33 @@
 
 <script>
     export default {
-        data: () => ({
-            intercity: [
-                {
-                    icon: 'mdi-bus-clock',
-                    text: 'Плановые поездки',
-                    link: '/cashier/intercity'
-                },
-                {
-                    icon: 'mdi-tag-multiple',
-                    text: 'Продажа билетов',
-                    link: '/cashier/tickets'
-                }
-            ],
-            tours: [
-                {
-                    icon: 'mdi-wallet-travel',
-                    text: 'Плановые туры',
-                    link: '/tours/lists'
-                },
-            ],
-        }),
+        data() {
+            return {
+                user: this.$store.getters.getUserData,
+                intercity: [
+                    {
+                        icon: 'mdi-bus-clock',
+                        text: 'Плановые поездки',
+                        link: '/cashier/intercity'
+                    },
+                    {
+                        icon: 'mdi-tag-multiple',
+                        text: 'Продажа билетов',
+                        link: '/cashier/tickets'
+                    }
+                ],
+                tours: [
+                    {
+                        icon: 'mdi-wallet-travel',
+                        text: 'Плановые туры',
+                        link: '/tours/lists'
+                    },
+                ],
+            }
+        },
+        created() {
+            console.log('left', this.user)
+        }
     }
 </script>
 

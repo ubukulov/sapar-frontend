@@ -5,7 +5,7 @@
                 <h4>Плановые туры</h4>
             </v-col>
 
-            <v-col cols="6" class="text-right">
+            <v-col v-if="user.type_id === 4" cols="6" class="text-right">
                 <router-link
                         class="btn green"
                         to="/tours/lists/create"

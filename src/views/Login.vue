@@ -93,6 +93,7 @@
             password: '',
             hasError: false,
             errorMessage: '',
+            user: [],
         }),
 
         computed: {
@@ -124,9 +125,23 @@
                     this.hasError = false;
                     this.$store.commit('setOverlay', false);
                     this.errorMessage = '';
-                    this.$store.commit('logged')
-                    this.$store.commit('setUser', res.data.user)
-                    this.$router.push({name: 'Intercity'})
+                    this.$store.commit('logged');
+                    this.$store.commit('setUser', res.data.user);
+                    this.user = res.data.user;
+                    switch (this.user.type_id) {
+                        case 1:
+                            this.$store.commit('setCashier');
+                            this.$router.push({name: 'Intercity'})
+                            break;
+                        case 3:
+                            this.$store.commit('setTourCompany');
+                            this.$router.push({name: 'Tours'})
+                            break;
+                        case 4:
+                            this.$store.commit('setTourLeader');
+                            this.$router.push({name: 'Tours'})
+                            break;
+                    }
                 })
                 .catch(err => {
                     console.log(err.response)

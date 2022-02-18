@@ -8,6 +8,9 @@ export default new Vuex.Store({
   state: {
     user: {
       isAuth: false,
+      isCashier: false,
+      isTourLeader: false,
+      isTourCompany: false,
       data: []
     },
     overlay: false
@@ -36,7 +39,16 @@ export default new Vuex.Store({
     },
     setOverlay(state, boolean){
       state.overlay = boolean
-    }
+    },
+    setCashier(state){
+      state.user.isCashier = true
+    },
+    setTourLeader(state){
+      state.user.isTourLeader = true
+    },
+    setTourCompany(state){
+      state.user.isTourCompany = true
+    },
   },
   plugins: [createPersistedState()]
 })
