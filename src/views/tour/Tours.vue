@@ -54,11 +54,26 @@
                     <v-card-text>
                         <v-row>
                             <v-col cols="12" class="text-left">
-                                <div><strong>{{ item.city.name }}</strong></div>
-                                <div><span>{{item.meeting_place.title}}</span></div>
+                                <div style="margin-bottom: 20px;">
+                                    <v-icon style="margin-right: 20px;">mdi-map-marker</v-icon>
+                                    <strong>{{ item.city.name }}</strong>,
+                                    <span>{{item.meeting_place.title}}</span>
+                                </div>
 
-                                <div><strong>{{ item.resting_place.title }}</strong></div>
-                                <div><span></span></div>
+                                <div>
+                                    <v-icon style="margin-right: 20px;">mdi-office-building-marker</v-icon>
+                                    <strong>{{ item.resting_place.title }}</strong>
+                                </div>
+                            </v-col>
+                        </v-row>
+
+                        <v-row>
+                            <v-col>
+                                <span class="card_car_info_span__success">Свободно: {{ item.stats.countFreePlaces }}</span>
+                            </v-col>
+
+                            <v-col>
+                                <span class="card_car_info_span__danger">Занято: {{ item.stats.countSoldPlaces }}</span>
                             </v-col>
                         </v-row>
 
@@ -72,11 +87,13 @@
                             Посмотреть
                         </v-btn>
                         <v-spacer></v-spacer>
-                        <!--<v-btn
+                        <v-btn
                                 color="red"
+                                v-if="item.stats.countSoldPlaces === 0 && user.type_id === 4"
+                                @click="deleteTour(item.id)"
                         >
                             Удалить
-                        </v-btn>-->
+                        </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -114,16 +131,17 @@
                     .then(res => {
                         this.$store.commit('setOverlay', false);
                         this.tours = res.data;
+                        console.log('tours', this.tours)
                     })
                     .catch(err => {
                         this.$store.commit('setOverlay', false);
                         console.log(err)
                     })
             },
-            destroyTravel(car_travel_id){
+            deleteTour(tour_id){
                 if(confirm("Вы действительно хотите удалить?")) {
                     this.$store.commit('setOverlay', true);
-                    axios.get(`${this.$apiUrl}cashier/intercity/${car_travel_id}/destroy`)
+                    axios.get(`${this.$apiUrl}tours/${tour_id}/destroy`)
                         .then(res => {
                             this.$store.commit('setOverlay', false);
                             console.log(res);

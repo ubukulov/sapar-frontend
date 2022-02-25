@@ -14,6 +14,7 @@ import CarDetail from "../views/cashier/CarDetail";
 import Tours from "../views/tour/Tours";
 import CreateTour from "../views/tour/CreateTour";
 import TourDetail from "../views/tour/TourDetail";
+import Booking from "../views/tour/Booking";
 
 Vue.use(VueRouter)
 
@@ -85,6 +86,11 @@ const routes = [
         path: '/tours/lists/:tourId',
         name: 'TourDetail',
         component: TourDetail
+      },
+      {
+        path: '/tours/lists/:tourId/booking/:count',
+        name: 'Booking',
+        component: Booking
       },
     ]
   },

@@ -57,24 +57,29 @@
 
                     <v-col cols="5">
                         <v-row>
-                            <v-col cols="12" class="text-right">
-                                <div><strong>{{ tour.city.name }}</strong></div>
-                                <div><span>{{tour.meeting_place.title}}</span></div>
+                            <v-col cols="12" class="text-left">
+                                <div style="margin-bottom: 20px;">
+                                    <v-icon style="margin-right: 20px;">mdi-map-marker</v-icon>
+                                    <strong>{{ tour.city.name }}</strong>,
+                                    <span>{{tour.meeting_place.title}}</span>
+                                </div>
 
-                                <div><strong>{{ tour.resting_place.title }}</strong></div>
-                                <div><span></span></div>
+                                <div>
+                                    <v-icon style="margin-right: 20px;">mdi-office-building-marker</v-icon>
+                                    <strong>{{ tour.resting_place.title }}</strong>
+                                </div>
                             </v-col>
                         </v-row>
 
-                        <!--<v-row>
+                        <v-row>
                             <v-col>
-                                <span class="card_car_info_span__success">Свободно: {{ carTravel.count_free_places }}</span>
+                                <span class="card_car_info_span__success">Свободно: {{ tour.stats.countFreePlaces }}</span>
                             </v-col>
 
                             <v-col>
-                                <span class="card_car_info_span__danger">Занято: {{ carTravel.car.car_type_count_places - carTravel.count_free_places }}</span>
+                                <span class="card_car_info_span__danger">Занято: {{ tour.stats.countSoldPlaces }}</span>
                             </v-col>
-                        </v-row>-->
+                        </v-row>
                     </v-col>
                 </v-row>
                 <v-card>
@@ -122,6 +127,29 @@
                             </v-icon>
                         </template>
                     </v-data-table>
+                </v-card>
+
+                <v-card v-if="tour.stats.countFreePlaces > 0">
+                    <v-container>
+                        <v-row>
+                            <v-col cols="4">
+                                <v-text-field
+                                        label="Количество мест"
+                                        hide-details="auto"
+                                        v-mask="'##'"
+                                        v-model="countBookingPlaces"
+                                        dense
+                                        solo
+                                ></v-text-field>
+                            </v-col>
+
+                            <v-col cols="4">
+                                <v-btn
+                                        @click="bookingPlaces()"
+                                >Забронировать</v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-container>
                 </v-card>
             </v-col>
         </v-row>
@@ -267,7 +295,8 @@
                 tour: [],
                 upperPlace: true,
                 lowerPlace: true,
-                moment: moment
+                moment: moment,
+                countBookingPlaces: null
             }
         },
         methods: {
@@ -369,6 +398,11 @@
             },
             changeCar(){
                 this.changeDialog = true;
+            },
+            bookingPlaces(){
+                //:to="`/tours/lists/${item.id}`" link
+                let link = "/tours/lists/" + this.tourId + "/booking/" + this.countBookingPlaces;
+                this.$router.go(link)
             }
         },
         created() {

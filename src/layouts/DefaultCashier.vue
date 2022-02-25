@@ -7,7 +7,9 @@
             dark
             app
         >
-            <h1>Интерфейс: Касса</h1>
+            <h1 v-if="user.type_id === 1">Интерфейс: Касса</h1>
+            <h1 v-if="user.type_id === 3">Интерфейс: Туркомпания</h1>
+            <h1 v-if="user.type_id === 4">Интерфейс: Турлидер</h1>
             <v-spacer></v-spacer>
             <h4>Пользователь: {{ user.first_name }}</h4>
         </v-app-bar>
