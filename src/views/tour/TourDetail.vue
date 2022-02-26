@@ -7,6 +7,7 @@
                             v-for="(item,i) in tour.images"
                             :key="i"
                             :src="`http://194.4.56.241:8888/${item.image}`"
+                            height="200"
                     ></v-carousel-item>
                 </v-carousel>
             </v-col>
@@ -58,15 +59,25 @@
                     <v-col cols="5">
                         <v-row>
                             <v-col cols="12" class="text-left">
-                                <div style="margin-bottom: 20px;">
-                                    <v-icon style="margin-right: 20px;">mdi-map-marker</v-icon>
-                                    <strong>{{ tour.city.name }}</strong>,
-                                    <span>{{tour.meeting_place.title}}</span>
+                                <div class="tour_direction" style="margin-bottom: 10px;">
+                                    <div>
+                                        <v-icon style="margin-right: 10px;">mdi-map-marker</v-icon>
+                                    </div>
+
+                                    <div>
+                                        <strong>{{ tour.city.name }}</strong>,
+                                        <span>{{tour.meeting_place.title}}</span>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <v-icon style="margin-right: 20px;">mdi-office-building-marker</v-icon>
-                                    <strong>{{ tour.resting_place.title }}</strong>
+                                <div class="tour_direction">
+                                    <div>
+                                        <v-icon style="margin-right: 10px;">mdi-office-building-marker</v-icon>
+                                    </div>
+
+                                    <div>
+                                        <strong>{{ tour.resting_place.title }}</strong>
+                                    </div>
                                 </div>
                             </v-col>
                         </v-row>
@@ -129,7 +140,7 @@
                     </v-data-table>
                 </v-card>
 
-                <v-card v-if="tour.stats.countFreePlaces > 0">
+                <v-card v-if="tour.stats.countFreePlaces > 0 && user.type_id === 3">
                     <v-container>
                         <v-row>
                             <v-col cols="4">
@@ -296,7 +307,8 @@
                 upperPlace: true,
                 lowerPlace: true,
                 moment: moment,
-                countBookingPlaces: null
+                countBookingPlaces: null,
+                user: this.$store.getters.getUserData
             }
         },
         methods: {

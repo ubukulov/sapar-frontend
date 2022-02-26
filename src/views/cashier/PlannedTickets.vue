@@ -1,5 +1,5 @@
 <template>
-    <v-card style="padding: 10px;">
+    <v-card>
 
         <SearchTrips></SearchTrips>
 

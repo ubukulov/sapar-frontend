@@ -47,20 +47,22 @@
 
                     <v-col cols="5">
                         <v-row>
-                            <v-col cols="4" class="text-right">
-                                <div><strong>{{ carTravel.from.city }}</strong></div>
-                                <div><span>{{carTravel.from.station}}</span></div>
-                            </v-col>
+                            <v-col cols="12" class="direction_from_to">
+                                <div class="direction_div_from">
+                                    <p><span><strong>{{ carTravel.from.city }}</strong></span></p>
+                                    <p class="direction__station"><span>{{ carTravel.from.station }}</span></p>
+                                </div>
 
-                            <v-col cols="4" class="text-center">
-                                <v-icon size="40">
-                                    mdi-chevron-right-circle-outline
-                                </v-icon>
-                            </v-col>
+                                <div class="direction_div_middle_icon">
+                                    <v-icon size="20">
+                                        mdi-chevron-right-circle-outline
+                                    </v-icon>
+                                </div>
 
-                            <v-col cols="4" class="text-left">
-                                <div><strong>{{ carTravel.to.city }}</strong></div>
-                                <div><span>{{carTravel.to.station}}</span></div>
+                                <div class="direction_div_to">
+                                    <p><span><strong>{{ carTravel.to.city }}</strong></span></p>
+                                    <p class="direction__station"><span>{{ carTravel.to.station }}</span></p>
+                                </div>
                             </v-col>
                         </v-row>
 

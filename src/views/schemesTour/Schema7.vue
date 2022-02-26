@@ -6,11 +6,11 @@
                     <img src="~@/assets/rul.png" alt="">
                 </v-col>
 
-                <v-col cols="4" v-for="(item, i) in places" :key="i" :class="'schema7_div'+i">
+                <div class="div_schemes" v-for="(item, i) in places" :key="i">
                     <div v-if="item.status === 'free'" @click="showOrderPlace(item)" class="place free_place"><span>{{ item.number }}</span></div>
                     <div v-if="item.status === 'take'" @click="showReturnPlace(item)" title="Место уже продано" class="place taken_place"><span>{{ item.number }}</span></div>
                     <div v-if="item.status === 'in_process'" title="Место уже на броне" class="place process_place"><span>{{ item.number }}</span></div>
-                </v-col>
+                </div>
             </v-row>
         </v-col>
 
@@ -235,4 +235,7 @@
 .schema7_div0 {
     margin-left: 29px;
 }
+    .div_schemes {
+        display: inline-flex;
+    }
 </style>

@@ -55,7 +55,16 @@
         ],
         methods: {
             confirmChangeCar(){
-                alert("Скоро будет!!!");
+                let formData = new FormData();
+                formData.append('car_id', this.car_id);
+                axios.post(`${this.$apiUrl}cashier/intercity/${this.carTravelId}/change-car-for-current-travel`, formData)
+                .then(res => {
+                    console.log(res)
+                    this.$router.go(this.$router.currentRoute);
+                })
+                .catch(err => {
+                    console.log(err)
+                })
             },
             getOtherCarLists(){
                 axios.get(`${this.$apiUrl}cashier/intercity/${this.carTravelId}/get-list-other-cars`)

@@ -1,6 +1,6 @@
 <template>
-    <v-row>
-        <v-col cols="2">
+    <v-row class="mt-1">
+        <v-col cols="3">
             <v-select
                     :items="cities"
                     label="Выберите город"
@@ -14,21 +14,21 @@
                     solo
             ></v-select>
         </v-col>
-        <v-col cols="2">
+        <v-col cols="3">
             <v-select
                     :items="to_cities"
                     label="Выберите город"
                     :hint="`${to_cities.id}, ${to_cities.name}`"
                     item-value="id"
                     v-model="to_city_id"
-                    prepend-icon="mdi-location"
+                    prepend-icon="mdi-flag-checkered"
                     item-text="name"
                     dense
                     solo
             ></v-select>
         </v-col>
 
-        <v-col cols="3">
+        <v-col cols="2">
             <datetime
                 input-class="form-control"
                 type="date"

@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-2">
+    <v-container class="mt-2">
         <v-row>
             <v-col cols="6">
                 <h4>Плановые туры</h4>
@@ -21,7 +21,7 @@
             <v-col cols="3" v-for="(item,i) in tours" :key="i">
                 <v-card
                         :loading="loading"
-                        class="mx-auto my-12"
+                        class="mx-auto"
                         max-width="374"
                 >
                     <template slot="progress">
@@ -33,36 +33,52 @@
                     </template>
 
                     <v-img
-                            height="250"
+                            height="100"
                             :src="`http://194.4.56.241:8888/${item.images[0].image}`"
                     ></v-img>
 
                     <v-card-title>
                         <v-row>
-                            <v-col>
-                                {{ item.car.state_number }}
-                            </v-col>
-
-                            <v-col>
-                                &#8376; {{ item.tour_price }}
+                            <v-col cols="12">
+                                <div class="direction_div_car_price">
+                                    <div class="direction_div_car">
+                                        <span class="direction_car_number">{{ item.car.state_number }}</span>
+                                    </div>
+                                    <div class="direction_div_price">
+                                        <span class="direction_price">&#8376; {{ item.tour_price }}</span>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <span class="direction_departure_time">
+                                        {{ moment(item.departure_time).format('LLL') }}
+                                    </span>
+                                </div>
                             </v-col>
                         </v-row>
                     </v-card-title>
 
-                    <v-card-title style="justify-content: center;">{{ item.departure_time }}</v-card-title>
-
                     <v-card-text>
                         <v-row>
                             <v-col cols="12" class="text-left">
-                                <div style="margin-bottom: 20px;">
-                                    <v-icon style="margin-right: 20px;">mdi-map-marker</v-icon>
-                                    <strong>{{ item.city.name }}</strong>,
-                                    <span>{{item.meeting_place.title}}</span>
+                                <div class="tour_direction" style="margin-bottom: 10px;">
+                                    <div>
+                                        <v-icon style="margin-right: 10px;">mdi-map-marker</v-icon>
+                                    </div>
+
+                                    <div>
+                                        <strong>{{ item.city.name }}</strong>,
+                                        <span>{{item.meeting_place.title}}</span>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <v-icon style="margin-right: 20px;">mdi-office-building-marker</v-icon>
-                                    <strong>{{ item.resting_place.title }}</strong>
+                                <div class="tour_direction">
+                                    <div>
+                                        <v-icon style="margin-right: 10px;">mdi-office-building-marker</v-icon>
+                                    </div>
+
+                                    <div>
+                                        <strong>{{ item.resting_place.title }}</strong>
+                                    </div>
                                 </div>
                             </v-col>
                         </v-row>
@@ -104,13 +120,15 @@
         <router-view></router-view>
 
         <WaitingLoader></WaitingLoader>
-    </div>
+    </v-container>
 </template>
 
 <script>
     import axios from 'axios'
     import WaitingLoader from "../../dialogs/WaitingLoader";
     import SearchTours from "../../components/SearchTours";
+    import moment from 'moment';
+    import 'moment/locale/ru'
     export default {
         components: {
             WaitingLoader,
@@ -122,6 +140,7 @@
                 user: [],
                 loading: false,
                 overlay: false,
+                moment: moment
             }
         },
         methods: {
@@ -161,7 +180,7 @@
     }
 </script>
 
-<style scoped>
+<style>
     .card_car_info_span__success {
         color: green;
         font-weight: bold;
@@ -169,5 +188,8 @@
     .card_car_info_span__danger{
         color: #cc0000;
         font-weight: bold;
+    }
+    .tour_direction {
+        display: inline-flex;
     }
 </style>

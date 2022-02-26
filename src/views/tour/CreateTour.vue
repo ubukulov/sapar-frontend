@@ -33,7 +33,7 @@
                             height="auto"
                     >
                         <v-row>
-                            <v-col cols="2">
+                            <v-col cols="3">
                                 <v-select
                                         :items="cities"
                                         label="Выберите город"
@@ -48,7 +48,7 @@
                                 ></v-select>
                             </v-col>
 
-                            <v-col cols="3">
+                            <v-col cols="4">
                                 <v-select
                                         :items="meeting_places"
                                         label="Выберите место сбора"

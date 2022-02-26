@@ -1,6 +1,6 @@
 <template>
     <v-row>
-        <v-col cols="2">
+        <v-col cols="3">
             <v-select
                     :items="cities"
                     label="Выберите город"

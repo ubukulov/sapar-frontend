@@ -33,7 +33,7 @@
                             height="200px"
                     >
                         <v-row>
-                            <v-col cols="2">
+                            <v-col cols="4">
                                 <v-select
                                         :items="companies"
                                         :hint="`${companies.id}, ${companies.title}`"
@@ -49,7 +49,7 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="3">
+                            <v-col cols="4">
                                 <v-select
                                         :items="cars"
                                         label="Выберите автобус/машину"
@@ -79,7 +79,7 @@
                         height="200px"
                     >
                         <v-row>
-                            <v-col cols="2">
+                            <v-col cols="4">
                                 <v-select
                                         :items="cities"
                                         label="Выберите город"
@@ -94,7 +94,7 @@
                                 ></v-select>
                             </v-col>
 
-                            <v-col cols="2">
+                            <v-col cols="4">
                                 <v-select
                                         :items="stations1"
                                         label="Выберите станцию"
@@ -114,7 +114,7 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="2">
+                            <v-col cols="4">
                                 <v-select
                                         :items="cities"
                                         label="Выберите город"
@@ -129,7 +129,7 @@
                                 ></v-select>
                             </v-col>
 
-                            <v-col cols="2">
+                            <v-col cols="4">
                                 <v-select
                                         :items="stations2"
                                         label="Выберите станцию"
