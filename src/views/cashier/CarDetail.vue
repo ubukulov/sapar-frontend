@@ -75,6 +75,12 @@
                                 <span class="card_car_info_span__danger">Занято: {{ carTravel.car.car_type_count_places - carTravel.count_free_places }}</span>
                             </v-col>
                         </v-row>
+
+                        <v-row>
+                            <v-col cols="12">
+                                <v-btn color="dark" @click="changeCar">Редактировать</v-btn>
+                            </v-col>
+                        </v-row>
                     </v-col>
                 </v-row>
                 <v-card>

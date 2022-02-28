@@ -1,5 +1,8 @@
 <template>
     <v-card>
+
+        <SearchTrips></SearchTrips>
+
         <v-row>
             <v-col cols="7">
                 <v-card-title>
@@ -15,9 +18,12 @@
                 </v-card-title>
                 <v-data-table
                         :headers="headers"
-                        :items="items"
+                        :items="travels"
                         :search="search"
                         :loading="isLoaded"
+                        :single-expand="singleExpand"
+                        :expanded.sync="expanded"
+                        show-expand
                         loading-text="Загружается... Пожалуйста подождите"
                         @click:row="showItemData"
                 >
@@ -33,11 +39,49 @@
                     <template v-slot:item.price = "{ item }">
                         {{ item.min_price }} - {{ item.max_price }}
                     </template>
+
+                    <template v-slot:expanded-item="{ headers, item }">
+                        <td :colspan="headers.length" style="padding: 10px 20px;">
+                            <p style="margin-bottom: 15px;"><strong>Информация по поездку: </strong> {{ item.id }}</p>
+                            <table class="table table-bordered">
+                                <thead>
+                                <th>Компания</th>
+                                <th>Номер машины</th>
+                                <th>Багаж</th>
+                                <th>Телевизор</th>
+                                <th>Кондиционер</th>
+                                </thead>
+
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <span style ><strong>{{ item.company_car.company.title }}</strong></span>
+                                    </td>
+                                    <td>
+                                        <span>{{ item.car.state_number }}</span>
+                                    </td>
+                                    <td>
+                                        <span v-if="item.car.baggage === 1">Есть</span>
+                                        <span v-else>Нет</span>
+                                    </td>
+                                    <td>
+                                        <span v-if="item.car.tv === 1">Есть</span>
+                                        <span v-else>Нет</span>
+                                    </td>
+                                    <td>
+                                        <span v-if="item.car.conditioner === 1">Есть</span>
+                                        <span v-else>Нет</span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </template>
                 </v-data-table>
             </v-col>
 
             <v-col cols="4" style="padding-bottom: 40px;">
-                <v-row v-if="selected_item.car.car_type_id === 2">
+                <v-row>
                     <v-col>
                         <v-checkbox
                                 v-model="upperPlace"
@@ -107,6 +151,7 @@
     import Schema53 from "../schemes/Schema53";
     import Schema62 from "../schemes/Schema62";
     import WaitingLoader from "../../dialogs/WaitingLoader";
+    import SearchTrips from "../../components/SearchTrips";
     export default {
         components: {
             WaitingLoader,
@@ -115,7 +160,8 @@
             Schema7,
             Schema36,
             Schema53,
-            Schema62
+            Schema62,
+            SearchTrips
         },
         data(){
             return {
@@ -133,22 +179,25 @@
                 search: '',
                 headers: [
                     {
-                        text: 'Номер машины',
+                        text: 'Откуда',
                         align: 'start',
                         filterable: false,
-                        value: 'car.state_number',
+                        value: 'from.city',
                     },
-                    { text: 'Фирмы', value: 'company_car.company.title' },
+                    { text: 'Куда', value: 'to.city' },
                     { text: 'Место', value: 'place' },
                     { text: 'Цена', value: 'price' },
                     { text: 'Дата отправление', value: 'departure_date' },
                     { text: 'Время', value: 'departure_time' },
+                    { text: '', value: 'data-table-expand' }
                 ],
-                items: [],
+                travels: [],
                 selected_item: [],
                 placesForRoute: [],
                 upperPlace: true,
                 lowerPlace: true,
+                expanded: [],
+                singleExpand: false,
             }
         },
         methods: {
@@ -183,10 +232,10 @@
                 axios.get(`${this.$apiUrl}cashier/tickets/get-tickets-for-today`)
                 .then(res => {
                     this.$store.commit('setOverlay', false);
-                    this.items = res.data;
-                    if(this.items.length !== 0) {
-                        this.selected_item = this.items[0];
-                        this.getPlacesForRoute(this.items[0].id);
+                    this.travels = res.data;
+                    if(this.travels.length !== 0) {
+                        this.selected_item = this.travels[0];
+                        this.getPlacesForRoute(this.travels[0].id);
                     }
                 })
                 .catch(err => {
