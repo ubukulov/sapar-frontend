@@ -21,6 +21,9 @@
                         :items="travels"
                         :search="search"
                         :loading="isLoaded"
+                        :single-expand="singleExpand"
+                        :expanded.sync="expanded"
+                        show-expand
                         loading-text="Загружается... Пожалуйста подождите"
                         @click:row="showItemData"
                 >
@@ -34,6 +37,44 @@
 
                     <template v-slot:item.price = "{ item }">
                         {{ item.min_price }} - {{ item.max_price }}
+                    </template>
+
+                    <template v-slot:expanded-item="{ headers, item }">
+                        <td :colspan="headers.length" style="padding: 10px 20px;">
+                            <p style="margin-bottom: 15px;"><strong>Информация по поездку: </strong> {{ item.id }}</p>
+                            <table class="table table-bordered">
+                                <thead>
+                                <th>Компания</th>
+                                <th>Номер машины</th>
+                                <th>Багаж</th>
+                                <th>Телевизор</th>
+                                <th>Кондиционер</th>
+                                </thead>
+
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <span style ><strong>{{ item.company_car.company.title }}</strong></span>
+                                    </td>
+                                    <td>
+                                        <span>{{ item.car.state_number }}</span>
+                                    </td>
+                                    <td>
+                                        <span v-if="item.car.baggage === 1">Есть</span>
+                                        <span v-else>Нет</span>
+                                    </td>
+                                    <td>
+                                        <span v-if="item.car.tv === 1">Есть</span>
+                                        <span v-else>Нет</span>
+                                    </td>
+                                    <td>
+                                        <span v-if="item.car.conditioner === 1">Есть</span>
+                                        <span v-else>Нет</span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
                     </template>
                 </v-data-table>
             </v-col>
@@ -137,16 +178,17 @@
                 search: '',
                 headers: [
                     {
-                        text: 'Номер машины',
+                        text: 'Откуда',
                         align: 'start',
                         filterable: false,
-                        value: 'car.state_number',
+                        value: 'from.city',
                     },
-                    { text: 'Фирмы', value: 'company_car.company.title' },
+                    { text: 'Куда', value: 'to.city' },
                     { text: 'Место', value: 'place' },
                     { text: 'Цена', value: 'price' },
                     { text: 'Дата отправление', value: 'departure_date' },
                     { text: 'Время', value: 'departure_time' },
+                    { text: '', value: 'data-table-expand' }
                 ],
                 travels: [],
                 user: [],
@@ -154,6 +196,8 @@
                 placesForRoute: [],
                 upperPlace: true,
                 lowerPlace: true,
+                expanded: [],
+                singleExpand: false,
             }
         },
         computed: {

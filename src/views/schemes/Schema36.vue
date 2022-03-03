@@ -20,7 +20,7 @@
 
             <v-col cols="2"></v-col>
 
-            <v-col cols="5" class="text-right" style="padding-top: 65px;">
+            <v-col cols="5" class="text-center" style="padding-top: 65px;">
                 <div>Выход</div>
                 <div><v-icon>mdi-arrow-right</v-icon></div>
             </v-col>
