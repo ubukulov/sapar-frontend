@@ -47,38 +47,7 @@
             </v-col>
         </v-row>
 
-        <v-dialog
-                v-model="dialog"
-                persistent
-                max-width="290"
-        >
-            <v-card>
-                <v-card-text class="dialog_text">
-                    <p style="margin-bottom: 0px;">
-                        <v-icon
-                                style="font-size: 30px; color: green;"
-                        >
-                            mdi-check-bold
-                        </v-icon>
-                    </p>
-
-                    <p>Ваши место забронированы!</p>
-                    <p>Отправьте указанную сумму на Kaspi номер: +77071909009</p>
-                    <p>Время бронирования 15 минут!</p>
-                    <p>! контактные данные ответственного лица Saparline: +77071310001</p>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                            color="green darken-1"
-                            @click="closeDialog()"
-                    >
-                        Ок
-                    </v-btn>
-                    <v-spacer></v-spacer>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+        <TourBookingDialog :tourBookingDialog="tourBookingDialog"></TourBookingDialog>
 
         <WaitingLoader></WaitingLoader>
     </div>
@@ -87,9 +56,11 @@
 <script>
     import axios from "axios";
     import WaitingLoader from "../../dialogs/WaitingLoader";
+    import TourBookingDialog from "../../dialogs/TourBookingDialog";
     export default {
         components: {
             WaitingLoader,
+            TourBookingDialog
         },
 
         data(){
@@ -103,6 +74,7 @@
                 ],
                 search: '',
                 isLoaded: false,
+                tourBookingDialog: false,
                 tourId: 0,
                 tour: [],
                 count: 0
@@ -146,6 +118,7 @@
                     axios.post(`${this.$apiUrl}tours/${this.tourId}/booking-by-tour-company`, formData)
                     .then(res => {
                         this.$store.commit('setOverlay', false);
+                        this.tourBookingDialog = true;
                         console.log(res)
                     })
                     .catch(err => {

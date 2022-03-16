@@ -78,7 +78,7 @@
 
                         <v-row>
                             <v-col cols="12">
-                                <v-btn color="dark" @click="changeCar">Редактировать</v-btn>
+                                <v-btn color="dark" @click="changeCarPrice">Изменить цены</v-btn>
                             </v-col>
                         </v-row>
                     </v-col>
@@ -144,6 +144,11 @@
             :changeDialog="changeDialog"
             :carTravelId="carTravelId"
         ></ChangeCarDialog>
+
+        <ChangeCarPriceDialog
+            :changeCarPriceDialog="changeCarPriceDialog"
+            :carTravelId="carTravelId"
+        ></ChangeCarPriceDialog>
 
         <vue-html2pdf
                 :show-layout="false"
@@ -236,6 +241,7 @@
     import 'moment/locale/ru'
     import PrintTicketDialog from "../../dialogs/PrintTicketDialog";
     import ChangeCarDialog from "../../dialogs/ChangeCarDialog";
+    import ChangeCarPriceDialog from "../../dialogs/ChangeCarPriceDialog";
     export default {
         components: {
             WaitingLoader,
@@ -248,7 +254,8 @@
             VueBarcode,
             VueHtml2pdf,
             PrintTicketDialog,
-            ChangeCarDialog
+            ChangeCarDialog,
+            ChangeCarPriceDialog
         },
         data(){
             return {
@@ -267,6 +274,7 @@
                 isLoaded: false,
                 dialog: false,
                 changeDialog: false,
+                changeCarPriceDialog: false,
                 search: '',
                 filters: [
                     {
@@ -390,6 +398,9 @@
             },
             changeCar(){
                 this.changeDialog = true;
+            },
+            changeCarPrice(){
+                this.changeCarPriceDialog = true;
             }
         },
         created() {

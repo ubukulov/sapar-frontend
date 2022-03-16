@@ -24,7 +24,7 @@
             <v-card-actions>
                 <v-btn
                         color="btn gray"
-                        @click="changeDialog = false"
+                        @click="cancel"
                 >
                     Отмена
                 </v-btn>
@@ -75,6 +75,10 @@
                 .catch(err => {
                     console.log(err)
                 })
+            },
+            cancel(){
+                this.changeDialog = false;
+                this.$router.go(this.$router.currentRoute)
             }
         },
         created() {
