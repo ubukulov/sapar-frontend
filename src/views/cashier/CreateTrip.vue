@@ -28,9 +28,9 @@
             <v-stepper-items>
                 <v-stepper-content step="1">
                     <v-card
-                            class="mb-12"
-                            color="lighten-1"
-                            height="200px"
+                        class="mb-12"
+                        color="lighten-1"
+                        height="auto"
                     >
                         <v-row>
                             <v-col cols="4">
@@ -76,7 +76,7 @@
                     <v-card
                         class="mb-12"
                         color="lighten-1"
-                        height="200px"
+                        height="auto"
                     >
                         <v-row>
                             <v-col cols="4">
@@ -106,10 +106,6 @@
                                         dense
                                         solo
                                 ></v-select>
-                            </v-col>
-
-                            <v-col cols="2">
-                                <datetime input-class="form-control" type="datetime" format="yyyy-MM-dd HH:mm" value-zone="Asia/Almaty" :phrases="{ok: 'ОК', cancel: 'Отмена'}" v-model="departure_time"></datetime>
                             </v-col>
                         </v-row>
 
@@ -143,10 +139,43 @@
                                 ></v-select>
                             </v-col>
 
-                            <v-col cols="2">
-                                <datetime input-class="form-control" type="datetime" format="yyyy-MM-dd HH:mm" value-zone="Asia/Almaty" :phrases="{ok: 'ОК', cancel: 'Отмена'}" v-model="destination_time"></datetime>
-                            </v-col>
+
                         </v-row>
+
+                        <vue-cloneya :maximum="5" :value="exampleData">
+                            <v-row>
+                                <v-col cols="3">
+                                    <datetime
+                                            input-class="form-control"
+                                            type="datetime" format="yyyy-MM-dd HH:mm"
+                                            value-zone="Asia/Almaty"
+                                            :phrases="{ok: 'ОК', cancel: 'Отмена'}"
+                                            v-cloneya-input="'departure_time'"
+                                    ></datetime>
+                                </v-col>
+
+                                <v-col cols="3">
+                                    <datetime
+                                            input-class="form-control"
+                                            type="datetime" format="yyyy-MM-dd HH:mm"
+                                            value-zone="Asia/Almaty"
+                                            :phrases="{ok: 'ОК', cancel: 'Отмена'}"
+                                            v-cloneya-input="'destination_time'"
+                                    ></datetime>
+                                </v-col>
+
+                                <v-col cols="1">
+                                    <button type="button" class="btn btn-success" tabindex="-1" v-cloneya-add>
+                                        <v-icon>mdi-calendar-plus</v-icon>
+                                    </button>
+
+                                    <button type="button" class="btn btn-danger" tabindex="-1"  v-cloneya-remove>
+                                        <v-icon>mdi-calendar-minus</v-icon>
+                                    </button>
+                                </v-col>
+                            </v-row>
+                        </vue-cloneya>
+
                     </v-card>
 
                     <v-btn
@@ -168,7 +197,7 @@
                     <v-card
                         class="mb-12"
                         color="lighten-1"
-                        height="200px"
+                        height="auto"
                         style="height: auto; padding: 10px;"
                     >
                         <v-row>
@@ -344,6 +373,7 @@
                 to_station_id: 0,
                 dialog: false,
                 errors: [],
+                exampleData: []
             }
         },
         methods: {
@@ -492,7 +522,8 @@
                 }
 
                 if (step === 3) {
-                    if (this.from_city_id === 0) {
+                    console.log('ex', this.exampleData);
+                    /*if (this.from_city_id === 0) {
                         this.errors.push('Укажите город отправление');
                     }
                     if (this.from_station_id === 0) {
@@ -517,7 +548,7 @@
 
                     if (this.errors.length === 0) {
                         this.e1 = 3;
-                    }
+                    }*/
                 }
 
             }

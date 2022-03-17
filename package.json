@@ -16,6 +16,7 @@
     "moment": "^2.29.1",
     "vue": "^2.6.11",
     "vue-barcode": "^1.3.0",
+    "vue-cloneya": "^1.0.14",
     "vue-datetime": "^1.0.0-beta.14",
     "vue-html-to-paper": "^1.4.4",
     "vue-html2pdf": "^1.8.0",
