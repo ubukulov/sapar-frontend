@@ -36,7 +36,7 @@
                 </v-data-table>
             </v-col>
 
-            <v-col cols="8" class="text-right">
+            <v-col cols="6" class="text-right">
                 <strong>Общая сумма: {{ count * tour.seat_price }}тг</strong>
             </v-col>
 
@@ -45,9 +45,18 @@
                     @click="booking()"
                 >Забронировать сейчас</v-btn>
             </v-col>
+
+            <v-col cols="2">
+                <v-btn
+                    :to="'/tours/lists/' + this.tourId"
+                >Назад</v-btn>
+            </v-col>
         </v-row>
 
-        <TourBookingDialog :tourBookingDialog="tourBookingDialog"></TourBookingDialog>
+        <TourBookingDialog
+                :tourBookingDialog="tourBookingDialog"
+                :tourId="tourId"
+        ></TourBookingDialog>
 
         <WaitingLoader></WaitingLoader>
     </div>

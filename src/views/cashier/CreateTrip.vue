@@ -142,39 +142,57 @@
 
                         </v-row>
 
-                        <vue-cloneya :maximum="5" :value="exampleData">
-                            <v-row>
-                                <v-col cols="3">
-                                    <datetime
-                                            input-class="form-control"
-                                            type="datetime" format="yyyy-MM-dd HH:mm"
-                                            value-zone="Asia/Almaty"
-                                            :phrases="{ok: 'ОК', cancel: 'Отмена'}"
-                                            v-cloneya-input="'departure_time'"
-                                    ></datetime>
-                                </v-col>
+                        <!--<v-row>
+                            <v-col cols="2">
+                                <datetime
+                                        input-class="form-control"
+                                        type="datetime" format="yyyy-MM-dd HH:mm"
+                                        value-zone="Asia/Almaty"
+                                        :phrases="{ok: 'ОК', cancel: 'Отмена'}"
+                                ></datetime>
+                            </v-col>
 
-                                <v-col cols="3">
-                                    <datetime
-                                            input-class="form-control"
-                                            type="datetime" format="yyyy-MM-dd HH:mm"
-                                            value-zone="Asia/Almaty"
-                                            :phrases="{ok: 'ОК', cancel: 'Отмена'}"
-                                            v-cloneya-input="'destination_time'"
-                                    ></datetime>
-                                </v-col>
+                            <v-col cols="2">
+                                <datetime
+                                        input-class="form-control"
+                                        type="datetime" format="yyyy-MM-dd HH:mm"
+                                        value-zone="Asia/Almaty"
+                                        :phrases="{ok: 'ОК', cancel: 'Отмена'}"
+                                ></datetime>
+                            </v-col>
 
-                                <v-col cols="1">
-                                    <button type="button" class="btn btn-success" tabindex="-1" v-cloneya-add>
-                                        <v-icon>mdi-calendar-plus</v-icon>
-                                    </button>
+                            <v-col cols="2">
+                                <button style="margin-right: 15px;" type="button" class="btn btn-success" tabindex="-1">
+                                    <v-icon>mdi-calendar-plus</v-icon>
+                                </button>
 
-                                    <button type="button" class="btn btn-danger" tabindex="-1"  v-cloneya-remove>
-                                        <v-icon>mdi-calendar-minus</v-icon>
-                                    </button>
-                                </v-col>
-                            </v-row>
-                        </vue-cloneya>
+                                <button type="button" class="btn btn-danger" tabindex="-1">
+                                    <v-icon>mdi-calendar-minus</v-icon>
+                                </button>
+                            </v-col>
+                        </v-row>-->
+
+                        <v-row v-for="(item, i) in dateInputs" :key="i">
+                            <v-col cols="3">
+                                <label :for="'departure_time'+i">Дата отправление:</label>
+                                <input :id="'departure_time'+i" type="datetime-local" v-model="item.departure_time">
+                            </v-col>
+
+                            <v-col cols="3">
+                                <label :for="'destination_time'+i">Дата прибытие:</label>
+                                <input :id="'destination_time'+i" type="datetime-local" v-model="item.destination_time">
+                            </v-col>
+
+                            <v-col cols="2">
+                                <button v-if="i === 0" @click="addDatetime()" style="margin-right: 15px;" type="button" class="btn btn-success" tabindex="-1">
+                                    <v-icon>mdi-calendar-plus</v-icon>
+                                </button>
+
+                                <button @click="removeDatetime(i)" v-if="i !== 0" type="button" class="btn btn-danger" tabindex="-1">
+                                    <v-icon>mdi-calendar-minus</v-icon>
+                                </button>
+                            </v-col>
+                        </v-row>
 
                     </v-card>
 
@@ -338,14 +356,14 @@
 
 <script>
     import axios from 'axios'
-    import { Datetime } from 'vue-datetime'
+    //import { Datetime } from 'vue-datetime'
     import 'vue-datetime/dist/vue-datetime.css'
     import 'bootstrap/dist/css/bootstrap.css'
     import 'bootstrap-vue/dist/bootstrap-vue.css'
     import WaitingLoader from "../../dialogs/WaitingLoader";
     export default {
         components: {
-            datetime: Datetime,
+            //datetime: Datetime,
             WaitingLoader
         },
         data(){
@@ -373,7 +391,12 @@
                 to_station_id: 0,
                 dialog: false,
                 errors: [],
-                exampleData: []
+                dateInputs: [
+                    {
+                        departure_time: null,
+                        destination_time: null,
+                    }
+                ]
             }
         },
         methods: {
@@ -473,9 +496,10 @@
                     formData.append('to_city_id', this.to_city_id);
                     formData.append('from_station_id', this.from_station_id);
                     formData.append('to_station_id', this.to_station_id);
-                    formData.append('departure_time', this.departure_time);
-                    formData.append('destination_time', this.destination_time);
+                    //formData.append('departure_time', this.departure_time);
+                    //formData.append('destination_time', this.destination_time);
                     formData.append('price_places', JSON.stringify(this.price_places));
+                    formData.append('date_times', JSON.stringify(this.dateInputs));
 
                     axios.post(`${this.$apiUrl}cashier/create-trip`, formData)
                         .then(res => {
@@ -485,6 +509,7 @@
                         })
                         .catch(err => {
                             console.log(err)
+                            this.$store.commit('setOverlay', false);
                         })
                 }
             },
@@ -522,8 +547,7 @@
                 }
 
                 if (step === 3) {
-                    console.log('ex', this.exampleData);
-                    /*if (this.from_city_id === 0) {
+                    if (this.from_city_id === 0) {
                         this.errors.push('Укажите город отправление');
                     }
                     if (this.from_station_id === 0) {
@@ -539,18 +563,49 @@
                         this.errors.push('Город прибытие должно быть другой');
                     }
 
-                    let departure_time = new Date(this.departure_time);
-                    let destination_time = new Date(this.destination_time);
+                    this.dateInputs.filter(item => {
+                        let i = this.dateInputs.indexOf(item);
 
-                    if(departure_time.getTime() >= destination_time.getTime()) {
-                        this.errors.push('Дата отправление не может быть больше или равно чем дата прибытие');
-                    }
+                        if(item.departure_time == null) {
+                            document.getElementById('departure_time'+i).style.border = '1px solid red';
+                            this.errors.push('Укажите дата и время отправление');
+                        } else {
+                            document.getElementById('departure_time'+i).style.border = 'none';
+                        }
+
+                        if(item.destination_time == null) {
+                            document.getElementById('destination_time'+i).style.border = '1px solid red';
+                            this.errors.push('Укажите дата и время прибытие');
+                        } else {
+                            document.getElementById('destination_time'+i).style.border = 'none';
+                        }
+
+                        if (item.departure_time != null && item.destination_time != null) {
+                            if(item.destination_time < item.departure_time) {
+                                document.getElementById('departure_time'+i).style.border = '1px solid red';
+                                document.getElementById('destination_time'+i).style.border = '1px solid red';
+                                this.errors.push('Дата и время прибытие должно быть выше чем дата отправление');
+                            } else {
+                                document.getElementById('departure_time'+i).style.border = 'none';
+                                document.getElementById('destination_time'+i).style.border = 'none';
+                            }
+                        }
+                    })
 
                     if (this.errors.length === 0) {
                         this.e1 = 3;
-                    }*/
+                    }
                 }
 
+            },
+            addDatetime(){
+                this.dateInputs.push({
+                    departure_time: null,
+                    destination_time: null,
+                })
+            },
+            removeDatetime(index){
+                this.dateInputs.splice(index, 1);
             }
         },
         created() {

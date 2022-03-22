@@ -5,25 +5,26 @@
             max-width="590"
     >
         <v-card>
-            <v-card-text class="dialog_text">
+            <v-card-text class="dialog_text text-center" style="padding: 20px;">
                 <p style="margin-bottom: 0px;">
                     <v-icon
-                            style="font-size: 30px; color: green;"
+                            style="font-size: 40px; color: green;"
+                            class="mb-2"
                     >
                         mdi-check-bold
                     </v-icon>
                 </p>
 
                 <p>Ваши место забронированы!</p>
-                <p>Отправьте указанную сумму на Kaspi номер: +77071909009</p>
-                <p>Время бронирования 15 минут!</p>
+                <p>Отправьте указанную сумму на Kaspi номер: <strong>+77071909009</strong></p>
+                <p>Время бронирования <strong>15 минут!</strong></p>
                 <p>! контактные данные ответственного лица Saparline: +77071310001</p>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn
                     color="green darken-1"
-                    @click="tourBookingDialog = false"
+                    @click="successBooking"
                 >
                     Ок
                 </v-btn>
@@ -36,11 +37,21 @@
 <script>
     export default {
         props: [
-            'tourBookingDialog'
-        ]
+            'tourBookingDialog', 'tourId'
+        ],
+        methods: {
+            successBooking(){
+                this.tourBookingDialog = false;
+                this.$router.push({
+                    name: 'TourDetail', params: { tourId: this.tourId }
+                })
+            }
+        }
     }
 </script>
 
 <style scoped>
-
+p {
+    font-size: 20px;
+}
 </style>

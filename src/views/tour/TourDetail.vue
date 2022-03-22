@@ -412,9 +412,8 @@
                 this.changeDialog = true;
             },
             bookingPlaces(){
-                //:to="`/tours/lists/${item.id}`" link
                 let link = "/tours/lists/" + this.tourId + "/booking/" + this.countBookingPlaces;
-                this.$router.go(link)
+                this.$router.push(link)
             }
         },
         created() {

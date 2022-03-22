@@ -5,7 +5,6 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import VueHtmlToPaper from 'vue-html-to-paper';
 import VueTheMask from 'vue-the-mask'
-import VueCloneya from 'vue-cloneya'
 
 const options = {
   name: '_blank',
@@ -26,7 +25,6 @@ const options = {
 
 Vue.use(VueHtmlToPaper, options);
 Vue.use(VueTheMask);
-Vue.use(VueCloneya);
 
 Vue.config.productionTip = false
 Vue.prototype.$apiUrl = (process.env.VUE_APP_ENV === 'local') ? process.env.VUE_APP_API_URL_TEST : process.env.VUE_APP_API_URL;

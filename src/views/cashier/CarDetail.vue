@@ -41,8 +41,6 @@
                         <p>Номер машины: {{ carTravel.car.state_number }}</p>
                         <p>Дата отправление: <br>{{ moment(carTravel.departure_time).format('LLL') }}</p>
                         <p>Дата прибытие: <br>{{ moment(carTravel.destination_time).format('LLL') }}</p>
-                        <br>
-                        <v-btn color="warning" @click="changeCar">Изменить автобус</v-btn>
                     </v-col>
 
                     <v-col cols="5">
@@ -75,12 +73,14 @@
                                 <span class="card_car_info_span__danger">Занято: {{ carTravel.car.car_type_count_places - carTravel.count_free_places }}</span>
                             </v-col>
                         </v-row>
+                    </v-col>
 
-                        <v-row>
-                            <v-col cols="12">
-                                <v-btn color="dark" @click="changeCarPrice">Изменить цены</v-btn>
-                            </v-col>
-                        </v-row>
+                    <v-col cols="4" class="mb-2">
+                        <v-btn color="warning" @click="changeCar">Изменить автобус</v-btn>
+                    </v-col>
+
+                    <v-col cols="4" class="mb-2">
+                        <v-btn color="dark" @click="changeCarPrice">Редактировать</v-btn>
                     </v-col>
                 </v-row>
                 <v-card>
@@ -88,6 +88,7 @@
                         Проданные билеты
                         <v-spacer></v-spacer>
                         <v-btn
+                            v-if="soldTicketsForCurrentCarTravel.length !== 0"
                             @click="createPDF()"
                             class="primary"
                         >
@@ -148,6 +149,7 @@
         <ChangeCarPriceDialog
             :changeCarPriceDialog="changeCarPriceDialog"
             :carTravelId="carTravelId"
+            :carTravel="carTravel"
         ></ChangeCarPriceDialog>
 
         <vue-html2pdf
