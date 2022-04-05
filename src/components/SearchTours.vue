@@ -46,6 +46,18 @@
                 Показать
             </v-btn>
         </v-col>
+
+        <v-col cols="12">
+            <v-alert
+                    v-if="info_html !== ''"
+                    border="bottom"
+                    colored-border
+                    type="warning"
+                    elevation="2"
+            >
+                <strong v-html="info_html"></strong>
+            </v-alert>
+        </v-col>
     </v-row>
 </template>
 
@@ -64,7 +76,9 @@
                 resting_places: [],
                 city_id: 0,
                 resting_place_id: 0,
-                user: []
+                user: [],
+                tours: [],
+                info_html: ''
             }
         },
         computed: {
@@ -89,12 +103,17 @@
                     this.$store.commit('setOverlay', true);
                     axios.post(`${this.$apiUrl}tours/searching`, formData)
                         .then(res => {
+                            this.info_html = '';
                             this.$store.commit('setOverlay', false);
+                            this.tours = res.data;
                             this.$parent.tours = res.data;
                         })
                         .catch(err => {
                             this.$store.commit('setOverlay', false);
                             console.log(err)
+                            if(err.response.status === 400) {
+                                this.info_html = err.response.data;
+                            }
                         })
                 }
             },
