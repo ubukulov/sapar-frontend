@@ -52,8 +52,8 @@
                         <p>Номер машины: {{ tour.car.state_number }}</p>
                         <p>Дата отправление: <br>{{ moment(tour.departure_time).format('LLL') }}</p>
                         <p>Дата прибытие: <br>{{ moment(tour.destination_time).format('LLL') }}</p>
-                        <!--<br>
-                        <v-btn color="warning" @click="changeCar">Изменить автобус</v-btn>-->
+                        <br>
+                        <v-btn color="warning" @click="addBus()">Добавить автобус</v-btn>
                     </v-col>
 
                     <v-col cols="5">
@@ -173,10 +173,10 @@
 
         <WaitingLoader></WaitingLoader>
 
-        <ChangeCarDialog
-                :changeDialog="changeDialog"
-                :carTravelId="tourId"
-        ></ChangeCarDialog>
+        <AddBusDialog
+                :addDialog="addDialog"
+                :tourId="tourId"
+        ></AddBusDialog>
 
         <vue-html2pdf
                 :show-layout="false"
@@ -268,7 +268,7 @@
     import moment from 'moment'
     import 'moment/locale/ru'
     import PrintTicketDialog from "../../dialogs/PrintTicketDialog";
-    import ChangeCarDialog from "../../dialogs/ChangeCarDialog";
+    import AddBusDialog from "../../dialogs/AddBusDialog";
     export default {
         components: {
             WaitingLoader,
@@ -281,7 +281,7 @@
             VueBarcode,
             VueHtml2pdf,
             PrintTicketDialog,
-            ChangeCarDialog
+            AddBusDialog
         },
         data(){
             return {
@@ -300,6 +300,7 @@
                 isLoaded: false,
                 dialog: false,
                 changeDialog: false,
+                addDialog: false,
                 search: '',
                 tourId: 0,
                 ticket: [],
@@ -308,7 +309,7 @@
                 lowerPlace: true,
                 moment: moment,
                 countBookingPlaces: null,
-                user: this.$store.getters.getUserData
+                user: this.$store.getters.getUserData,
             }
         },
         methods: {
@@ -414,6 +415,9 @@
             bookingPlaces(){
                 let link = "/tours/lists/" + this.tourId + "/booking/" + this.countBookingPlaces;
                 this.$router.push(link)
+            },
+            addBus(){
+                this.addDialog = true;
             }
         },
         created() {
